@@ -1,5 +1,4 @@
 /* CORE TESTS -  */
-var tinyg = require("tinyg")
 var should = require("should")
 var tg = new tinyg()
 var sync = require("sync")
