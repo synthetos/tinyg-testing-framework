@@ -1,6 +1,5 @@
 /* CORE TESTS -  */
 var should = require("should")
-var tg = new tinyg()
 var sync = require("sync")
 var serialport = require("serialport")
 var SerialPort = serialport.SerialPort;
