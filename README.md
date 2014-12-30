@@ -7,13 +7,17 @@ Installation:
 Install nodeJS from here: http://nodejs.org/download/
 
 Once its all downloaded and installed clone this repo like normal.
+`git clone https://github.com/synthetos/tinyg-testing-framework.git`
+
+Then cd into the tinyg-testing-framework/ directory
+`cd tinyg-testing-framework/`
 
 Then at the terminal run:
-npm install
+`npm install`
 
 This will get everything you need now to run the test files.
 
-After that is complete you should be able to run grunt at the command line and it will attempt to run the test in the spec/core folder.
+After that is complete you should be able to run grunt at the command line and it will attempt to run the test in the `spec/core` folder.
 
 Note that at this time the serial port is hard coded.
 
