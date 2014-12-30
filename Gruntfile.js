@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   // Add the grunt-mocha-test tasks.
   grunt.loadNpmTasks('grunt-mocha-test');
@@ -17,21 +17,6 @@ module.exports = function(grunt) {
       }
     }
   });
-  
-  
-   v8Tests: {
-      test: {
-        options: {
-          reporter: 'spec',
-          captureFile: 'v8results.txt', // Optionally capture the reporter output to a file
-          quiet: false, // Optionally suppress output to standard out (defaults to false)
-          clearRequireCache: false // Optionally clear the require cache before running tests (defaults to false)
-        },
-        src: ['spec/**/*.js']
-      }
-    }
-  });
 
   grunt.registerTask('default', 'mochaTest');
-
-};
+}
