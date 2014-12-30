@@ -19,7 +19,7 @@ var sp = new SerialPort(PORTNAME, {
 
 describe('Test Connections to TinyG and Initial Comms.', function () {
 
-  it('Should have more than 1 serial port present.', function (done) {
+  it('Should have more than 1 serial port present. @v8 @v9', function (done) {
     serialport.list(function (err, ports) {
       if (err) throw (err);
       ports.length.should.be.above(0);
@@ -28,7 +28,7 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
   });
 
   //################################################################ 
-  it("Checks TinyG's USB Connection", function (done) {
+  it("Checks TinyG's USB Connection @v8 @v9", function (done) {
     var openEvent = function (err, data) {
       if (err) {
         //console.log("Err: " + err);
@@ -50,7 +50,7 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
 describe("Checks firmware and hardware numbers for up to date values", function () {
   
   //Firmware build response test
-  it('Checks firmware build number', function (done) {
+  it('Checks firmware build number @v8 @v9', function (done) {
     var fbcheck = function (data, err) {
       //console.log(data);
       sp.removeListener('data', fbcheck);
@@ -63,12 +63,12 @@ describe("Checks firmware and hardware numbers for up to date values", function 
   });
 
   //Firmware Build Test
-  it("Checks the min firmware build value", function () {
+  it("Checks the min firmware build value @v8 @v9", function () {
     r.fb.should.be.above(80);
   });
 
   //Hardware Value Test
-  it('Checks Hardwave Value', function (done) {
+  it('Checks Hardwave Value @v8 @v9', function (done) {
     var hvcheck = function (data, err) {
       // sconsole.log(data);
       sp.removeListener('data', hvcheck);
@@ -81,7 +81,7 @@ describe("Checks firmware and hardware numbers for up to date values", function 
   });
 
   //Hardware Min Value Test
-  it("Checks the min hardware value is set", function () {
+  it("Checks the min hardware value is set @v8 @v9", function () {
     r.hv.should.be.above(6);
   });
 });
@@ -127,10 +127,48 @@ describe("Checks System Group Values", function () {
   });
 });
 
+describe("Checks System Group Values", function () {
+  //Check all sys values are present
+  it('check all sys values are present @v9', function (done) {
+
+    var sysGhetter = function (data, err) {
+      sp.removeListener('data', sysGhetter);
+      r = JSON.parse(data).r.sys
+      should(r).have.property("fb")
+      should(r).have.property("fv")
+      should(r).have.property("hp")
+      should(r).have.property("hv")
+      should(r).have.property("hv")
+      should(r).have.property("ja")
+      should(r).have.property("ct") 
+      should(r).have.property("sl")
+      should(r).have.property("mt")
+      should(r).have.property("ej")
+      should(r).have.property("jv")
+      should(r).have.property("js")
+      should(r).have.property("tv")
+      should(r).have.property("qv")
+      should(r).have.property("sv")
+      should(r).have.property("si")
+      should(r).have.property("spi") //v9
+      should(r).have.property("gpl")
+      should(r).have.property("gun")
+      should(r).have.property("gco")
+      should(r).have.property("gpa")
+      should(r).have.property("gdi")
+      done();
+    }
+    //This fires THEN the callback sysGhetter will execute on data
+    sp.on('data', sysGhetter);
+    sp.write("{\"sys\":null}\n")
+    
+  });
+});
+
 
 
 describe("Check offset commands and homing functions", function(){
- it("Check manual homing op 28.2", function(done){
+ it("Check manual homing op 28.2 @v8 @v9", function(done){
     //This is a bit more of involved test so I will explain what is going on here:
     //
    G28_3_TEST_COMMAND = '{"gc":"g28.3 X5 Y4 Z1.220"}\n'
