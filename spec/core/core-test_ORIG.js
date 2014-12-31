@@ -4,9 +4,9 @@ var sync = require("sync")
 var serialport = require("serialport")
 var SerialPort = serialport.SerialPort;
 
-var PORTNAME = "/dev/cu.usbserial-DA00XCML" //v8 alden/CNC3040
-//var PORTNAME = "/dev/cu.usbserial-DA00XCMV" //v8 riley
-//var PORTNAME = "/dev/cu.usbmodem001"  //v9
+var PORTNAME = "/dev/cu.usbserial-DA00XCML" //v8
+//var PORTNAME = "/dev/cu.usbserial-DA00XCMV" //v8
+  //var PORTNAME = "/dev/cu.usbmodem001"  //v9
 
 var sp = new SerialPort(PORTNAME, {
   baudrate: 115200,
@@ -15,8 +15,6 @@ var sp = new SerialPort(PORTNAME, {
 
 
 'use strict';
-
-console.log("STARTING TESTS")
 
 describe('Test Connections to TinyG and Initial Comms.', function () {
 
@@ -39,26 +37,28 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
       }
 
     };
-    sp.open(openEvent); //we call open on the port now which will fire the callback above.
+    sp.open(openEvent); //we call open on the port now which will fire the call
+    //back above.
   });
 })
 
 
-//#############################################################################
 
+
+//################################################################################### 
 describe("Checks firmware and hardware numbers for up to date values", function () {
-
+  
   //Firmware build response test
   it('Checks firmware build number @v8 @v9', function (done) {
     var fbcheck = function (data, err) {
-      console.log(data);
+      //console.log(data);
       sp.removeListener('data', fbcheck);
       r = JSON.parse(data).r
       should(r).have.property('fb')
       done();
     }
     sp.on('data', fbcheck);
-    sp.write('{"fb":n}\n');
+    sp.write('{"fb":""}\n');
   });
 
   //Firmware Build Test
@@ -69,14 +69,14 @@ describe("Checks firmware and hardware numbers for up to date values", function 
   //Hardware Value Test
   it('Checks Hardwave Value @v8 @v9', function (done) {
     var hvcheck = function (data, err) {
-      console.log(data);
+      // sconsole.log(data);
       sp.removeListener('data', hvcheck);
       r = JSON.parse(data).r
       r.should.have.property('hv')
       done();
     }
     sp.on('data', hvcheck);
-    sp.write('{"hv":n}\n');
+    sp.write('{"hv":""}\n');
   });
 
   //Hardware Min Value Test
@@ -85,14 +85,14 @@ describe("Checks firmware and hardware numbers for up to date values", function 
   });
 });
 
-//############################################################################ 
+
+
 
 describe("Checks System Group Values", function () {
   //Check all sys values are present
   it('check all sys values are present @v8', function (done) {
 
     var sysGhetter = function (data, err) {
-      console.log(data);
       sp.removeListener('data', sysGhetter);
       r = JSON.parse(data).r.sys
       should(r).have.property("fb")
@@ -126,14 +126,11 @@ describe("Checks System Group Values", function () {
   });
 });
 
-//############################################################################ 
-
 describe("Checks System Group Values", function () {
   //Check all sys values are present
   it('check all sys values are present @v9', function (done) {
 
     var sysGhetter = function (data, err) {
-      console.log(data);
       sp.removeListener('data', sysGhetter);
       r = JSON.parse(data).r.sys
       should(r).have.property("fb")
@@ -167,7 +164,7 @@ describe("Checks System Group Values", function () {
   });
 });
 
-//############################################################################ 
+
 
 describe("Check offset commands and homing functions", function(){
  it("Check manual homing op 28.2 @v8 @v9", function(done){
