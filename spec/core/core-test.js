@@ -2,10 +2,10 @@
 /*jslint node: true */
 /*jshint -W097 */
 
-var describe;
+//var describe;     // these blow up mocha for some reason
+//var console;
+//var it;
 var require;
-var console;
-var it;
 var r;
 
 var should = require("should");
@@ -129,6 +129,7 @@ describe("Checks System Group Values", function () {
         //This fires THEN the callback sysGhetter will execute on data
         sp.on('data', sysGhetter);
         sp.write("{\"sys\":null}\n");
+//        sp.write('{"sys":null}\n');
     });
 });
 
@@ -170,15 +171,16 @@ describe("Checks System Group Values", function () {
         //This fires THEN the callback sysGhetter will execute on data
         sp.on('data', sysGhetter);
         sp.write("{\"sys\":null}\n");
+//        sp.write('{"sys":null}\n');
     });
 });
 
 //############################################################################ 
 
-describe("Check offset commands and homing functions", function () {
+describe("Check G28.3 forced homing", function () {
     var G28_3_TEST_COMMAND, CLEAR_COMMAND, pdata;
     
-    it("Check manual homing op 28.2 @v8 @v9", function (done) {
+    it("Check G28.3 force homing @v8 @v9", function (done) {
     //This is a bit more of involved test so I will explain what is going on here:
     
         G28_3_TEST_COMMAND = '{"gc":"g28.3 X5 Y4 Z1.220"}\n';
