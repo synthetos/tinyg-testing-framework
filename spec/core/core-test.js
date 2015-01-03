@@ -44,7 +44,6 @@ describe('hooks', function() {
 })
 
 describe('Test Connections to TinyG and Initial Comms.', function () {
-
 	it('Should have 1 or more serial port present. @v8 @v9', function (done) {
 		serialport.list(function (err, ports) {
 			if (err) {
@@ -62,12 +61,51 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
 
 //#############################################################################
 
+
+describe("Set configuration preconditions", function () {
+	it('Set configuration preconditions @v8 @v9', function (done) {
+
+/*
+//		var config = {js: 1, b: 2, c: {a: 1, b: 2}};
+		var obj = { js: 1 };
+
+		var reader = function walk(obj) {
+		  for (var key in obj) {
+		    if (obj.hasOwnProperty(key)) {
+		      var val = obj[key];
+		      console.log(val);
+		      walk(val);
+		    }
+		  }
+		}
+		walk(reader);
+*/
+  	var reader = function (data, err) {
+//			console.log(data);
+      sp.removeListener('data', reader);
+      r = JSON.parse(data).r;
+      should(r).have.property('js');
+			if (err) {
+				throw (err); 
+			} else {
+	      done();	
+			}			
+		};
+
+		sp.on('data', reader);
+		sp.write('g92 x0 y0 z0\n');
+		sp.write('{"js":1}\n');		
+	});
+});
+
+//#############################################################################
+
 describe("Check firmware and hardware numbers for up to date values", function () {
 
 	//Firmware build response test
 	it('Checks firmware build number @v8 @v9', function (done) {
   	var fbcheck = function (data, err) {
-			console.log(data);
+//			console.log(data);
       sp.removeListener('data', fbcheck);
       r = JSON.parse(data).r;
       should(r).have.property('fb');
@@ -85,7 +123,7 @@ describe("Check firmware and hardware numbers for up to date values", function (
   //Hardware Value Test
   it('Checks Hardwave Value @v8 @v9', function (done) {
 		var hvcheck = function (data, err) {
-			console.log(data);
+//			console.log(data);
 			sp.removeListener('data', hvcheck);
 			r = JSON.parse(data).r;
 			r.should.have.property('hv');
@@ -107,7 +145,7 @@ describe("Checks System Group Values", function () {
   //Check all sys values are present
 	it('check all sys values are present @v8', function (done) {
 		var sysGhetter = function (data, err) {
-			console.log(data);
+//			console.log(data);
 			sp.removeListener('data', sysGhetter);
 			r = JSON.parse(data).r.sys;
 			should(r).have.property("fb");
@@ -148,7 +186,7 @@ describe("Checks System Group Values", function () {
 	it('check all sys values are present @v9', function (done) {
 
       var sysGhetter = function (data, err) {
-        console.log(data);
+//        console.log(data);
         sp.removeListener('data', sysGhetter);
         r = JSON.parse(data).r.sys;
         should(r).have.property("fb");
@@ -191,23 +229,30 @@ describe("Check G28.3 Set Machine Origins", function () {
 		it("Check G28.3 Set Machine Origins @v8 @v9", function (done) {
     //This is a bit more of involved test so I will explain what is going on here:
     
-			G28_3_TEST_COMMAND = '{"gc":"g28.3 X5 Y4 Z1.220"}\n';
 			CLEAR_COMMAND = '{"gc":"g28.3 x0 y0 z0"}\n';
-			
-			var offsetCallback = function (data, err) {
+			TEST_COMMAND = '{"gc":"g28.3 X5 Y4 Z1.220"}\n';
+
+			var testCallback = function (data, err) {
+//				console.log(data);
+
 				pdata = JSON.parse(data); //Lets parse this every time this callback fires
             //We will get other json data other than the {sr} so we put some logic below
             //that looks for the sr element before we try to parse the pos* values.
       
-        if (pdata.hasOwnProperty("sr")) {
-            if (pdata.sr.posx === 5 && pdata.sr.posy === 4 && pdata.sr.posz === 1.220) {
-                done();
-            }
+//				console.log(pdata);
+				
+				if (pdata.hasOwnProperty("sr")) {
+					if (pdata.sr.posx === 5 && pdata.sr.posy === 4 && pdata.sr.posz === 1.220) {
+						done();
+					}
         }  //end if pdata
-    }; //end offsetCallback()
+    	}; //end testCallback()
+			
+//		console.log(CLEAR_COMMAND);
+    sp.write(CLEAR_COMMAND);        // clear us out to detect the change
 
-    sp.write(CLEAR_COMMAND);        //This clears us out to detect the change
-    sp.on('data', offsetCallback);  //We now subscribe to the data message callback
-    sp.write(G28_3_TEST_COMMAND);   //we fire off our true test command now
+    sp.on('data', testCallback);		// subscribe to the data message callback
+//		console.log(TEST_COMMAND);
+    sp.write(TEST_COMMAND);   			// fire off the true test command now
   });
 });
