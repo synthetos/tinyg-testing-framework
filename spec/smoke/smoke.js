@@ -24,41 +24,40 @@ var sp = new SerialPort(PORTNAME, {
     parser: serialport.parsers.readline("\n")
 }, false); //do not open right away
 
-
 'use strict';
 
 describe('hooks', function() {
-	before(function() {		// runs before all tests in this block
-		console.log("STARTING TESTS");
-	});
+  before(function() {		// runs before all tests in this block
+    console.log("STARTING TESTS");
 
-	after(function(){		// runs after all tests in this block
-	})
+    describe('Connect to TinyG and test USB connection', function () {
+	 it('Should see one or more serial port @v8 @v9', function (done) {
+       serialport.list(function (err, ports) {
+         if (err) {
+           throw (err); 
+		  }
+		  ports.length.should.be.above(0);
+		  done();
+        }); // serialport
+      }); // it
+	
+	 it("Check TinyG USB Connection @v8 @v9", function (done) {
+       sp.open(done);		//we call open on the port now which will fire the callback above.
+	 });
+    });
+  
+  after(function(){		// runs after all tests in this block
+  })
 
-	beforeEach(function(){	// runs before each test in this block
-	})
+  beforeEach(function(){	// runs before each test in this block
+  })
 
-	afterEach(function(){	// runs after each test in this block
-	})
+  afterEach(function(){	// runs after each test in this block
+  })
 
   // test cases
 })
 
-describe('Test Connections to TinyG and Initial Comms.', function () {
-	it('Should have 1 or more serial port present. @v8 @v9', function (done) {
-		serialport.list(function (err, ports) {
-			if (err) {
-				throw (err); 
-			}
-			ports.length.should.be.above(0);
-			done();
-      });
-  });
-	
-	it("Check TinyG's USB Connection @v8 @v9", function (done) {
-		sp.open(done);		//we call open on the port now which will fire the callback above.
-	});
-});
 
 //#############################################################################
 
