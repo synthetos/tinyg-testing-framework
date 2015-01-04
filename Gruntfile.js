@@ -14,7 +14,7 @@ module.exports = function (grunt) {
           clearRequireCache: false 			// Optionally clear the require cache before running tests (defaults to false)
         },
 //        src: ['spec/**/*.js']
-        src: ['spec/smoke/smoke.js']
+        src: ['tests/smoke/smoke.js']
       }
     }
   });

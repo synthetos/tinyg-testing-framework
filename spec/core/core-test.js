@@ -61,7 +61,7 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
 });
 
 //#############################################################################
-
+/*
 describe("Set configuration preconditions", function () {
 
 	var reader = function (data, err) {
@@ -81,6 +81,34 @@ describe("Set configuration preconditions", function () {
 //		done();	
 	});
 });
+*/
+describe("Set configuration preconditions", function () {
+//	var G28_3_TEST_COMMAND, CLEAR_COMMAND, pdata;
+    
+  it("Check G28.3 Set Machine Origins @v8 @v9", function (done) {
+    //This is a bit more of involved test so I will explain what is going on here:
+
+    JSON_MODE       = '{ej:1}\n';
+    JSON_VERBOSITY  = '{jv:5}\n';
+    G92_RESET       = 'g92 x0 y0 z0\n';
+    DONE_COMMAND    = '{fb:n}\n';
+    
+    var reader = function (data, err) {
+//      console.log(data);
+      r = JSON.parse(data);
+      console.log(r);
+//      should(r).have.property('fb');
+      r.should.have.property('fb');
+      done();
+    }; //end reader
+
+    sp.on('data', reader);		// subscribe to the data message callback
+    sp.write(JSON_MODE);
+    sp.write(JSON_VERBOSITY);
+    sp.write(G92_RESET);
+    sp.write(DONE_COMMAND);   	// fire off the true test command now
+  }); // end it
+}); // end Set configuration preconditions
 
 //#############################################################################
 
