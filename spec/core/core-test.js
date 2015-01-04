@@ -70,7 +70,7 @@ describe("Set configuration preconditions", function () {
 
   var commands = ['{ej:1}', '{jv:5}',
                   'g92 x0 y0 z0',
-                  '{"fb":n}']   //LAST ELEMENT TRIPS done() (NOTE THE QUOTES @ALDEN)
+                  '{"fb":n}']   //LAST COMMAND TRIPS done() (NOTE THE QUOTES @ALDEN)
 
   it("Set configuration preconditions @v8 @v9", function (done) {
 
@@ -218,33 +218,34 @@ describe("Checks System Group Values", function () {
 //############################################################################ 
 
 describe("Check G28.3 Set Machine Origins", function () {
-  var G28_3_TEST_COMMAND, CLEAR_COMMAND, pdata;
+  // Explanation:
+  //  - The commands to send are defined as an array
+  //  - A reader callback is defined that intercepts all responses from the board
+  //  - sp.on registers this callback
+  //  - Commands are executed until the last comamnd is detected, or a timeout occurs
+
+  var commands = ['g28.3 x0 y0 z0',
+                    'g28.3 X5 Y4 Z1.220'] // this comamnd trips done()
 
   it("Check G28.3 Set Machine Origins @v8 @v9", function (done) {
-    //This is a bit more of involved test so I will explain what is going on here:
 
-    CLEAR_COMMAND = '{"gc":"g28.3 x0 y0 z0"}\n';
-    TEST_COMMAND = '{"gc":"g28.3 X5 Y4 Z1.220"}\n';
-
+    //### Start callback ###
     var reader = function (data, err) {
-      //				console.log(data);
-
-      r = JSON.parse(data); //Lets parse this every time this callback fires
-      //We will get other json data other than the {sr} so we put some logic below
-      //that looks for the sr element before we try to parse the pos* values
-      console.log(r);
-      if (r.hasOwnProperty("sr")) {
+      var r = JSON.parse(data);
+      debugJS(r)
+      if (r.sr) {
         if (r.sr.posx === 0 && r.sr.posy === 0 && r.sr.posz === 0) {
-//        if (r.sr.posx === 5 && r.sr.posy === 4 && r.sr.posz === 1.220) {
           sp.removeListener("data",reader)
           done();
         }
-      } //end if r
-    }; //end reader()
+      }
+    }; //end reader
 
-    sp.write(CLEAR_COMMAND); // clear us out to detect the change
-    sp.on('data', reader); // subscribe to the data message callback
-    sp.write(TEST_COMMAND); // fire off the true test command now
-  });
-});
-})
+    sp.on('data', reader);      // subscribe to the data message callback
+    for (var i in commands) {
+      sp.write(commands[i]+"\n");
+    }
+  }); // it
+}); // describe
+
+}); // hooks
