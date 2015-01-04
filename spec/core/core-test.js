@@ -28,7 +28,7 @@ var sp = new SerialPort(PORTNAME, {
 'use strict';
 
 //A little function to print out the json responses coming back.  Only accepts JSON
-var debug = function(msg){
+var debugJS = function(msg){
   console.log("<<DEBUG>> " + JSON.stringify(msg)) 
 }
 
