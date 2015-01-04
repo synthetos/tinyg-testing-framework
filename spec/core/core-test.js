@@ -47,7 +47,6 @@ describe('hooks', function () {
   })
 
   // test cases
-})
 
 describe('Test Connections to TinyG and Initial Comms.', function () {
   it('Should have 1 or more serial port present. @v8 @v9 @debug', function (done) {
@@ -68,15 +67,10 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
 //#############################################################################
 
 describe("Set configuration preconditions", function () {
-/*
-  var commands = ['{ej:1}\n',
-                  '{jv:5}\n',
-                  'g92 x0 y0 z0\n',
-                  '{"fb":n}\n']  //NOTE THE QUOTES @ALDEN
-*/
+
   var commands = ['{ej:1}', '{jv:5}',
                   'g92 x0 y0 z0',
-                  '{"fb":n}']   //NOTE THE QUOTES @ALDEN
+                  '{"fb":n}']   //LAST ELEMENT TRIPS done() (NOTE THE QUOTES @ALDEN)
 
   it("Set configuration preconditions @v8 @v9", function (done) {
 
@@ -87,6 +81,7 @@ describe("Set configuration preconditions", function () {
       if (r && r.r && r.r.fb) {
         sp.removeListener("data",reader)
         done();
+//      } else {
         debugJS(r)
       }
     }; //end reader
@@ -252,3 +247,4 @@ describe("Check G28.3 Set Machine Origins", function () {
     sp.write(TEST_COMMAND); // fire off the true test command now
   });
 });
+})
