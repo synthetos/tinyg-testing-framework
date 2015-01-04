@@ -15,9 +15,9 @@ var serialport = require("serialport");
 var SerialPort = serialport.SerialPort;
 
 //var PORTNAME = "/dev/cu.usbserial-DA00XCML"; //v8 alden/CNC3040
-//var PORTNAME = "/dev/cu.usbserial-DA00XKGQ"; //v8 alden/Shapeoko2
-var PORTNAME = "/dev/cu.usbserial-DA00XCMV" //v8 riley
-  //var PORTNAME = "/dev/cu.usbmodem001"  //v9
+var PORTNAME = "/dev/cu.usbserial-DA00XKGQ"; //v8 alden/Shapeoko2
+//var PORTNAME = "/dev/cu.usbserial-DA00XCMV" //v8 riley
+//var PORTNAME = "/dev/cu.usbmodem001"  //v9
 
 var sp = new SerialPort(PORTNAME, {
   baudrate: 115200,
@@ -66,56 +66,36 @@ describe('Test Connections to TinyG and Initial Comms.', function () {
 });
 
 //#############################################################################
+
+describe("Set configuration preconditions", function () {
 /*
-describe("Set configuration preconditions", function () {
-
-	var reader = function (data, err) {
-//		console.log(data);
-		r = JSON.parse(data); 	// parse this every time this callback fires
-		console.log(r);
-//		r.should.have.property('js')
-//		sp.removeListener('data', reader);
-//		done();
-	}; //end reader()
-
-	it('Set configuration preconditions @v8 @v9', function (done) {
-
-		sp.on('data', reader);				// register the callback for data and err
-		sp.write('g92 x0 y0 z0\n');
-		sp.write('{"js":1}\n');	
-//		done();	
-	});
-});
+  var commands = ['{ej:1}\n',
+                  '{jv:5}\n',
+                  'g92 x0 y0 z0\n',
+                  '{"fb":n}\n']  //NOTE THE QUOTES @ALDEN
 */
-describe("Set configuration preconditions", function () {
-  //	var G28_3_TEST_COMMAND, CLEAR_COMMAND, pdata;
+  var commands = ['{ej:1}', '{jv:5}',
+                  'g92 x0 y0 z0',
+                  '{"fb":n}']   //NOTE THE QUOTES @ALDEN
 
-  it("Set configuration preconditions @v8 @v9 @debug ", function (done) {
-    //This is a bit more of involved test so I will explain what is going on here:
+  it("Set configuration preconditions @v8 @v9", function (done) {
 
-    JSON_MODE = '{ej:1}\n';
-    JSON_VERBOSITY = '{jv:5}\n';
-    G92_RESET = 'g92 x0 y0 z0\n';
-    DONE_COMMAND = '{"fb":n}\n';  //NOTE THE QUOTES @ALDEN
-
-    
-    //#################Start callback
+    //### Start callback ###
     var reader = function (data, err) {
       //console.log(data);
-      r = JSON.parse(data);       
-     if (r.hasOwnProperty("r")  && r["r"].hasOwnProperty("fb")) {
+      var r = JSON.parse(data);
+      if (r && r.r && r.r.fb) {
         sp.removeListener("data",reader)
         done();
-      }else{
         debugJS(r)
       }
     }; //end reader
 
     sp.on('data', reader); // subscribe to the data message callback
-    sp.write(JSON_MODE);
-    sp.write(JSON_VERBOSITY);
-    sp.write(G92_RESET);
-    sp.write(DONE_COMMAND); // fire off the true test command now
+    for (var i in commands) {
+      debugJS(commands[i]+"\n")
+      sp.write(commands[i]+"\n");
+    }
   }); // end it
 }); // end Set configuration preconditions
 
@@ -167,12 +147,11 @@ describe("Checks System Group Values", function () {
   //Check all sys values are present
   it('check all sys values are present @v8', function (done) {
     var reader = function (data, err) {
-      //			console.log(data);
       sp.removeListener('data', reader);
       r = JSON.parse(data).r.sys;
       should(r).have.property("fb");
       should(r).have.property("fv");
-      //	should(r).have.property("hp");
+      // should(r).have.property("hp");
       should(r).have.property("hv");
       should(r).have.property("hv");
       should(r).have.property("ja");
@@ -260,7 +239,9 @@ describe("Check G28.3 Set Machine Origins", function () {
       //that looks for the sr element before we try to parse the pos* values
       console.log(r);
       if (r.hasOwnProperty("sr")) {
-        if (r.sr.posx === 5 && r.sr.posy === 4 && r.sr.posz === 1.220) {
+        if (r.sr.posx === 0 && r.sr.posy === 0 && r.sr.posz === 0) {
+//        if (r.sr.posx === 5 && r.sr.posy === 4 && r.sr.posz === 1.220) {
+          sp.removeListener("data",reader)
           done();
         }
       } //end if r
