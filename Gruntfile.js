@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     mochaTest: {
       test: {
         options: {
+          bail: true,
           reporter: 'spec',
           captureFile: 'results.txt', 	// Optionally capture the reporter output to a file
           quiet: false, 								// Optionally suppress output to standard out (defaults to false)
