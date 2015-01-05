@@ -8,18 +8,18 @@ module.exports = function (grunt) {
     mochaTest: {
       test: {
         options: {
-          bail: true,
+          bail: false,
           reporter: 'spec',
           captureFile: 'results.txt', 	// Optionally capture the reporter output to a file
           quiet: false, 								// Optionally suppress output to standard out (defaults to false)
           clearRequireCache: false 			// Optionally clear the require cache before running tests (defaults to false)
         },
-        src: ['spec/**/*.js']
+        src: ['spec/**/tinyg-*.js']
 //        src: ['tests/smoke/smoke.js']
       }
     }
   });
-	
+
 //  grunt.initConfig({
 //    // Configure a mochaTest task
 //    mochaTest: {
@@ -34,10 +34,10 @@ module.exports = function (grunt) {
 //      }
 //    }
 //  });
-//  
-//  
-//  
-//  
+//
+//
+//
+//
 //
 //  grunt.registerTask('v8', 'v8');
   grunt.registerTask('default', 'mochaTest');

@@ -4,7 +4,7 @@
   "dependencies": {
     "serialport": "^1.4.6",
     "sync": "^0.2.3",
-    "tinyg": "^0.3.7"
+    "tinyg": "^0.3.8"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
