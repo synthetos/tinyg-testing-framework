@@ -32,11 +32,27 @@ precondition:
       {qv: 1, x: null}
     ] # Indention on these lines just has to be at least that of the key, plus one
 
-  setValues: # This is the one that's actually used.
-    - jv: 1
-    - qv: 1
-    - ee: 1
+  # This is the one that's actually used.
+  setValues:
+    - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
+    - js: 1    # Should set JSON to strict mode-- for JS parsing
+    - fd: 0    # Should set footer depth
+    - ex: 2    # Should set flow control to RTS/CTS
+    - jv: 5    # Should set JSON verbosity to max
+    - tv: 1    # Should set text to verbose
+    - qv: 0    # Should turn queue reports off
+    - sv: 1    # Should set status report verbosity to filtered
+    - si: 250  # Should set status interval
+    - ew: 0    # Should disable window mode
+    - hv: 8    # Should set HW version to v8
 
+  reportParameters:
+    - id
+    - fv
+    - fb
+    - cv
+    - hp
+    - hv
 
 # Sys structure test data
 sys:
@@ -70,19 +86,79 @@ setParameterTests:
   # give an null value for "returns" (or give neither "exists" or "returns") to match null or undefined response
   # give a "status" value to match *that* non-zero status as success
 
-  - parameters:
-      # Here's a list of parameters that if we set it to 1, we get back 1, witout an error
-      - jv
+  - parameter: ee
     value: 1
     returns: 1
+
+  - parameter: ee
+    value: 0
+    returns: 0
+
+  - parameter: js
+    value: 1
+    returns: 1
+
+  - parameter: fd
+    value: 0
+    returns: 0
+
+  - parameter: ex
+    value: 2
+    returns: 2
+
+  - parameter: jv
+    value: 1
+    returns: 1
+
+  - parameter: jv
+    value: 2
+    returns: 2
+
+  - parameter: jv
+    value: 3
+    returns: 3
+
+  - parameter: jv
+    value: 4
+    returns: 4
+
+  - parameter: jv
+    value: 5
+    returns: 5
+
+  - parameter: tv
+    value: 1
+    returns: 1
+
+  - parameter: qv
+    value: 0
+    returns: 0
+
+  - parameter: sv
+    value: 1
+    returns: 1
+
+  # - parameters:
+  #     # Here's a list of parameters that if we set it to 1, we get back 1, witout an error
+  #     - jv
+  #   value: 1
+  #   returns: 1
 
   - parameter: si
     value: 50
     returns: [100, 1000]
 
-  - parameter: ee
-    value: 1
-    returns: 1
+  - parameter: si
+    value: 250
+    returns: 250
+
+  - parameter: ew
+    value: 0
+    returns: 0
+
+  - parameter: hv
+    value: 8
+    returns: 8
 
   - parameter: madeup
     value: 1

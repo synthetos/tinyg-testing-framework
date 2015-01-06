@@ -47,9 +47,33 @@ before(function (done) {
       g.open(portPath, {dataPortPath : dataportPath, dontSetup: true});
       g.on('open', function (err) {
         if (err) { done(err); }
-        g.set(testData.precondition.setValues).finally(function () {
+        var promise = g.set(testData.precondition.setValues);
+
+        promise = promise.then(function () {
+          console.log("\nTest parameters:")
+        });
+
+        testData.precondition.reportParameters.forEach(function (p) {
+          promise = promise.then(function () {
+            return g.get(p).then(
+              function (v) {
+                console.log("  " + p + "=" + v);
+              },
+              function (e) {
+                console.log("  " + p + "=null");
+                return Q.fcall(function () {}); // Return an empty promise to "ignore the error"
+              }
+            );
+          });
+        });
+
+        promise = promise.then(function () {
+          console.log("--\n\n")
+        }).finally(function () {
           done();
         });
+
+        return promise;
       });
 
     } else if (results.length > 1) {
@@ -85,9 +109,9 @@ sp.write('{"js":1}\n');
 */
 
 // DEBUG:
- g.on('data', function (v) {
-   console.log(v);
- });
+ // g.on('data', function (v) {
+ //   console.log(v);
+ // });
 
 //#############################################################################
 
@@ -103,38 +127,46 @@ describe("Check firmware and hardware numbers for up to date values", function (
     return g.get("hv").should.eventually.be.above(testData.min_hv);
 	});
 
-  // Set parameter tests
-  testData.setParameterTests.forEach(function(v) {
-    if (v.parameters === undefined){
-        v.parameters = [v.parameter];
-    }
-    v.parameters.forEach(function(p) {
-      it('Setting ' + p + ' to ' + v.value + ' does what we expect @v8 @v9', function () {
-        // set() returns a promise. If we put a function in the promise.catch(),
-        // it will give us a TinyGError object, with the full response object in
-        // the data member.
-        // It will only throw an error if the status is non-zero. If the status is
-        // zero, it will resolve with the value the TinyG sent back.
-        var promise = g.set(p, v.value).catch(function (e) {
-          // e.data contains our full response
-          if (e.data.f[0] !== (v.status || 0)) {
-            throw(new Error(util.format("Bad response, expected status (%d): ", v.status, e.data)));
+  describe("Check Parameters", function () {
+
+    // Set parameter tests
+    testData.setParameterTests.forEach(function(v) {
+      if (v.parameters === undefined){
+          v.parameters = [v.parameter];
+      }
+      if (v.status === undefined){
+        v.status = 0;
+      }
+
+      v.parameters.forEach(function(p) {
+        it('Setting ' + p + ' to ' + v.value + ' does what we expect @v8 @v9', function () {
+          // set() returns a promise. If we put a function in the promise.catch(),
+          // it will give us a TinyGError object, with the full response object in
+          // the data member.
+          // It will only throw an error if the status is non-zero. If the status is
+          // zero, it will resolve with the value the TinyG sent back.
+          var promise = g.set(p, v.value).catch(function (e) {
+            // e.data contains our full response
+            if (e.data.f[0] !== (v.status || 0)) {
+              throw(new Error(util.format("Bad response, expected status (%d), got response: ", v.status, e.data)));
+            }
+          })
+
+          if (util.isArray(v.returns)) {
+            promise.should.eventually.be.within(v.returns);
+          } else if (v.exists === true) {
+            promise.should.eventually.exist;
+          } else if (v.returns === undefined || v.returns === null) {
+            promise.should.eventually.not.exist;
+          } else {
+            promise.should.eventually.equal(v.returns);
           }
-        })
 
-        if (util.isArray(v.returns)) {
-          promise.should.eventually.be.within(v.returns);
-        } else if (v.exists === true) {
-          promise.should.eventually.exist;
-        } else if (v.returns === undefined || v.returns === null) {
-          promise.should.eventually.not.exist;
-        } else {
-          promise.should.eventually.equal(v.returns);
-        }
-
-        return promise;
+          return promise;
+        });
       });
     });
+
   });
 
   describe("Checks System Group Values", function () {
