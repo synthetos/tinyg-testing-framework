@@ -2,11 +2,20 @@
 /*jslint node: true */
 /*jshint -W097 */
 
-var should = require("should");
+var util = require("util");
+var chai = require("chai");
+var chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+chai.should();
+
 var sync = require("sync");
+var Q = require('Q');
+// Q.longStackSupport = true;
 
 var TinyG = require("tinyg");
 var g = new TinyG();
+
+var testData = require("./tinyg-connect-1.json");
 
 var portPath, dataportPath;
 
@@ -27,7 +36,9 @@ before(function (done) {
       g.open(portPath, {dataPortPath : dataportPath, dontSetup: true});
       g.on('open', function (err) {
         if (err) { done(err); }
-        done();
+        g.set(testData.precondition.setValues).finally(function () {
+          done();
+        });
       });
 
     } else if (results.length > 1) {
@@ -67,87 +78,24 @@ sp.write('{"js":1}\n');
 //   console.log(v);
 // });
 
-function testForValue(v, done, test) {
-  var configChanged = function (r) {
-    if (v in r) {
-      // Remove the listener *first*
-      g.removeListener('configChanged', configChanged);
-
-      try {
-        test(r[v]);
-        done();
-      } catch(e) {
-        done(e);
-      }
-    }
-  }
-
-  g.on('configChanged', configChanged);
-
-  g.write('{'+v+':n}\n');
-}
-
-
-function testResultOf(cmd, done, test) {
-  var configChanged = function (r) {
-    if (v in r) {
-      // Remove the listener *first*
-      g.removeListener('configChanged', configChanged);
-
-      try {
-        test(r);
-        done();
-      } catch(e) {
-        done(e);
-      }
-    }
-  }
-
-  g.on('configChanged', configChanged);
-
-  g.write(cmd+'\n');
-}
 //#############################################################################
 
 describe("Check firmware and hardware numbers for up to date values", function () {
 
 	//Firmware build response test
-	it('Checks firmware build number @v8 @v9', function (done) {
-    testForValue("fb", done, function(v) { v.should.be.above(80); });
+	it('Checks firmware build number @v8 @v9', function () {
+    return g.get("fb").should.eventually.be.above(testData.min_fb);
 	});
 
   //Hardware Value Test
-  it('Checks Hardwave Value @v8 @v9', function (done) {
-    testForValue("hv", done, function(v) { v.should.be.above(6); });
+  it('Checks Hardwave Value @v8 @v9', function () {
+    return g.get("hv").should.eventually.be.above(testData.min_hv);
 	});
 
   describe("Checks System Group Values", function () {
     //Check all sys values are present
-    it('check all sys values are present @v8', function (done) {
-      testForValue("sys", done, function(r) {
-        should(r).have.property("fb");
-        should(r).have.property("fv");
-        // should(r).have.property("hp");
-        should(r).have.property("hv");
-        should(r).have.property("hv");
-        should(r).have.property("ja");
-        should(r).have.property("ct");
-        //  should(r).have.property("sl");
-        should(r).have.property("mt");
-        should(r).have.property("ej");
-        should(r).have.property("jv");
-        //  should(r).have.property("js");
-        should(r).have.property("tv");
-        should(r).have.property("qv");
-        should(r).have.property("sv");
-        should(r).have.property("si");
-        //  should(r).have.property("spi"); //v9
-        should(r).have.property("gpl");
-        should(r).have.property("gun");
-        should(r).have.property("gco");
-        should(r).have.property("gpa");
-        should(r).have.property("gdi");
-      });
+    it('check all sys values are present @v8', function () {
+      return g.get("sys").should.eventually.contain.keys(testData.sys.propertyList);
     });
   });
 
