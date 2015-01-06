@@ -1,0 +1,89 @@
+# Example test document.
+---
+
+# Minimums:
+min_fb: 80
+min_hv: 6
+
+# Preconditions for all tests:
+precondition:
+  setValuesExample1: # Example of passing it as JSON-style chunks
+    # This is the same as the json [{"jv": 1}, {"qv": 1}]
+    - {jv: 1}
+    - {qv: 1}
+
+  setValuesExample2: # Example of passing it as JSON-style chunks
+    # This is the same as the json [{"jv": 1}, {"qv": 1}]
+    - {jv: 1}
+    - {qv: 1, x: null}
+
+  setValuesExample3: # Another similar example, but without the brackets, since having key: value implies an dictionary
+    # The following translates to the javascript [{jv:1}, {qv:1, x:null}]
+    - jv: 1 # Note that the space after the colon is necessary!
+    - qv: 1 # The -<space> means that this is the next entry in an array
+      x: null # **Without** the -<space>, we are adding another key to the same dictionary.
+
+  # Another example: This is the same as setValuesExample2:
+  setValuesExample4: [{jv: 1}, {qv: 1, x: null}]
+
+  # Another example: This is the same as setValuesExample2:
+  setValuesExample5: [
+      {jv: 1},
+      {qv: 1, x: null}
+    ] # Indention on these lines just has to be at least that of the key, plus one
+
+  setValues: # This is the one that's actually used.
+    - jv: 1
+    - qv: 1
+    - ee: 1
+
+
+# Sys structure test data
+sys:
+  propertyList:
+    - fb
+    - fv
+    - hv
+    - ja
+    - ct
+    - mt
+    - ej
+    - jv
+    - tv
+    - qv
+    - sv
+    - si
+    - gpl
+    - gun
+    - gco
+    - gpa
+    - gdi
+
+setParameterTests:
+  # Required: ("parameters" as an array OR "parameter" as a string), "value" as the value to send
+  # Optional: "returns" OR "exists" (not both), status (assumes zero if missing)
+
+  # Options for resturns, exists, and status:
+  # give an array for "returns" for an inclusive range: returns: [0, 10] matches 0 <= x <= 10
+  # give an non-null value for "returns" to match exactly
+  # give an non-null value for "exists" to match any non-null response
+  # give an null value for "returns" (or give neither "exists" or "returns") to match null or undefined response
+  # give a "status" value to match *that* non-zero status as success
+
+  - parameters:
+      # Here's a list of parameters that if we set it to 1, we get back 1, witout an error
+      - jv
+    value: 1
+    returns: 1
+
+  - parameter: si
+    value: 50
+    returns: [100, 1000]
+
+  - parameter: ee
+    value: 1
+    returns: 1
+
+  - parameter: madeup
+    value: 1
+    status: 1

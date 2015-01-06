@@ -2,20 +2,31 @@
 /*jslint node: true */
 /*jshint -W097 */
 
+// Built-in libraries:
 var util = require("util");
+var fs   = require('fs');
+
+// Chai and Chai-as-promised
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
 
-var sync = require("sync");
+// Q for promises
 var Q = require('Q');
 // Q.longStackSupport = true;
 
+// YAML, for loading the data
+var yaml = require('js-yaml');
+
+
+// And last but not least, TinyG:
 var TinyG = require("tinyg");
 var g = new TinyG();
 
-var testData = require("./tinyg-connect-1.json");
+var testData = yaml.safeLoad(fs.readFileSync('spec/core/tinyg-connect-1.yml', 'utf8'));
+// Uncomment to debug the testData:
+console.log("testData debug:\n", util.inspect(testData, {depth: null}));
 
 var portPath, dataportPath;
 
@@ -74,9 +85,9 @@ sp.write('{"js":1}\n');
 */
 
 // DEBUG:
-// g.on('data', function (v) {
-//   console.log(v);
-// });
+ g.on('data', function (v) {
+   console.log(v);
+ });
 
 //#############################################################################
 
@@ -91,6 +102,40 @@ describe("Check firmware and hardware numbers for up to date values", function (
   it('Checks Hardwave Value @v8 @v9', function () {
     return g.get("hv").should.eventually.be.above(testData.min_hv);
 	});
+
+  // Set parameter tests
+  testData.setParameterTests.forEach(function(v) {
+    if (v.parameters === undefined){
+        v.parameters = [v.parameter];
+    }
+    v.parameters.forEach(function(p) {
+      it('Setting ' + p + ' to ' + v.value + ' does what we expect @v8 @v9', function () {
+        // set() returns a promise. If we put a function in the promise.catch(),
+        // it will give us a TinyGError object, with the full response object in
+        // the data member.
+        // It will only throw an error if the status is non-zero. If the status is
+        // zero, it will resolve with the value the TinyG sent back.
+        var promise = g.set(p, v.value).catch(function (e) {
+          // e.data contains our full response
+          if (e.data.f[0] !== (v.status || 0)) {
+            throw(new Error(util.format("Bad response, expected status (%d): ", v.status, e.data)));
+          }
+        })
+
+        if (util.isArray(v.returns)) {
+          promise.should.eventually.be.within(v.returns);
+        } else if (v.exists === true) {
+          promise.should.eventually.exist;
+        } else if (v.returns === undefined || v.returns === null) {
+          promise.should.eventually.not.exist;
+        } else {
+          promise.should.eventually.equal(v.returns);
+        }
+
+        return promise;
+      });
+    });
+  });
 
   describe("Checks System Group Values", function () {
     //Check all sys values are present
