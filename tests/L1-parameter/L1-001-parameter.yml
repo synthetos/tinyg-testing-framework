@@ -1,0 +1,165 @@
+# Example test document.
+---
+
+# Minimums:
+min_fb: 80
+min_hv: 6
+
+# Preconditions for all tests:
+precondition:
+  setValuesExample1: # Example of passing it as JSON-style chunks
+    # This is the same as the json [{"jv": 1}, {"qv": 1}]
+    - {jv: 1}
+    - {qv: 1}
+
+  setValuesExample2: # Example of passing it as JSON-style chunks
+    # This is the same as the json [{"jv": 1}, {"qv": 1}]
+    - {jv: 1}
+    - {qv: 1, x: null}
+
+  setValuesExample3: # Another similar example, but without the brackets, since having key: value implies an dictionary
+    # The following translates to the javascript [{jv:1}, {qv:1, x:null}]
+    - jv: 1 # Note that the space after the colon is necessary!
+    - qv: 1 # The -<space> means that this is the next entry in an array
+      x: null # **Without** the -<space>, we are adding another key to the same dictionary.
+
+  # Another example: This is the same as setValuesExample2:
+  setValuesExample4: [{jv: 1}, {qv: 1, x: null}]
+
+  # Another example: This is the same as setValuesExample2:
+  setValuesExample5: [
+      {jv: 1},
+      {qv: 1, x: null}
+    ] # Indention on these lines just has to be at least that of the key, plus one
+
+  # This is the one that's actually used.
+  setValues:
+    - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
+    - js: 1    # Should set JSON to strict mode-- for JS parsing
+    - fd: 0    # Should set footer depth
+    - ex: 2    # Should set flow control to RTS/CTS
+    - jv: 5    # Should set JSON verbosity to max
+    - tv: 1    # Should set text to verbose
+    - qv: 0    # Should turn queue reports off
+    - sv: 1    # Should set status report verbosity to filtered
+    - si: 250  # Should set status interval
+    - ew: 0    # Should disable window mode
+    - hv: 8    # Should set HW version to v8
+
+  reportParameters:
+    - id
+    - fv
+    - fb
+    - cv
+    - hp
+    - hv
+
+# Sys structure test data
+sys:
+  propertyList:
+    - fb
+    - fv
+    - hv
+    - ja
+    - ct
+    - mt
+    - ej
+    - jv
+    - tv
+    - qv
+    - sv
+    - si
+    - gpl
+    - gun
+    - gco
+    - gpa
+    - gdi
+
+setParameterTests:
+  # Required: ("parameters" as an array OR "parameter" as a string), "value" as the value to send
+  # Optional: "returns" OR "exists" (not both), status (assumes zero if missing)
+
+  # Options for resturns, exists, and status:
+  # give an array for "returns" for an inclusive range: returns: [0, 10] matches 0 <= x <= 10
+  # give an non-null value for "returns" to match exactly
+  # give an non-null value for "exists" to match any non-null response
+  # give an null value for "returns" (or give neither "exists" or "returns") to match null or undefined response
+  # give a "status" value to match *that* non-zero status as success
+
+  - parameter: ee
+    value: 1
+    returns: 1
+
+  - parameter: ee
+    value: 0
+    returns: 0
+
+  - parameter: js
+    value: 1
+    returns: 1
+
+  - parameter: fd
+    value: 0
+    returns: 0
+
+  - parameter: ex
+    value: 2
+    returns: 2
+
+  - parameter: jv
+    value: 1
+    returns: 1
+
+  - parameter: jv
+    value: 2
+    returns: 2
+
+  - parameter: jv
+    value: 3
+    returns: 3
+
+  - parameter: jv
+    value: 4
+    returns: 4
+
+  - parameter: jv
+    value: 5
+    returns: 5
+
+  - parameter: tv
+    value: 1
+    returns: 1
+
+  - parameter: qv
+    value: 0
+    returns: 0
+
+  - parameter: sv
+    value: 1
+    returns: 1
+
+  # - parameters:
+  #     # Here's a list of parameters that if we set it to 1, we get back 1, witout an error
+  #     - jv
+  #   value: 1
+  #   returns: 1
+
+  - parameter: si
+    value: 50
+    returns: [100, 1000]
+
+  - parameter: si
+    value: 250
+    returns: 250
+
+  - parameter: ew
+    value: 0
+    returns: 0
+
+  - parameter: hv
+    value: 8
+    returns: 8
+
+  - parameter: madeup
+    value: 1
+    status: 100
