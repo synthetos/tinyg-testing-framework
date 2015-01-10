@@ -133,7 +133,7 @@ describe("Check for up-to-date firmware and hardware", function () {
   });
 
   //Hardware Value Test
-  it('Checks hardwave version @v8 @v9', function () {
+  it('Checks hardware version @v8 @v9', function () {
     return g.get("hv").should.eventually.be.above(testData.min_hv);
   });
 });

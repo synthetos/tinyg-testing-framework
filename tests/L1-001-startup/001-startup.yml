@@ -65,9 +65,18 @@ setParameterTests:
   # give exactKeys as an array of key names, and there must be exactly those keys in the response, no more, no less
   # give a "status" value to match *that* non-zero status as success
 
+  - parameter: unsupported
+    value: 1
+    status: 100
+
+  ### Communications and formatting ###
   - parameter: ee
     value: 1
     returns: 1
+
+  - parameter: ee
+    value: -1
+    status: 100
 
   - parameter: ee
     value: 0
@@ -138,10 +147,6 @@ setParameterTests:
   - parameter: hv
     value: 8
     returns: 8
-
-  - parameter: madeup
-    value: 1
-    status: 1
 
   - description: "Setting motor %s to known values"
     parameters: [1, 2, 3, 4, 5, 6]
