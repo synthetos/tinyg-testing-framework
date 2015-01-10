@@ -1,10 +1,10 @@
-/* CORE TESTS -  */
+/* L1-001-parameter */
 /*jslint node: true */
-/*jshint -W097 */
 
+//### Libraries and dependencies ###
 // Built-in libraries:
 var util = require("util");
-var fs   = require('fs');
+var fs = require('fs');
 
 // Chai and Chai-as-promised
 var chai = require("chai");
@@ -12,25 +12,34 @@ var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
 
-// Q for promises
-var Q = require('Q');
+var Q = require('Q'); // Q for promises
 // Q.longStackSupport = true;
 
 // YAML, for loading the data
 var yaml = require('js-yaml');
 
-
 // And last but not least, TinyG:
 var TinyG = require("tinyg");
 var g = new TinyG();
 
-var testData = yaml.safeLoad(fs.readFileSync('spec/core/tinyg-connect-1.yml', 'utf8'));
-// Uncomment to debug the testData:
-console.log("testData debug:\n", util.inspect(testData, {depth: null}));
 
+//### Load test data from YAML file
+
+var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
+// Uncomment to debug the testData:
+//console.log("testData debug:\n", util.inspect(testData, { depth: null }));
+/*
+console.log("testData debug:\n", util.inspect(testData, {
+  depth: null
+}));
+*/
 var portPath, dataportPath;
 
 'use strict';
+
+//#############################################################################
+//#### Setup - open a new TinyG USB port or use it if it's already open #######
+//#############################################################################
 
 before(function (done) {
   g.list(function (err, results) {
@@ -44,9 +53,15 @@ before(function (done) {
         dataportPath = results[0].dataPortPath;
       }
 
-      g.open(portPath, {dataPortPath : dataportPath, dontSetup: true});
+      g.open(portPath, {
+        dataPortPath: dataportPath,
+        dontSetup: true
+      });
       g.on('open', function (err) {
-        if (err) { done(err); }
+        if (err) {
+          done(err);
+        }
+        console.log("Setting precondition communication and system parameters");
         var promise = g.set(testData.precondition.setValues);
 
         promise = promise.then(function () {
@@ -68,7 +83,7 @@ before(function (done) {
         });
 
         promise = promise.then(function () {
-          console.log("--\n\n")
+          console.log("--\n")
         }).finally(function () {
           done();
         });
@@ -93,53 +108,54 @@ before(function (done) {
 });
 
 
-after(function(done) {
+after(function (done) {
   g.on('close', function (err) {
     done(err);
   })
   g.close();
 });
 
-/*
-
-sp.on('data', reader);
-sp.write('g92 x0 y0 z0\n');
-sp.write('{"js":1}\n');
-
-*/
-
 // DEBUG:
- // g.on('data', function (v) {
- //   console.log(v);
- // });
+// g.on('data', function (v) {
+//   console.log(v);
+// });
 
 //#############################################################################
+//#### Preliminary Tests
+//#############################################################################
 
-describe("Check firmware and hardware numbers for up to date values", function () {
+describe("Create an ID record for this test run", function () {
 
-	//Firmware build response test
-	it('Checks firmware build number @v8 @v9', function () {
+  //Firmware build response test
+  it('Checks firmware build number @v8 @v9', function () {
     return g.get("fb").should.eventually.be.above(testData.min_fb);
-	});
+  });
 
   //Hardware Value Test
-  it('Checks Hardwave Value @v8 @v9', function () {
+  it('Checks hardwave version @v8 @v9', function () {
     return g.get("hv").should.eventually.be.above(testData.min_hv);
-	});
+  });
+
+  //Hardware Value Test
+  it('Gets board ID @v8 @v9', function () {
+    //    return g.get("id").should.eventually.be.above(testData.min_hv);
+    //    console.log(g.get("id"))
+    return g.get("id").console.log()
+  });
 });
 
-describe("Check Parameters", function () {
+describe("Setup system parameters for testing", function () {
 
   // Set parameter tests
-  testData.setParameterTests.forEach(function(v) {
-    if (v.parameters === undefined){
-        v.parameters = [v.parameter];
+  testData.setParameterTests.forEach(function (v) {
+    if (v.parameters === undefined) {
+      v.parameters = [v.parameter];
     }
-    if (v.status === undefined){
+    if (v.status === undefined) {
       v.status = 0;
     }
 
-    v.parameters.forEach(function(p) {
+    v.parameters.forEach(function (p) {
       var description = 'Setting ' + p + ' to ' + util.inspect(v.value) + ' does what we expect @v8 @v9';
       if (v.description) {
         description = util.format(v.description, p);
@@ -153,7 +169,7 @@ describe("Check Parameters", function () {
         var promise = g.set(p, v.value).catch(function (e) {
           // e.data contains our full response
           if (e.data.f[0] !== (v.status || 0)) {
-            throw(new Error(util.format("Bad response, expected status (%d), got response: ", v.status, e.data)));
+            throw (new Error(util.format("Bad response, expected status (%d), got response: ", v.status, e.data)));
           }
         })
 

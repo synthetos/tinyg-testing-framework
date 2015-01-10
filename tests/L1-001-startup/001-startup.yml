@@ -4,36 +4,11 @@
 # Minimums:
 min_fb: 80
 min_hv: 6
+min_id: 0
 
 # Preconditions for all tests:
 precondition:
-  setValuesExample1: # Example of passing it as JSON-style chunks
-    # This is the same as the json [{"jv": 1}, {"qv": 1}]
-    - {jv: 1}
-    - {qv: 1}
-
-  setValuesExample2: # Example of passing it as JSON-style chunks
-    # This is the same as the json [{"jv": 1}, {"qv": 1}]
-    - {jv: 1}
-    - {qv: 1, x: null}
-
-  setValuesExample3: # Another similar example, but without the brackets, since having key: value implies an dictionary
-    # The following translates to the javascript [{jv:1}, {qv:1, x:null}]
-    - jv: 1 # Note that the space after the colon is necessary!
-    - qv: 1 # The -<space> means that this is the next entry in an array
-      x: null # **Without** the -<space>, we are adding another key to the same dictionary.
-
-  # Another example: This is the same as setValuesExample2:
-  setValuesExample4: [{jv: 1}, {qv: 1, x: null}]
-
-  # Another example: This is the same as setValuesExample2:
-  setValuesExample5: [
-      {jv: 1},
-      {qv: 1, x: null}
-    ] # Indention on these lines just has to be at least that of the key, plus one
-
-  # This is the one that's actually used.
-  setValues:
+  setValues: 
     - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
     - js: 1    # Should set JSON to strict mode-- for JS parsing
     - fd: 0    # Should set footer depth
@@ -45,7 +20,7 @@ precondition:
     - si: 250  # Should set status interval
     - ew: 0    # Should disable window mode
     - hv: 8    # Should set HW version to v8
-
+    
   reportParameters:
     - id
     - fv
@@ -54,7 +29,7 @@ precondition:
     - hp
     - hv
 
-# Sys structure test data
+# System structure test data
 sys:
   propertyList:
     - fb
@@ -69,6 +44,9 @@ sys:
     - qv
     - sv
     - si
+
+gcodeDefaults:
+  propertyList:
     - gpl
     - gun
     - gco

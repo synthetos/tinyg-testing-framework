@@ -15,7 +15,7 @@ module.exports = function (grunt) {
           clearRequireCache: false 			// Optionally clear the require cache before running tests (defaults to false)
         },
 //        src: ['spec/**/tinyg-*.js']
-        src: ['tests/L1*/*.js']
+        src: ['tests/**/*.js']
       }
     }
   });
