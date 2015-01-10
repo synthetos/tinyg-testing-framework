@@ -8,6 +8,7 @@ min_hv: 6
 # Preconditions for all tests (runs from before() )
 precondition:
   setValues: 
+    - js: 1    # Should set JSON to strict mode-- for JS parsing
     - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
     - js: 1    # Should set JSON to strict mode-- for JS parsing
     - fd: 0    # Should set footer depth
@@ -65,8 +66,8 @@ setParameterTests:
   # give exactKeys as an array of key names, and there must be exactly those keys in the response, no more, no less
   # give a "status" value to match *that* non-zero status as success
 
-  - parameter: unsupported
-    value: 1
+  - parameter: xxx  # this test fails
+    value: null
     status: 100
 
   ### Communications and formatting ###
