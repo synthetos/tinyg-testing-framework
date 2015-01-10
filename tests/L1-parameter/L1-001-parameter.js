@@ -1,35 +1,36 @@
-/* L1-v8-parameter TESTS -  */
+/* CORE TESTS -  */
 /*jslint node: true */
 /*jshint -W097 */
 
 // Built-in libraries:
 var util = require("util");
-var fs = require('fs');
+var fs   = require('fs');
 
 // Chai and Chai-as-promised
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
-var Q = require('Q'); // Q for promises
+
+// Q for promises
+var Q = require('Q');
 // Q.longStackSupport = true;
 
+// YAML, for loading the data
 var yaml = require('js-yaml');
+
+
+// And last but not least, TinyG:
 var TinyG = require("tinyg");
 var g = new TinyG();
 
-// Load test data from yaml file
 var testData = yaml.safeLoad(fs.readFileSync('spec/core/tinyg-connect-1.yml', 'utf8'));
 // Uncomment to debug the testData:
-console.log("testData debug:\n", util.inspect(testData, {
-  depth: null
-}));
+console.log("testData debug:\n", util.inspect(testData, {depth: null}));
 
 var portPath, dataportPath;
 
 'use strict';
-
-//##### Setup tests #####
 
 before(function (done) {
   g.list(function (err, results) {
@@ -43,14 +44,9 @@ before(function (done) {
         dataportPath = results[0].dataPortPath;
       }
 
-      g.open(portPath, {
-        dataPortPath: dataportPath,
-        dontSetup: true
-      });
+      g.open(portPath, {dataPortPath : dataportPath, dontSetup: true});
       g.on('open', function (err) {
-        if (err) {
-          done(err);
-        }
+        if (err) { done(err); }
         var promise = g.set(testData.precondition.setValues);
 
         promise = promise.then(function () {
@@ -96,91 +92,100 @@ before(function (done) {
   });
 });
 
-//##### Cleanup tests #####
 
-after(function (done) {
+after(function(done) {
   g.on('close', function (err) {
     done(err);
   })
   g.close();
 });
 
-//###### Tests #######################################################################
+/*
+
+sp.on('data', reader);
+sp.write('g92 x0 y0 z0\n');
+sp.write('{"js":1}\n');
+
+*/
+
+// DEBUG:
+ // g.on('data', function (v) {
+ //   console.log(v);
+ // });
+
+//#############################################################################
 
 describe("Check firmware and hardware numbers for up to date values", function () {
 
-  // Preamble code
-  it('Checks firmware build number @v8 @v9', function () {
+	//Firmware build response test
+	it('Checks firmware build number @v8 @v9', function () {
     return g.get("fb").should.eventually.be.above(testData.min_fb);
-  });
+	});
 
+  //Hardware Value Test
   it('Checks Hardwave Value @v8 @v9', function () {
     return g.get("hv").should.eventually.be.above(testData.min_hv);
-  });
+	});
+});
 
-  it('Reports System Parameters @v8 @v9', function () {
-    testData.reportParameters.forEach(function (v) {
-      if (v.parameters === undefined) {
+describe("Check Parameters", function () {
+
+  // Set parameter tests
+  testData.setParameterTests.forEach(function(v) {
+    if (v.parameters === undefined){
         v.parameters = [v.parameter];
+    }
+    if (v.status === undefined){
+      v.status = 0;
+    }
+
+    v.parameters.forEach(function(p) {
+      var description = 'Setting ' + p + ' to ' + util.inspect(v.value) + ' does what we expect @v8 @v9';
+      if (v.description) {
+        description = util.format(v.description, p);
       }
-      if (v.status === undefined) {
-        v.status = 0;
-      }
-      v.parameters.forEach(function (p) {
-
-    });
-
-  
-  //Actual tests
-  
-  
-  describe("Check System Parameters", function () {
-
-    // Set parameter tests
-    testData.setParameterTests.forEach(function (v) {
-      if (v.parameters === undefined) {
-        v.parameters = [v.parameter];
-      }
-      if (v.status === undefined) {
-        v.status = 0;
-      }
-
-      v.parameters.forEach(function (p) {
-        it('Setting ' + p + ' to ' + v.value + ' does what we expect @v8 @v9', function () {
-          // set() returns a promise. If we put a function in the promise.catch(),
-          // it will give us a TinyGError object, with the full response object in
-          // the data member.
-          // It will only throw an error if the status is non-zero. If the status is
-          // zero, it will resolve with the value the TinyG sent back.
-          var promise = g.set(p, v.value).catch(function (e) {
-            // e.data contains our full response
-            if (e.data.f[0] !== (v.status || 0)) {
-              throw (new Error(util.format("Bad response, expected status (%d), got response: ", v.status, e.data)));
-            }
-          })
-
-          if (util.isArray(v.returns)) {
-            promise.should.eventually.be.within(v.returns);
-          } else if (v.exists === true) {
-            promise.should.eventually.exist;
-          } else if (v.returns === undefined || v.returns === null) {
-            promise.should.eventually.not.exist;
-          } else {
-            promise.should.eventually.equal(v.returns);
+      it(description, function () {
+        // set() returns a promise. If we put a function in the promise.catch(),
+        // it will give us a TinyGError object, with the full response object in
+        // the data member.
+        // It will only throw an error if the status is non-zero. If the status is
+        // zero, it will resolve with the value the TinyG sent back.
+        var promise = g.set(p, v.value).catch(function (e) {
+          // e.data contains our full response
+          if (e.data.f[0] !== (v.status || 0)) {
+            throw(new Error(util.format("Bad response, expected status (%d), got response: ", v.status, e.data)));
           }
+        })
 
-          return promise;
-        });
+        if (util.isArray(v.returns)) {
+          promise = promise.should.eventually.be.within(v.returns[0], v.returns[1]);
+        } else if (v.exists === true) {
+          promise = promise.should.eventually.exist;
+        } else if (v.returns === undefined || v.returns === null) {
+          // If we have a *Keys, then we actually implicitly check for exists.
+          if (!v.exactKeys && !v.exactKeys) {
+            promise = promise.should.eventually.not.exist;
+          }
+        } else {
+          promise = promise.should.eventually.eql(v.returns);
+        }
+
+        if (util.isArray(v.exactKeys)) {
+          promise = promise.should.eventually.have.keys(v.exactKeys);
+        } else if (util.isArray(v.hasKeys)) {
+          promise = promise.should.eventually.include.keys(v.hasKeys);
+        }
+
+        return promise;
       });
     });
-
   });
 
-  describe("Checks System Group Values", function () {
-    //Check all sys values are present
-    it('check all sys values are present @v8', function () {
-      return g.get("sys").should.eventually.contain.keys(testData.sys.propertyList);
-    });
-  });
+});
 
+describe("Checks System Group Values", function () {
+  //Check all sys values are present
+  it('check all sys values are present @v8', function () {
+    return g.get("sys").should.eventually.contain.keys(testData.sys.propertyList);
+  });
 });

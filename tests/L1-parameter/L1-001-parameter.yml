@@ -77,13 +77,15 @@ sys:
 
 setParameterTests:
   # Required: ("parameters" as an array OR "parameter" as a string), "value" as the value to send
-  # Optional: "returns" OR "exists" (not both), status (assumes zero if missing)
+  # Optional: "returns" OR "exists" OR "hasKeys" OR "exactKeys" (only one), status (assumes zero if missing)
 
-  # Options for resturns, exists, and status:
+  # Options for resturns, exists, hasKeys, exactKeys, and status:
   # give an array for "returns" for an inclusive range: returns: [0, 10] matches 0 <= x <= 10
   # give an non-null value for "returns" to match exactly
   # give an non-null value for "exists" to match any non-null response
-  # give an null value for "returns" (or give neither "exists" or "returns") to match null or undefined response
+  # give an null value for "returns" (or give neither "exists" or "returns" or "*Keys") to match null or undefined response
+  # give hasKeys as an array of key names that must exist, but other keys may exist
+  # give exactKeys as an array of key names, and there must be exactly those keys in the response, no more, no less
   # give a "status" value to match *that* non-zero status as success
 
   - parameter: ee
@@ -162,4 +164,52 @@ setParameterTests:
 
   - parameter: madeup
     value: 1
-    status: 100
+    status: 1
+
+  - description: "Setting motor %s to known values"
+    parameters: [1, 2, 3, 4, 5, 6]
+    value: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2}
+    returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2}
+    status: 0
+
+  - description: "Setting motor %s with additional madeup key"
+    parameters: [1, 2, 3, 4, 5, 6]
+    value: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2, madeup: 1}
+    returns: null
+    status: 1
+
+  - description: "Getting motor %s returns correct data"
+    parameters: [1, 2, 3, 4, 5, 6]
+    value: null
+    returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8}
+    status: 0
+
+
+  - description: "Setting axis %s to known values"
+    parameters: [x, y, z]
+    value: {am: 1, vm: 1000, fr: 1000, tn: 0, tm: 150, jm: 20, jh: 20, jd: 0.05, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
+    returns: {am: 1, vm: 1000, fr: 1000, tn: 0, tm: 150, jm: 20, jh: 20, jd: 0.05, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
+    status: 0
+
+  - description: "Setting axis %s to known values"
+    parameters: [a, b, c]
+    value: {am: 3, vm: 288000, fr: 288000, tn: -1, tm: -1, jm: 5760, jh: 5760, jd: 0.05, ra: 0.198943449, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
+    returns: {am: 3, vm: 288000, fr: 288000, tn: -1, tm: -1, jm: 5760, jh: 5760, jd: 0.05, ra: 0.199, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
+    status: 0
+
+  - description: "Getting axis %s returns correct data"
+    parameters: [x, y, z]
+    value: null
+    returns: {am: 1, vm: 1000, fr: 1000, tn: 0, tm: 150, jm: 20, jh: 20, jd: 0.05, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
+    status: 0
+
+  - description: "Getting axis %s returns correct data"
+    parameters: [a, b, c]
+    value: null
+    returns: {am: 3, vm: 288000, fr: 288000, tn: -1, tm: -1, jm: 5760, jh: 5760, jd: 0.05, ra: 0.199, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
+    status: 0
+
+  - description: Setup status reports
+    parameter: sr
+    value: {line: true, posx: true, posy: true, posz: true, posa: true, feed: true, vel: true, unit: true, coor: true, dist: true, frmo: true, momo: true, stat: true}
+    exactKeys: [line, posx, posy, posz, posa, feed, vel, unit, coor, dist, frmo, momo, stat]
