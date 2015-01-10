@@ -4,9 +4,8 @@
 # Minimums:
 min_fb: 80
 min_hv: 6
-min_id: 0
 
-# Preconditions for all tests:
+# Preconditions for all tests (runs from before() )
 precondition:
   setValues: 
     - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
@@ -20,7 +19,7 @@ precondition:
     - si: 250  # Should set status interval
     - ew: 0    # Should disable window mode
     - hv: 8    # Should set HW version to v8
-    
+
   reportParameters:
     - id
     - fv
@@ -161,7 +160,6 @@ setParameterTests:
     value: null
     returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8}
     status: 0
-
 
   - description: "Setting axis %s to known values"
     parameters: [x, y, z]

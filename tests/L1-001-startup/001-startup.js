@@ -2,6 +2,7 @@
 /*jslint node: true */
 
 //### Libraries and dependencies ###
+
 // Built-in libraries:
 var util = require("util");
 var fs = require('fs');
@@ -15,32 +16,30 @@ chai.should();
 var Q = require('Q'); // Q for promises
 // Q.longStackSupport = true;
 
-// YAML, for loading the data
+// YAML, for loading test data
 var yaml = require('js-yaml');
 
-// And last but not least, TinyG:
+// And last but not least, TinyG
 var TinyG = require("tinyg");
-var g = new TinyG();
-
-
-//### Load test data from YAML file
-
-var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
-// Uncomment to debug the testData:
-//console.log("testData debug:\n", util.inspect(testData, { depth: null }));
-/*
-console.log("testData debug:\n", util.inspect(testData, {
-  depth: null
-}));
-*/
-var portPath, dataportPath;
 
 'use strict';
 
 //#############################################################################
-//#### Setup - open a new TinyG USB port or use it if it's already open #######
+//#### Setup for testing ###################################################### 
 //#############################################################################
 
+// Setup or re-use USB connection to TinyG
+var g = new TinyG();  
+
+// Load test data from YAML file
+var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
+// Uncomment to debug the testData:
+//console.log("testData debug:\n", util.inspect(testData, { depth: null }));
+
+// ??? What does this do?
+var portPath, dataportPath;
+
+// Begin Mocha preconditions functions
 before(function (done) {
   g.list(function (err, results) {
     if (err) {
@@ -64,9 +63,11 @@ before(function (done) {
         console.log("Setting precondition communication and system parameters");
         var promise = g.set(testData.precondition.setValues);
 
-        promise = promise.then(function () {
-          console.log("\nTest parameters:")
-        });
+//        promise = promise.then(function () {
+//          console.log("\nTest parameters:")
+//        });
+        console.log("\nTest parameters:")
+        console.log("  " + new Date());
 
         testData.precondition.reportParameters.forEach(function (p) {
           promise = promise.then(function () {
@@ -124,7 +125,7 @@ after(function (done) {
 //#### Preliminary Tests
 //#############################################################################
 
-describe("Create an ID record for this test run", function () {
+describe("Check for up-to-date firmware and hardware", function () {
 
   //Firmware build response test
   it('Checks firmware build number @v8 @v9', function () {
@@ -134,13 +135,6 @@ describe("Create an ID record for this test run", function () {
   //Hardware Value Test
   it('Checks hardwave version @v8 @v9', function () {
     return g.get("hv").should.eventually.be.above(testData.min_hv);
-  });
-
-  //Hardware Value Test
-  it('Gets board ID @v8 @v9', function () {
-    //    return g.get("id").should.eventually.be.above(testData.min_hv);
-    //    console.log(g.get("id"))
-    return g.get("id").console.log()
   });
 });
 
