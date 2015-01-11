@@ -7,7 +7,7 @@ min_hv: 6
 
 # Preconditions for all tests (runs from before() )
 precondition:
-  setValues: 
+  setValues:
     - js: 1    # Should set JSON to strict mode-- for JS parsing
     - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
     - js: 1    # Should set JSON to strict mode-- for JS parsing
@@ -20,6 +20,9 @@ precondition:
     - si: 250  # Should set status interval
     - ew: 0    # Should disable window mode
     - hv: 8    # Should set HW version to v8
+
+  setValuesEach: # Try to keep this short -- it makes debugging harder
+    - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
 
   reportParameters:
     - id
@@ -159,7 +162,7 @@ setParameterTests:
     parameters: [1, 2, 3, 4, 5, 6]
     value: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2, madeup: 1}
     returns: null
-    status: 1
+    status: 100
 
   - description: "Getting motor %s returns correct data"
     parameters: [1, 2, 3, 4, 5, 6]

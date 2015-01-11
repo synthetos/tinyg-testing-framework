@@ -25,16 +25,19 @@ var TinyG = require("tinyg");
 'use strict';
 
 //#############################################################################
-//#### Setup for testing ###################################################### 
+//#### Setup for testing ######################################################
 //#############################################################################
 
 // Setup or re-use USB connection to TinyG
-var g = new TinyG();  
+var g = new TinyG();
 
 // Load test data from YAML file
 var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
 // Uncomment to debug the testData:
-//console.log("testData debug:\n", util.inspect(testData, { depth: null }));
+// console.log("testData debug:\n", util.inspect(testData, { depth: null }));
+
+// 1 to print all raw data coming back from the TinyG to the console (CHATTY!), 0 for quiet:
+var DEBUG_RESPONSES = 0;
 
 // ??? What does this do?
 var portPath, dataportPath;
@@ -109,6 +112,11 @@ before(function (done) {
 });
 
 
+beforeEach(function () {
+  var promise = g.set(testData.precondition.setValuesEach);
+  return promise;
+})
+
 after(function (done) {
   g.on('close', function (err) {
     done(err);
@@ -117,9 +125,11 @@ after(function (done) {
 });
 
 // DEBUG:
-// g.on('data', function (v) {
-//   console.log(v);
-// });
+if (DEBUG_RESPONSES === 1) {
+  g.on('data', function (v) {
+    console.log(v);
+  });
+}
 
 //#############################################################################
 //#### Preliminary Tests
@@ -162,8 +172,8 @@ describe("Setup system parameters for testing", function () {
         // zero, it will resolve with the value the TinyG sent back.
         var promise = g.set(p, v.value).catch(function (e) {
           // e.data contains our full response
-          if (e.data.f[0] !== (v.status || 0)) {
-            throw (new Error(util.format("Bad response, expected status (%d), got response: ", v.status, e.data)));
+          if (!e.data || !e.data.f || e.data.f[1] !== (v.status || 0)) {
+            throw (new Error(util.format("Bad response, expected status (%d), got error \"%s\" for response: ", v.status, e, util.inspect(e.data)) ));
           }
         })
 
