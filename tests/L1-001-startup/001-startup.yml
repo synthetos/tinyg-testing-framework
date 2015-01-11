@@ -126,7 +126,8 @@ gcodeDefaults:
 #   "parameters:" as an array OR "parameter:" as a string,
 #   "value" as the value to send
 #
-# Optional: 
+# Optional:
+#   "description:" will output a line of descriptive text  
 #   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none), 
 #   "status:" - assumes status=0 if missing (status=0 is the OK status code)
 #               status codes ref: http://github.com/synthetos/tinyg/TinyG-Status-Codes
@@ -144,7 +145,7 @@ gcodeDefaults:
 
 setParameterTests:
 
-### Generic failure cases (no parameters)
+  ### Generic failure cases (no parameters)
 
   - parameter: madeup  # this test fails
     value: null
@@ -154,9 +155,10 @@ setParameterTests:
     value: null
     status: 100
   
-  ### System ID ###
+  ### System IDs ###
 
-  - parameter: fb     # firmware build - supposed to be read-only
+  - description: "firmware build - supposed to be read-only"
+    parameter: fb
     value: 999.99
     status: 100
 
@@ -193,9 +195,10 @@ setParameterTests:
     value: "loopy"
     status: 100
     
-  ### Dynamic model attributes
-  #   These report back state from the Gcode model. Typically used only by status reports
-    
+  ### Dynamic model attributes ###
+  
+  # NOTE: These report back state from the Gcode models. Typically used only by status reports
+
   - parameter: n      # line number most recently parsed (Gcode model line number)
     value: null
     returns: 0 
@@ -208,45 +211,432 @@ setParameterTests:
     value: null
     returns: 0 
 
-  - parameter: line 
-    value: 1331       # supposed to be read only
+  - parameter: line   # supposed to be read only
+    value: 1331
     status: 100
 
-  - parameter: vel    # current velocity
+  - parameter: vel    # velocity (from model)
     value: null
     returns: 0 
 
-  - parameter: vel 
-    value: 1331       # supposed to be read only
+  - parameter: vel
+    value: 1331
     status: 100
 
-  - parameter: feed   # current feed rate
+  - parameter: feed   # feed rate (from model)
     value: null
     returns: 0 
 
   - parameter: feed
-    value: 1331       # supposed to be read only
+    value: 1331
     status: 100
 
-  - parameter: stat   # current machine status
+  - parameter: stat   # combined machine state
     value: null
     returns: 1
 
   - parameter: stat
-    value: 4          # supposed to be read only
+    value: 4
     status: 100
 
-  - parameter: stat   # current machine status
+  - parameter: macs   # raw machine state
     value: null
     returns: 1
 
-  - parameter: stat
-    value: 4          # supposed to be read only
+  - parameter: macs
+    value: 4
     status: 100
 
+  - parameter: cycs   # cycle state
+    value: null
+    returns: 1
 
+  - parameter: cycs
+    value: 4
+    status: 100
+
+  - parameter: mots   # motion state
+    value: null
+    returns: 1
+
+  - parameter: mots
+    value: 4
+    status: 100
+
+  - parameter: hold   # feedhold state
+    value: null
+    returns: 1
+
+  - parameter: hold
+    value: 4
+    status: 100
+
+  - parameter: unit   # units mode (mm/in)
+    value: null
+    returns: 1
+
+  - parameter: unit
+    value: 4
+    status: 100
+
+  - parameter: coor   # coordinate system
+    value: null
+    returns: 1
+
+  - parameter: coor
+    value: 4
+    status: 100
+
+  - parameter: momo   # motion mode
+    value: null
+    returns: 1
+
+  - parameter: momo
+    value: 4
+    status: 100
+
+  - parameter: plan   # plane select
+    value: null
+    returns: 1
+
+  - parameter: plan
+    value: 4
+    status: 100
+
+  - parameter: path   # path control mode
+    value: null
+    returns: 1
+
+  - parameter: path
+    value: 4
+    status: 100
+
+  - parameter: dist   # distance mode
+    value: null
+    returns: 1
+
+  - parameter: dist
+    value: 4
+    status: 100
+
+  - parameter: frmo   # feed rate mode
+    value: null
+    returns: 1
+
+  - parameter: frmo
+    value: 4
+    status: 100
+
+  - parameter: tool   # active tool select
+    value: null
+    returns: 1
+
+  - parameter: tool
+    value: 4
+    status: 100
+
+    # machine position
+
+  - parameter: mpox   # X machine position
+    value: null
+    returns: 0.00
+
+  - parameter: mpox
+    value: 100.000
+    status: 100
+
+  - parameter: mpoy   # Y machine position
+    value: null
+    returns: 0.00
+
+  - parameter: mpoy
+    value: 100.000
+    status: 100
+
+  - parameter: mpoz   # Z machine position
+    value: null
+    returns: 0.00
+
+  - parameter: mpoz
+    value: 100.000
+    status: 100
+
+  - parameter: mpoa   # A machine position
+    value: null
+    returns: 0.00
+
+  - parameter: mpoa
+    value: 100.000
+    status: 100
+
+  - parameter: mpob   # B machine position
+    value: null
+    returns: 0.00
+
+  - parameter: mpob
+    value: 100.000
+    status: 100
+
+  - parameter: mpoc   # C machine position
+    value: null
+    returns: 0.00
+
+  - parameter: mpoc
+    value: 100.000
+    status: 100
+
+    # work position
+
+  - parameter: posx   # X work position
+    value: null
+    returns: 0.00
+
+  - parameter: posx
+    value: 100.000
+    status: 100
+
+  - parameter: posy   # Y work position
+    value: null
+    returns: 0.00
+
+  - parameter: posy
+    value: 100.000
+    status: 100
+
+  - parameter: posz   # Z work position
+    value: null
+    returns: 0.00
+
+  - parameter: posz
+    value: 100.000
+    status: 100
+
+  - parameter: posa   # A work position
+    value: null
+    returns: 0.00
+
+  - parameter: posa
+    value: 100.000
+    status: 100
+
+  - parameter: posb   # B work position
+    value: null
+    returns: 0.00
+
+  - parameter: posb
+    value: 100.000
+    status: 100
+
+  - parameter: posc   # C work position
+    value: null
+    returns: 0.00
+
+  - parameter: posc
+    value: 100.000
+    status: 100
+
+    # work offsets
+    
+  - parameter: ofsx   # X work offset
+    value: null
+    returns: 0.00
+
+  - parameter: ofsx
+    value: 100.000
+    status: 100
+
+  - parameter: ofsy   # Y work offset
+    value: null
+    returns: 0.00
+
+  - parameter: ofsy
+    value: 100.000
+    status: 100
+
+  - parameter: ofsz   # Z work offset
+    value: null
+    returns: 0.00
+
+  - parameter: ofsz
+    value: 100.000
+    status: 100
+
+  - parameter: ofsa   # A work offset
+    value: null
+    returns: 0.00
+
+  - parameter: ofsa
+    value: 100.000
+    status: 100
+
+  - parameter: ofsb   # B work offset
+    value: null
+    returns: 0.00
+
+  - parameter: ofsb
+    value: 100.000
+    status: 100
+
+  - parameter: ofsc   # C work offset
+    value: null
+    returns: 0.00
+
+  - parameter: ofsc
+    value: 100.000
+    status: 100
   
-  ### Communications and formatting ###
+    # home positions
+
+  - parameter: homx   # X home position
+    value: null
+    returns: 0.00
+
+  - parameter: homx
+    value: 100.000
+    status: 100
+  
+  - parameter: homy   # Y home position
+    value: null
+    returns: 0.00
+
+  - parameter: homy
+    value: 100.000
+    status: 100
+  
+  - parameter: homz   # Z home position
+    value: null
+    returns: 0.00
+
+  - parameter: homz
+    value: 100.000
+    status: 100
+  
+  - parameter: homa   # A home position
+    value: null
+    returns: 0.00
+
+  - parameter: homa
+    value: 100.000
+    status: 100
+  
+  - parameter: homb   # B home position
+    value: null
+    returns: 0.00
+
+  - parameter: homb
+    value: 100.000
+    status: 100
+  
+  - parameter: homc   # C home position
+    value: null
+    returns: 0.00
+
+  - parameter: homc
+    value: 100.000
+    status: 100
+  
+    # probe positions
+
+  - parameter: prbx   # X probe position
+    value: null
+    returns: 0.00
+
+  - parameter: prbx
+    value: 100.000
+    status: 100
+  
+  - parameter: prby   # Y probe position
+    value: null
+    returns: 0.00
+
+  - parameter: prby
+    value: 100.000
+    status: 100
+  
+  - parameter: prbz   # Z probe position
+    value: null
+    returns: 0.00
+
+  - parameter: prbz
+    value: 100.000
+    status: 100
+  
+  - parameter: prba   # A probe position
+    value: null
+    returns: 0.00
+
+  - parameter: prba
+    value: 100.000
+    status: 100
+  
+  - parameter: prbb   # B probe position
+    value: null
+    returns: 0.00
+
+  - parameter: prbb
+    value: 100.000
+    status: 100
+  
+  - parameter: prbc   # C probe position
+    value: null
+    returns: 0.00
+
+  - parameter: prbc
+    value: 100.000
+    status: 100
+  
+    # jog positions
+
+  - parameter: jogx   # X jog position
+    value: null
+    returns: 0.00
+
+  - parameter: jogx
+    value: 100.000
+    status: 100
+  
+  - parameter: jogy   # Y jog position
+    value: null
+    returns: 0.00
+
+  - parameter: jogy
+    value: 100.000
+    status: 100
+  
+  - parameter: jogz   # Z jog position
+    value: null
+    returns: 0.00
+
+  - parameter: jogz
+    value: 100.000
+    status: 100
+  
+  - parameter: joga   # A jog position
+    value: null
+    returns: 0.00
+
+  - parameter: joga
+    value: 100.000
+    status: 100
+  
+  - parameter: jogb   # B jog position
+    value: null
+    returns: 0.00
+
+  - parameter: jogb
+    value: 100.000
+    status: 100
+  
+  - parameter: jogc   # C jog position
+    value: null
+    returns: 0.00
+
+  - parameter: jogc
+    value: 100.000
+    status: 100
+  
+  ### Communications paraameters ###
+  
   - parameter: ee   # enable echo
     value: 1
     returns: 1
@@ -274,6 +664,10 @@ setParameterTests:
   - parameter: ex
     value: 2
     returns: 2
+
+  - parameter: ew
+    value: 0
+    returns: 0
 
   - parameter: jv
     value: 1
@@ -307,27 +701,23 @@ setParameterTests:
     value: 1
     returns: 1
 
-  # - parameters:
-  #     # Here's a list of parameters that if we set it to 1, we get back 1, witout an error
-  #     - jv
-  #   value: 1
-  #   returns: 1
-
-  - parameter: si
-    value: 50
-    returns: [100, 1000]
-
-  - parameter: si
+  - description: "Set status interval to a legal value"
+    parameter: si
     value: 250
     returns: 250
 
-  - parameter: ew
-    value: 0
-    returns: 0
+  - description "Set status interval to a value too small"
+    parameter: si
+    value: 50
+    returns: [100, 1000]
 
-  - parameter: hv
-    value: 8
-    returns: 8
+  ### Motor values ###
+
+  - description: "Getting motor %s returns correct data"
+    parameters: [1, 2, 3, 4, 5, 6]
+    value: null
+    returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8}
+    status: 0
 
   - description: "Setting motor %s to known values"
     parameters: [1, 2, 3, 4, 5, 6]
@@ -340,12 +730,6 @@ setParameterTests:
     value: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2, madeup: 1}
     returns: null
     status: 100
-
-  - description: "Getting motor %s returns correct data"
-    parameters: [1, 2, 3, 4, 5, 6]
-    value: null
-    returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8}
-    status: 0
 
   - description: "Setting axis %s to known values"
     parameters: [x, y, z]
