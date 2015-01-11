@@ -162,19 +162,23 @@ setParameterTests:
     value: 999.99
     status: 100
 
-  - parameter: fv     # firmware version - supposed to be read-only
+  - description: "firmware version - supposed to be read-only"
+    parameter: fv
     value: 999.99
     status: 100
 
-  - parameter: cv     # configuration version - supposed to be read-only
+  - description: "configuration version - supposed to be read-only"
+    parameter: cv
     value: 2
     status: 100
 
-  - parameter: hp     # hardware platform - supposed to be read-only
+  - description: "hardware platform - supposed to be read-only"
+    parameter: hp
     value: 99
     status: 100
 
-  - parameter: hv     # hardware version - can be set to valid values only
+  - description: "hardware version - supposed to be read-only"
+    parameter: hv
     value: 6
     returns: 6
 
@@ -191,7 +195,8 @@ setParameterTests:
     returns: 9
     status: 100       # fails on v8
     
-  - parameter: id     # board id - supposed to be read only
+  - description: "board ID - supposed to be read-only"
+    parameter: id
     value: "loopy"
     status: 100
     
@@ -199,23 +204,26 @@ setParameterTests:
   
   # NOTE: These report back state from the Gcode models. Typically used only by status reports
 
-  - parameter: n      # line number most recently parsed (Gcode model line number)
+  - description: "line number most recently parsed (Gcode model line number)"
+    parameter: n
     value: null
     returns: 0 
 
-  - parameter: n 
-    value: 1331       # supposed to be read only
-    status: 100
-
-  - parameter: line   # line number currently executing or last executed (runtime line number)
-    value: null
-    returns: 0 
-
-  - parameter: line   # supposed to be read only
+  - parameter: n      # supposed to be read only 
     value: 1331
     status: 100
 
-  - parameter: vel    # velocity (from model)
+  - description: "line number currently executing or last executed (runtime line number)"
+    parameter: line
+    value: null
+    returns: 0 
+
+  - parameter: line
+    value: 1331
+    status: 100
+
+  - description: "velocity"
+    parameter: vel
     value: null
     returns: 0 
 
@@ -223,7 +231,8 @@ setParameterTests:
     value: 1331
     status: 100
 
-  - parameter: feed   # feed rate (from model)
+  - description: "feed rate"
+    parameter: feed
     value: null
     returns: 0 
 
@@ -231,7 +240,8 @@ setParameterTests:
     value: 1331
     status: 100
 
-  - parameter: stat   # combined machine state
+  - description: "combined machine state"
+    parameter: stat
     value: null
     returns: 1
 
@@ -239,7 +249,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: macs   # raw machine state
+  - description: "raw machine state"
+    parameter: macs
     value: null
     returns: 1
 
@@ -247,7 +258,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: cycs   # cycle state
+  - description: "cycle state"
+    parameter: cycs
     value: null
     returns: 1
 
@@ -255,7 +267,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: mots   # motion state
+  - description: "motion state"
+    parameter: mots
     value: null
     returns: 1
 
@@ -263,7 +276,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: hold   # feedhold state
+  - description: "feedhold state"
+    parameter: hold
     value: null
     returns: 1
 
@@ -271,7 +285,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: unit   # units mode (mm/in)
+  - description: "units mode (mm/in)"
+    parameter: unit
     value: null
     returns: 1
 
@@ -279,7 +294,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: coor   # coordinate system
+  - description: "coordinate system"
+    parameter: coor
     value: null
     returns: 1
 
@@ -287,7 +303,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: momo   # motion mode
+  - description: " motion mode"
+    parameter: momo
     value: null
     returns: 1
 
@@ -295,7 +312,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: plan   # plane select
+  - description: "plane select"
+    parameter: plan
     value: null
     returns: 1
 
@@ -303,7 +321,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: path   # path control mode
+  - description: "path control mode"
+    parameter: path
     value: null
     returns: 1
 
@@ -311,7 +330,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: dist   # distance mode
+  - description: "distance mode"
+    parameter: dist
     value: null
     returns: 1
 
@@ -319,7 +339,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: frmo   # feed rate mode
+  - description: "feed rate mode"
+    parameter: frmo
     value: null
     returns: 1
 
@@ -327,7 +348,8 @@ setParameterTests:
     value: 4
     status: 100
 
-  - parameter: tool   # active tool select
+  - description: "active tool select"
+    parameter: tool
     value: null
     returns: 1
 
@@ -337,7 +359,8 @@ setParameterTests:
 
     # machine position
 
-  - parameter: mpox   # X machine position
+  - description: "machine position"
+    parameter: mpox   # X machine position
     value: null
     returns: 0.00
 
@@ -387,7 +410,8 @@ setParameterTests:
 
     # work position
 
-  - parameter: posx   # X work position
+  - description: "work position"
+    parameter: posx   # X work position
     value: null
     returns: 0.00
 
@@ -435,9 +459,10 @@ setParameterTests:
     value: 100.000
     status: 100
 
-    # work offsets
+    # work offset
     
-  - parameter: ofsx   # X work offset
+  - description: "work offset"
+    parameter: ofsx   # X work offset
     value: null
     returns: 0.00
 
@@ -485,9 +510,10 @@ setParameterTests:
     value: 100.000
     status: 100
   
-    # home positions
+    # home position
 
-  - parameter: homx   # X home position
+  - description: "home position"
+    parameter: homx   # X home position
     value: null
     returns: 0.00
 
@@ -535,9 +561,10 @@ setParameterTests:
     value: 100.000
     status: 100
   
-    # probe positions
+    # probe position
 
-  - parameter: prbx   # X probe position
+  - description: "probe position"
+    parameter: prbx   # X probe position
     value: null
     returns: 0.00
 
@@ -585,9 +612,10 @@ setParameterTests:
     value: 100.000
     status: 100
   
-    # jog positions
+    # jog position
 
-  - parameter: jogx   # X jog position
+  - description: "jog position"
+    parameter: jogx   # X jog position
     value: null
     returns: 0.00
 
@@ -637,7 +665,8 @@ setParameterTests:
   
   ### Communications paraameters ###
   
-  - parameter: ee   # enable echo
+  - description: "enable echo"
+    parameter: ee
     value: 1
     returns: 1
 
@@ -649,7 +678,23 @@ setParameterTests:
     value: 0
     returns: 0
 
-  - parameter: js   # JSON syntax
+  - description: "flow control mode"
+    parameter: ex
+    value: 2
+    returns: 2
+
+  - description: "windowing mode"
+    parameter: ew
+    value: 0
+    returns: 0
+
+  - description: "footer depth"
+    parameter: fd
+    value: 0
+    returns: 0
+
+  - description: "JSON syntax"
+    parameter: js
     value: 1
     returns: 1
 
@@ -657,56 +702,82 @@ setParameterTests:
     value: 1
     returns: 1
 
-  - parameter: fd
+  - description: "JSON verbosity - set jv to SILENT (0)"
+    parameter: jv
     value: 0
     returns: 0
 
-  - parameter: ex
-    value: 2
-    returns: 2
-
-  - parameter: ew
-    value: 0
-    returns: 0
-
-  - parameter: jv
+  - description: "JSON verbosity - set jv to FOOTER only (1)"
+    parameter: jv
     value: 1
     returns: 1
 
-  - parameter: jv
+  - description: "JSON verbosity - set jv to MESSAGES (2)"
+    parameter: jv
     value: 2
     returns: 2
 
-  - parameter: jv
+  - description: "JSON verbosity - set jv to CONFIGS (3)"
+    parameter: jv
     value: 3
     returns: 3
 
-  - parameter: jv
+  - description: "JSON verbosity - set jv to LINENUM (4)"
+    parameter: jv
     value: 4
     returns: 4
 
-  - parameter: jv
+  - description: "JSON verbosity - set jv to VERBOSE (5)"
+    parameter: jv
     value: 5
     returns: 5
 
-  - parameter: tv
-    value: 1
-    returns: 1
+  - description: "JSON verbosity - set jv to -1"
+    parameter: jv
+    value: -1
+    status: 100
 
-  - parameter: qv
+  - description: "JSON verbosity - set jv to too high"
+    parameter: jv
+    value: 6
+    status: 100
+
+  - description: "text mode verbosity - set to SILENT (0)"
+    parameter: tv
     value: 0
     returns: 0
 
-  - parameter: sv
+  - description: "text mode verbosity - set to VERBOSE (0)"
+    parameter: tv
     value: 1
     returns: 1
 
-  - description: "Set status interval to a legal value"
+  - description: "text mode verbosity - set to -1"
+    parameter: tv
+    value: -1
+    status: 100
+
+  - description: "text mode verbosity - set to too high"
+    parameter: tv
+    value: 2
+    status: 100
+
+  - description: "queue report verbosity"
+    parameter: qv
+    value: 0
+    returns: 0
+
+  - description: "status report verbosity"
+    parameter: sv
+    value: 1
+    returns: 1
+
+  - description: "status interval - set si to a legal value"
     parameter: si
     value: 250
     returns: 250
 
-  - description "Set status interval to a value too small"
+  - description: "status interval - set si too small"
     parameter: si
     value: 50
     returns: [100, 1000]
