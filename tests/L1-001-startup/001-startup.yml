@@ -1,13 +1,71 @@
-# Example test document.
+###############################################################################
+#### Startup tests
+###############################################################################
+#
+# This document is heavily commented to serve as an example so other YAML files
+# don't need to be.
+#
 ---
 
-# Minimums:
+###############################################################################
+#### Examples and explanations of the YAML structures used
+###############################################################################
+
+#### Syntax notes:
+#
+# The test code will execute elements of an array [] in the order listed, so 
+# sequencing is preserved. An element preceded by a '-<space>' marks it as an 
+# element of an array. 
+#
+# Elements in a dictionary are executed in random order - ordering is not 
+# preserved. Multiple items in {}'s are a dictionary, e.g. {sv: 1, si: 250}
+#
+# A space or newline is required after a colon.
+# This is legal {jv: 1}, this is not {jv:1}
+#
+# Indentation of child elements is required, but flexible (this is not Python!)
+# Indentation needs the be at least one more than the parent and is flexible.
+
+# Examples of preconditions for before() tests:
+precondition:
+  setValues_Example1: # Example of passing parameters as JSON-style chunks
+    				          # This is the same as the json [{"jv": 1}, {"qv": 1}]
+    - {jv: 1}
+    - {qv: 1}
+
+  setValues_Example2: # Example of passing parameters as JSON-style chunks
+    				          # Same as JSON [{jv:1}, {qv:1, x:null}]
+    - {jv: 1}
+    - {qv: 1, x: null}
+
+  setValues_Example3: # Same as Example2, but without the brackets, 
+  					          # since having key: value implies a dictionary
+    				          # Translates to JSON [{jv:1}, {qv:1, x:null}]
+    - jv: 1 		      # Note that the space after the colon is necessary!
+    - qv: 1 		      # The -<space> means that this is the next entry in an array
+      x: null 		    # **Without** the -<space>, we are adding another key to the same dictionary.
+
+                      # Another example the same as setValues_Example2:
+  setValues_Example4: [{jv: 1}, {qv: 1, x: null}]
+
+                      # Another example the same as setValuesExample2:
+  setValues_Example5: [
+      {jv: 1},
+      {qv: 1, x: null}
+    ]                 # Indention on these lines just has to be at least that of the key, plus one
+
+###############################################################################
+#### Start of actual data for the tests
+###############################################################################
+
+#### Global values 
 min_fb: 80
 min_hv: 6
 
-# Preconditions for all tests (runs from before() )
+#### Preconditions for all tests (runs from before_all() )
 precondition:
-  setValues:
+  
+  setValues:   # These run before() all tests (test setup). Ordering is important
     - js: 1    # Should set JSON to strict mode-- for JS parsing
     - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
     - js: 1    # Should set JSON to strict mode-- for JS parsing
@@ -21,8 +79,8 @@ precondition:
     - ew: 0    # Should disable window mode
     - hv: 8    # Should set HW version to v8
 
-  setValuesEach: # Try to keep this short -- it makes debugging harder
-    - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
+  setValuesEach: # These run before each test. Try to keep this short -- it makes debugging harder
+    - ee: 0    # Should disable echo and set JSON mode
 
   reportParameters:
     - id
@@ -56,25 +114,140 @@ gcodeDefaults:
     - gpa
     - gdi
 
+###############################################################################
+#### Parameter tests
+###############################################################################
+#
+# See here for parameters: http://github.com/synthetos/tinyg/wiki/...
+#
+# Syntax:
+#
+# Required: 
+#   "parameters:" as an array OR "parameter:" as a string,
+#   "value" as the value to send
+#
+# Optional: 
+#   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none), 
+#   "status:" - assumes status=0 if missing (status=0 is the OK status code)
+#               status codes ref: http://github.com/synthetos/tinyg/TinyG-Status-Codes
+#
+# Options for values for returns:, exists:, hasKeys:, exactKeys:, and status:
+#   - give an array for returns: for an inclusive range - returns: [0, 10] matches 0 <= x <= 10
+#   - give a non-null value for returns: to match exactly
+#   - give a non-null value for exists: to match any non-null response
+#   - give a null value for returns: (or give none of returns:, exists:, hasKeys:, or exactKeys:) 
+#     to match null or undefined response
+#   - give hasKeys as an array of key names that must exist, but other keys may also exist
+#   - give exactKeys as an array of key names than must match exactly, 
+#     there must be exactly those keys in the response, no more, no less
+#   - give a status: value to match - so that a non-zero status can be interpreted as success
+
 setParameterTests:
-  # Required: ("parameters" as an array OR "parameter" as a string), "value" as the value to send
-  # Optional: "returns" OR "exists" OR "hasKeys" OR "exactKeys" (only one), status (assumes zero if missing)
 
-  # Options for resturns, exists, hasKeys, exactKeys, and status:
-  # give an array for "returns" for an inclusive range: returns: [0, 10] matches 0 <= x <= 10
-  # give an non-null value for "returns" to match exactly
-  # give an non-null value for "exists" to match any non-null response
-  # give an null value for "returns" (or give neither "exists" or "returns" or "*Keys") to match null or undefined response
-  # give hasKeys as an array of key names that must exist, but other keys may exist
-  # give exactKeys as an array of key names, and there must be exactly those keys in the response, no more, no less
-  # give a "status" value to match *that* non-zero status as success
+### Generic failure cases (no parameters)
 
-  - parameter: xxx  # this test fails
+  - parameter: madeup  # this test fails
     value: null
     status: 100
 
+  - parameter: null
+    value: null
+    status: 100
+  
+  ### System ID ###
+
+  - parameter: fb     # firmware build - supposed to be read-only
+    value: 999.99
+    status: 100
+
+  - parameter: fv     # firmware version - supposed to be read-only
+    value: 999.99
+    status: 100
+
+  - parameter: cv     # configuration version - supposed to be read-only
+    value: 2
+    status: 100
+
+  - parameter: hp     # hardware platform - supposed to be read-only
+    value: 99
+    status: 100
+
+  - parameter: hv     # hardware version - can be set to valid values only
+    value: 6
+    returns: 6
+
+  - parameter: hv
+    value: 7
+    returns: 7
+
+  - parameter: hv
+    value: 8
+    returns: 8
+
+  - parameter: hv
+    value: 9
+    returns: 9
+    status: 100       # fails on v8
+    
+  - parameter: id     # board id - supposed to be read only
+    value: "loopy"
+    status: 100
+    
+  ### Dynamic model attributes
+  #   These report back state from the Gcode model. Typically used only by status reports
+    
+  - parameter: n      # line number most recently parsed (Gcode model line number)
+    value: null
+    returns: 0 
+
+  - parameter: n 
+    value: 1331       # supposed to be read only
+    status: 100
+
+  - parameter: line   # line number currently executing or last executed (runtime line number)
+    value: null
+    returns: 0 
+
+  - parameter: line 
+    value: 1331       # supposed to be read only
+    status: 100
+
+  - parameter: vel    # current velocity
+    value: null
+    returns: 0 
+
+  - parameter: vel 
+    value: 1331       # supposed to be read only
+    status: 100
+
+  - parameter: feed   # current feed rate
+    value: null
+    returns: 0 
+
+  - parameter: feed
+    value: 1331       # supposed to be read only
+    status: 100
+
+  - parameter: stat   # current machine status
+    value: null
+    returns: 1
+
+  - parameter: stat
+    value: 4          # supposed to be read only
+    status: 100
+
+  - parameter: stat   # current machine status
+    value: null
+    returns: 1
+
+  - parameter: stat
+    value: 4          # supposed to be read only
+    status: 100
+
+
+  
   ### Communications and formatting ###
-  - parameter: ee
+  - parameter: ee   # enable echo
     value: 1
     returns: 1
 
@@ -85,6 +258,10 @@ setParameterTests:
   - parameter: ee
     value: 0
     returns: 0
+
+  - parameter: js   # JSON syntax
+    value: 1
+    returns: 1
 
   - parameter: js
     value: 1

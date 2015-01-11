@@ -66,9 +66,9 @@ before(function (done) {
         console.log("Setting precondition communication and system parameters");
         var promise = g.set(testData.precondition.setValues);
 
-//        promise = promise.then(function () {
-//          console.log("\nTest parameters:")
-//        });
+        //        promise = promise.then(function () {
+        //          console.log("\nTest parameters:")
+        //        });
         console.log("\nTest parameters:")
         console.log("  " + new Date());
 
@@ -165,15 +165,17 @@ describe("Setup system parameters for testing", function () {
         description = util.format(v.description, p);
       }
       it(description, function () {
-        // set() returns a promise. If we put a function in the promise.catch(),
-        // it will give us a TinyGError object, with the full response object in
-        // the data member.
-        // It will only throw an error if the status is non-zero. If the status is
-        // zero, it will resolve with the value the TinyG sent back.
+
+        // set() returns a promise. If we put a function in the promise.catch() it will 
+        // give us a TinyGError object, with the full response object in the data member.
+        //
+        // It will only throw an error if the status is non-zero. If the status is zero
+        // it will resolve with the value the TinyG sent back.
         var promise = g.set(p, v.value).catch(function (e) {
+
           // e.data contains our full response
           if (!e.data || !e.data.f || e.data.f[1] !== (v.status || 0)) {
-            throw (new Error(util.format("Bad response, expected status (%d), got error \"%s\" for response: ", v.status, e, util.inspect(e.data)) ));
+            throw (new Error(util.format("Bad response, expected status (%d), got error \"%s\" for response: ", v.status, e, util.inspect(e.data))));
           }
         })
 
