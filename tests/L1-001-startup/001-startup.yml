@@ -127,12 +127,19 @@ gcodeDefaults:
 #   "value" as the value to send
 #
 # Optional:
-#   "description:" will output a line of descriptive text  
-#   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none), 
+#   "description:" will output a line of descriptive text. Ex:
+#     description: "firmware build - supposed to be read-only"
+#
+#   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none). Ex:
+#     returns: 2
+#     exists: 0
+#     hasKeys: [fb, fv]
+#     exactKeys: [fb, fv, cv, hp, hv, id]
+#
 #   "status:" - assumes status=0 if missing (status=0 is the OK status code)
 #               status codes ref: http://github.com/synthetos/tinyg/TinyG-Status-Codes
 #
-# Options for values for returns:, exists:, hasKeys:, exactKeys:, and status:
+#   Options for values for returns:, exists:, hasKeys:, exactKeys:, and status:
 #   - give an array for returns: for an inclusive range - returns: [0, 10] matches 0 <= x <= 10
 #   - give a non-null value for returns: to match exactly
 #   - give a non-null value for exists: to match any non-null response
@@ -177,28 +184,40 @@ setParameterTests:
     value: 99
     status: 100
 
-  - description: "hardware version - supposed to be read-only"
+  - description: "hardware version (v8 behaviors) - Legal input"
     parameter: hv
     value: 6
     returns: 6
 
-  - parameter: hv
+  - description: "hardware version (v8 behaviors) - Legal input"
+    parameter: hv
     value: 7
     returns: 7
 
-  - parameter: hv
+  - description: "hardware version (v8 behaviors) - Legal input"
+    parameter: hv
     value: 8
     returns: 8
 
-  - parameter: hv
+  - description: "hardware version (v8 behaviors) - Illegal input"
+    parameter: hv
+    value: 5
+    returns: 5        # should fail on 5
+#    exists: 0
+#    status: 106       # fails on v8 - should be a 106
+
+  - description: "hardware version (v8 behaviors) - Illegal input"
+    parameter: hv
     value: 9
-    returns: 9
-    status: 100       # fails on v8
+    exists: 0
+    status: 107       # fails on v8 - should be a 106
+#    status: 106       # fails on v8 - should be a 106
     
-  - description: "board ID - supposed to be read-only"
+  - description: "board ID - supposed to be read-only string value"
     parameter: id
     value: "loopy"
-    status: 100
+    status: 3
+    status: 107
     
   ### Dynamic model attributes ###
   

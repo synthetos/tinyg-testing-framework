@@ -1,7 +1,9 @@
 /* L1-001-parameter */
 /*jslint node: true */
 
-//### Libraries and dependencies ###
+//#############################################################################
+//### Libraries and dependencies ##############################################
+//#############################################################################
 
 // Built-in libraries:
 var util = require("util");
@@ -13,14 +15,11 @@ var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
 
-var Q = require('Q'); // Q for promises
+var Q = require('Q');           // Q for promises
 // Q.longStackSupport = true;
 
-// YAML, for loading test data
-var yaml = require('js-yaml');
-
-// And last but not least, TinyG
-var TinyG = require("tinyg");
+var yaml = require('js-yaml');  // YAML, for loading test data
+var TinyG = require("tinyg");   // And last but not least, TinyG
 
 'use strict';
 
@@ -32,7 +31,8 @@ var TinyG = require("tinyg");
 var g = new TinyG();
 
 // Load test data from YAML file
-var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
+//var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
+var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup_TEST.yml', 'utf8'));
 // Uncomment to debug the testData:
 // console.log("testData debug:\n", util.inspect(testData, { depth: null }));
 
@@ -66,9 +66,9 @@ before(function (done) {
         console.log("Setting precondition communication and system parameters");
         var promise = g.set(testData.precondition.setValues);
 
-        //        promise = promise.then(function () {
-        //          console.log("\nTest parameters:")
-        //        });
+//        promise = promise.then(function () {
+//          console.log("\nTest parameters:")
+//        });
         console.log("\nTest parameters:")
         console.log("  " + new Date());
 
@@ -148,6 +148,13 @@ describe("Check for up-to-date firmware and hardware", function () {
   });
 });
 
+describe("Checks System Group Values", function () {
+  //Check all sys values are present
+  it('check all sys values are present @v8', function () {
+    return g.get("sys").should.eventually.contain.keys(testData.sys.propertyList);
+  });
+});
+
 describe("Setup system parameters for testing", function () {
 
   // Set parameter tests
@@ -203,11 +210,4 @@ describe("Setup system parameters for testing", function () {
     });
   });
 
-});
-
-describe("Checks System Group Values", function () {
-  //Check all sys values are present
-  it('check all sys values are present @v8', function () {
-    return g.get("sys").should.eventually.contain.keys(testData.sys.propertyList);
-  });
 });
