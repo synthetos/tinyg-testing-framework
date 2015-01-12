@@ -82,7 +82,7 @@ gcodeDefaults:
 #
 #   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none). Ex:
 #     returns: 2
-#     exists: 0
+#     exists: 1
 #     hasKeys: [fb, fv]
 #     exactKeys: [fb, fv, cv, hp, hv, id]
 #
@@ -92,7 +92,7 @@ gcodeDefaults:
 #   Options for values for returns:, exists:, hasKeys:, exactKeys:, and status:
 #   - give an array for returns: for an inclusive range - returns: [0, 10] matches 0 <= x <= 10
 #   - give a non-null value for returns: to match exactly
-#   - give a non-null value for exists: to match any non-null response
+#   - give exists: 1 to match any non-null response
 #   - give a null value for returns: (or give none of returns:, exists:, hasKeys:, or exactKeys:) 
 #     to match null or undefined response
 #   - give hasKeys as an array of key names that must exist, but other keys may also exist
@@ -104,21 +104,48 @@ setParameterTests:
 
   ### Generic failure cases (no parameters)
 
-#  - description: "Should reject unrecognized tag"
-  - parameter: madeup  # this test fails
+  - description: "Should reject unrecognized tag"
+    parameter: madeup  # this test fails
     value: null
     status: 100
 
-#  - description: "Should reject null tag"
-  - parameter: null
+  - description: "Should reject null tag"
+    parameter: null
     value: null
     status: 100
   
   ### System IDs ###
 
-#  - description: "firmware build - supposed to be read-only"
+#  - description: "read firmware build"
   - parameter: fb
+    value: null
+    exists: 1
+
+  - description: "firmware build - supposed to be read-only"
+    parameter: fb
     value: 999.99
     exists: 0
     status: 3
 #    status: 107
+
+  - description: "firmware version - supposed to be read-only"
+    parameter: fv
+    value: 999.99
+    exists: 0
+    status: 3
+#    status: 107
+
+  - description: "configuration version - supposed to be read-only"
+    parameter: cv
+    value: 2
+    exists: 0
+    status: 3
+#    status: 107
+
+  - description: "hardware platform - supposed to be read-only"
+    parameter: hp
+    value: 99
+    exists: 0
+    status: 3
+#    status: 107
+

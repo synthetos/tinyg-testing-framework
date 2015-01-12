@@ -130,25 +130,23 @@ gcodeDefaults:
 #   "description:" will output a line of descriptive text. Ex:
 #     description: "firmware build - supposed to be read-only"
 #
-#   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none). Ex:
-#     returns: 2
-#     exists: 0
-#     hasKeys: [fb, fv]
-#     exactKeys: [fb, fv, cv, hp, hv, id]
+#   "returns:" OR "exists:" OR "hasKeys:" OR "exactKeys:" (only one, or none). Cases:
+#     returns: xyz    exact match for the floating point, integer or string returned
+#     returns: null   exact match for null, but key must be present
+#     exists: 1       any non-null matches (passes test)
+#     exists: 0       null or missing value matches
 #
-#   "status:" - assumes status=0 if missing (status=0 is the OK status code)
-#               status codes ref: http://github.com/synthetos/tinyg/TinyG-Status-Codes
+#     hasKeys: [x, y] array of key names that must exist but other keys may also exist
 #
-#   Options for values for returns:, exists:, hasKeys:, exactKeys:, and status:
-#   - give an array for returns: for an inclusive range - returns: [0, 10] matches 0 <= x <= 10
-#   - give a non-null value for returns: to match exactly
-#   - give a non-null value for exists: to match any non-null response
-#   - give a null value for returns: (or give none of returns:, exists:, hasKeys:, or exactKeys:) 
-#     to match null or undefined response
-#   - give hasKeys as an array of key names that must exist, but other keys may also exist
-#   - give exactKeys as an array of key names than must match exactly, 
-#     there must be exactly those keys in the response, no more, no less
-#   - give a status: value to match - so that a non-zero status can be interpreted as success
+#     exactKeys: [x, y] array of key names that must match exactly; there must be
+#                       exactly those keys in the response, no more, no less
+#
+#   "status:" - matches return code 
+#     status: 0       status = 0 means comamnd returned OK (0=OK)
+#     <omitted>       same as status: 0
+#     status: nnn     integer match so non-zero status can be interpreted as success
+#
+#     status codes ref: http://github.com/synthetos/tinyg/TinyG-Status-Codes
 
 setParameterTests:
 
