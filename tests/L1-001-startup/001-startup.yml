@@ -1,58 +1,8 @@
 ###############################################################################
 #### Startup tests
 ###############################################################################
-#
-# This document is heavily commented to serve as an example so other YAML files
-# don't need to be.
-#
+
 ---
-
-###############################################################################
-#### Examples and explanations of the YAML structures used
-###############################################################################
-
-#### Syntax notes:
-#
-# The test code will execute elements of an array [] in the order listed, so 
-# sequencing is preserved. An element preceded by a '-<space>' marks it as an 
-# element of an array. 
-#
-# Elements in a dictionary are executed in random order - ordering is not 
-# preserved. Multiple items in {}'s are a dictionary, e.g. {sv: 1, si: 250}
-#
-# A space or newline is required after a colon.
-# This is legal {jv: 1}, this is not {jv:1}
-#
-# Indentation of child elements is required, but flexible (this is not Python!)
-# Indentation needs the be at least one more than the parent and is flexible.
-
-# Examples of preconditions for before() tests:
-precondition:
-  setValues_Example1: # Example of passing parameters as JSON-style chunks
-    				          # This is the same as the json [{"jv": 1}, {"qv": 1}]
-    - {jv: 1}
-    - {qv: 1}
-
-  setValues_Example2: # Example of passing parameters as JSON-style chunks
-    				          # Same as JSON [{jv:1}, {qv:1, x:null}]
-    - {jv: 1}
-    - {qv: 1, x: null}
-
-  setValues_Example3: # Same as Example2, but without the brackets, 
-  					          # since having key: value implies a dictionary
-    				          # Translates to JSON [{jv:1}, {qv:1, x:null}]
-    - jv: 1 		      # Note that the space after the colon is necessary!
-    - qv: 1 		      # The -<space> means that this is the next entry in an array
-      x: null 		    # **Without** the -<space>, we are adding another key to the same dictionary.
-
-                      # Another example the same as setValues_Example2:
-  setValues_Example4: [{jv: 1}, {qv: 1, x: null}]
-
-                      # Another example the same as setValuesExample2:
-  setValues_Example5: [
-      {jv: 1},
-      {qv: 1, x: null}
-    ]                 # Indention on these lines just has to be at least that of the key, plus one
 
 ###############################################################################
 #### Start of actual data for the tests
@@ -152,698 +102,108 @@ setParameterTests:
 
   ### Generic failure cases (no parameters)
 
-  - parameter: madeup  # this test fails
+  - description: "Should reject unrecognized tag"
+    parameter: madeup
     value: null
     status: 100
 
-  - parameter: null
+  - description: "Should reject null tag"
+    parameter: null
     value: null
     status: 100
+  
+  # NOTE: the case of {"":null} is not tested
   
   ### System IDs ###
 
-  - description: "firmware build - supposed to be read-only"
-    parameter: fb
-    value: 999.99
-    status: 100
+#  - description: "read firmware build"
+  - parameter: fb
+    value: null
+    exists: 1
 
-  - description: "firmware version - supposed to be read-only"
-    parameter: fv
+#  - description: "attempt to write firmware build"
+  - parameter: fb
     value: 999.99
-    status: 100
+    exists: 1
+    status: 3
+#    status: 107
 
-  - description: "configuration version - supposed to be read-only"
-    parameter: cv
+#  - description: "read firmware version"
+  - parameter: fv
+    value: null
+    exists: 1
+
+#  - description: "attempt to write firmware version"
+  - parameter: fv
+    value: 999.99
+    exists: 1
+    status: 3
+#    status: 107
+
+#  - description: "read configuration version"
+  - parameter: cv
+    value: null
+    exists: 1
+
+#  - description: "attempt to write configuration version"
+  - parameter: cv
     value: 2
-    status: 100
+    exists: 1
+    status: 3
+#    status: 107
 
-  - description: "hardware platform - supposed to be read-only"
-    parameter: hp
-    value: 99
-    status: 100
+#  - description: "read board ID"
+  - parameter: id
+    value: null
+    exists: 1
 
-  - description: "hardware version (v8 behaviors) - Legal input"
-    parameter: hv
+#  - description: "attempt to write board ID"
+  - parameter: id
+    value: "loopy"
+    exists: 1
+    status: 3
+#    status: 107
+
+#  - description: "read hardware platform"
+  - parameter: hp
+    value: null
+    exists: 1
+
+#  - description: "attempt to write hardware platform"
+  - parameter: hp
+    value: 2
+    exists: 1
+    status: 3
+#    status: 107
+
+#  - description: "set hardware version - legal input (v8 behaviors) "
+  - parameter: hv
     value: 6
     returns: 6
 
-  - description: "hardware version (v8 behaviors) - Legal input"
-    parameter: hv
+#  - description: "set hardware version - legal input (v8 behaviors) "
+  - parameter: hv
     value: 7
     returns: 7
 
-  - description: "hardware version (v8 behaviors) - Legal input"
-    parameter: hv
+#  - description: "set hardware version - legal input (v8 behaviors) "
+  - parameter: hv
     value: 8
     returns: 8
 
-  - description: "hardware version (v8 behaviors) - Illegal input"
-    parameter: hv
+#  - description: "set hardware version - illegal input (v8 behaviors) "
+  - parameter: hv
     value: 5
-    returns: 5        # should fail on 5
-#    exists: 0
-#    status: 106       # fails on v8 - should be a 106
-
-  - description: "hardware version (v8 behaviors) - Illegal input"
-    parameter: hv
-    value: 9
-    exists: 0
-    status: 107       # fails on v8 - should be a 106
-#    status: 106       # fails on v8 - should be a 106
-    
-  - description: "board ID - supposed to be read-only string value"
-    parameter: id
-    value: "loopy"
-    status: 3
+    exists: 1
     status: 107
-    
-  ### Dynamic model attributes ###
-  
-  # NOTE: These report back state from the Gcode models. Typically used only by status reports
+#    status: 106
 
-  - description: "line number most recently parsed (Gcode model line number)"
-    parameter: n
-    value: null
-    returns: 0 
+#  - description: "set hardware version - illegal input (v8 behaviors) "
+  - parameter: hv
+    value: 9
+    exists: 1
+    status: 107
+#    status: 106
 
-  - parameter: n      # supposed to be read only 
-    value: 1331
-    status: 100
 
-  - description: "line number currently executing or last executed (runtime line number)"
-    parameter: line
-    value: null
-    returns: 0 
 
-  - parameter: line
-    value: 1331
-    status: 100
-
-  - description: "velocity"
-    parameter: vel
-    value: null
-    returns: 0 
-
-  - parameter: vel
-    value: 1331
-    status: 100
-
-  - description: "feed rate"
-    parameter: feed
-    value: null
-    returns: 0 
-
-  - parameter: feed
-    value: 1331
-    status: 100
-
-  - description: "combined machine state"
-    parameter: stat
-    value: null
-    returns: 1
-
-  - parameter: stat
-    value: 4
-    status: 100
-
-  - description: "raw machine state"
-    parameter: macs
-    value: null
-    returns: 1
-
-  - parameter: macs
-    value: 4
-    status: 100
-
-  - description: "cycle state"
-    parameter: cycs
-    value: null
-    returns: 1
-
-  - parameter: cycs
-    value: 4
-    status: 100
-
-  - description: "motion state"
-    parameter: mots
-    value: null
-    returns: 1
-
-  - parameter: mots
-    value: 4
-    status: 100
-
-  - description: "feedhold state"
-    parameter: hold
-    value: null
-    returns: 1
-
-  - parameter: hold
-    value: 4
-    status: 100
-
-  - description: "units mode (mm/in)"
-    parameter: unit
-    value: null
-    returns: 1
-
-  - parameter: unit
-    value: 4
-    status: 100
-
-  - description: "coordinate system"
-    parameter: coor
-    value: null
-    returns: 1
-
-  - parameter: coor
-    value: 4
-    status: 100
-
-  - description: " motion mode"
-    parameter: momo
-    value: null
-    returns: 1
-
-  - parameter: momo
-    value: 4
-    status: 100
-
-  - description: "plane select"
-    parameter: plan
-    value: null
-    returns: 1
-
-  - parameter: plan
-    value: 4
-    status: 100
-
-  - description: "path control mode"
-    parameter: path
-    value: null
-    returns: 1
-
-  - parameter: path
-    value: 4
-    status: 100
-
-  - description: "distance mode"
-    parameter: dist
-    value: null
-    returns: 1
-
-  - parameter: dist
-    value: 4
-    status: 100
-
-  - description: "feed rate mode"
-    parameter: frmo
-    value: null
-    returns: 1
-
-  - parameter: frmo
-    value: 4
-    status: 100
-
-  - description: "active tool select"
-    parameter: tool
-    value: null
-    returns: 1
-
-  - parameter: tool
-    value: 4
-    status: 100
-
-    # machine position
-
-  - description: "machine position"
-    parameter: mpox   # X machine position
-    value: null
-    returns: 0.00
-
-  - parameter: mpox
-    value: 100.000
-    status: 100
-
-  - parameter: mpoy   # Y machine position
-    value: null
-    returns: 0.00
-
-  - parameter: mpoy
-    value: 100.000
-    status: 100
-
-  - parameter: mpoz   # Z machine position
-    value: null
-    returns: 0.00
-
-  - parameter: mpoz
-    value: 100.000
-    status: 100
-
-  - parameter: mpoa   # A machine position
-    value: null
-    returns: 0.00
-
-  - parameter: mpoa
-    value: 100.000
-    status: 100
-
-  - parameter: mpob   # B machine position
-    value: null
-    returns: 0.00
-
-  - parameter: mpob
-    value: 100.000
-    status: 100
-
-  - parameter: mpoc   # C machine position
-    value: null
-    returns: 0.00
-
-  - parameter: mpoc
-    value: 100.000
-    status: 100
-
-    # work position
-
-  - description: "work position"
-    parameter: posx   # X work position
-    value: null
-    returns: 0.00
-
-  - parameter: posx
-    value: 100.000
-    status: 100
-
-  - parameter: posy   # Y work position
-    value: null
-    returns: 0.00
-
-  - parameter: posy
-    value: 100.000
-    status: 100
-
-  - parameter: posz   # Z work position
-    value: null
-    returns: 0.00
-
-  - parameter: posz
-    value: 100.000
-    status: 100
-
-  - parameter: posa   # A work position
-    value: null
-    returns: 0.00
-
-  - parameter: posa
-    value: 100.000
-    status: 100
-
-  - parameter: posb   # B work position
-    value: null
-    returns: 0.00
-
-  - parameter: posb
-    value: 100.000
-    status: 100
-
-  - parameter: posc   # C work position
-    value: null
-    returns: 0.00
-
-  - parameter: posc
-    value: 100.000
-    status: 100
-
-    # work offset
-    
-  - description: "work offset"
-    parameter: ofsx   # X work offset
-    value: null
-    returns: 0.00
-
-  - parameter: ofsx
-    value: 100.000
-    status: 100
-
-  - parameter: ofsy   # Y work offset
-    value: null
-    returns: 0.00
-
-  - parameter: ofsy
-    value: 100.000
-    status: 100
-
-  - parameter: ofsz   # Z work offset
-    value: null
-    returns: 0.00
-
-  - parameter: ofsz
-    value: 100.000
-    status: 100
-
-  - parameter: ofsa   # A work offset
-    value: null
-    returns: 0.00
-
-  - parameter: ofsa
-    value: 100.000
-    status: 100
-
-  - parameter: ofsb   # B work offset
-    value: null
-    returns: 0.00
-
-  - parameter: ofsb
-    value: 100.000
-    status: 100
-
-  - parameter: ofsc   # C work offset
-    value: null
-    returns: 0.00
-
-  - parameter: ofsc
-    value: 100.000
-    status: 100
-  
-    # home position
-
-  - description: "home position"
-    parameter: homx   # X home position
-    value: null
-    returns: 0.00
-
-  - parameter: homx
-    value: 100.000
-    status: 100
-  
-  - parameter: homy   # Y home position
-    value: null
-    returns: 0.00
-
-  - parameter: homy
-    value: 100.000
-    status: 100
-  
-  - parameter: homz   # Z home position
-    value: null
-    returns: 0.00
-
-  - parameter: homz
-    value: 100.000
-    status: 100
-  
-  - parameter: homa   # A home position
-    value: null
-    returns: 0.00
-
-  - parameter: homa
-    value: 100.000
-    status: 100
-  
-  - parameter: homb   # B home position
-    value: null
-    returns: 0.00
-
-  - parameter: homb
-    value: 100.000
-    status: 100
-  
-  - parameter: homc   # C home position
-    value: null
-    returns: 0.00
-
-  - parameter: homc
-    value: 100.000
-    status: 100
-  
-    # probe position
-
-  - description: "probe position"
-    parameter: prbx   # X probe position
-    value: null
-    returns: 0.00
-
-  - parameter: prbx
-    value: 100.000
-    status: 100
-  
-  - parameter: prby   # Y probe position
-    value: null
-    returns: 0.00
-
-  - parameter: prby
-    value: 100.000
-    status: 100
-  
-  - parameter: prbz   # Z probe position
-    value: null
-    returns: 0.00
-
-  - parameter: prbz
-    value: 100.000
-    status: 100
-  
-  - parameter: prba   # A probe position
-    value: null
-    returns: 0.00
-
-  - parameter: prba
-    value: 100.000
-    status: 100
-  
-  - parameter: prbb   # B probe position
-    value: null
-    returns: 0.00
-
-  - parameter: prbb
-    value: 100.000
-    status: 100
-  
-  - parameter: prbc   # C probe position
-    value: null
-    returns: 0.00
-
-  - parameter: prbc
-    value: 100.000
-    status: 100
-  
-    # jog position
-
-  - description: "jog position"
-    parameter: jogx   # X jog position
-    value: null
-    returns: 0.00
-
-  - parameter: jogx
-    value: 100.000
-    status: 100
-  
-  - parameter: jogy   # Y jog position
-    value: null
-    returns: 0.00
-
-  - parameter: jogy
-    value: 100.000
-    status: 100
-  
-  - parameter: jogz   # Z jog position
-    value: null
-    returns: 0.00
-
-  - parameter: jogz
-    value: 100.000
-    status: 100
-  
-  - parameter: joga   # A jog position
-    value: null
-    returns: 0.00
-
-  - parameter: joga
-    value: 100.000
-    status: 100
-  
-  - parameter: jogb   # B jog position
-    value: null
-    returns: 0.00
-
-  - parameter: jogb
-    value: 100.000
-    status: 100
-  
-  - parameter: jogc   # C jog position
-    value: null
-    returns: 0.00
-
-  - parameter: jogc
-    value: 100.000
-    status: 100
-  
-  ### Communications paraameters ###
-  
-  - description: "enable echo"
-    parameter: ee
-    value: 1
-    returns: 1
-
-  - parameter: ee
-    value: -1
-    status: 100
-
-  - parameter: ee
-    value: 0
-    returns: 0
-
-  - description: "flow control mode"
-    parameter: ex
-    value: 2
-    returns: 2
-
-  - description: "windowing mode"
-    parameter: ew
-    value: 0
-    returns: 0
-
-  - description: "footer depth"
-    parameter: fd
-    value: 0
-    returns: 0
-
-  - description: "JSON syntax"
-    parameter: js
-    value: 1
-    returns: 1
-
-  - parameter: js
-    value: 1
-    returns: 1
-
-  - description: "JSON verbosity - set jv to SILENT (0)"
-    parameter: jv
-    value: 0
-    returns: 0
-
-  - description: "JSON verbosity - set jv to FOOTER only (1)"
-    parameter: jv
-    value: 1
-    returns: 1
-
-  - description: "JSON verbosity - set jv to MESSAGES (2)"
-    parameter: jv
-    value: 2
-    returns: 2
-
-  - description: "JSON verbosity - set jv to CONFIGS (3)"
-    parameter: jv
-    value: 3
-    returns: 3
-
-  - description: "JSON verbosity - set jv to LINENUM (4)"
-    parameter: jv
-    value: 4
-    returns: 4
-
-  - description: "JSON verbosity - set jv to VERBOSE (5)"
-    parameter: jv
-    value: 5
-    returns: 5
-
-  - description: "JSON verbosity - set jv to -1"
-    parameter: jv
-    value: -1
-    status: 100
-
-  - description: "JSON verbosity - set jv to too high"
-    parameter: jv
-    value: 6
-    status: 100
-
-  - description: "text mode verbosity - set to SILENT (0)"
-    parameter: tv
-    value: 0
-    returns: 0
-
-  - description: "text mode verbosity - set to VERBOSE (0)"
-    parameter: tv
-    value: 1
-    returns: 1
-
-  - description: "text mode verbosity - set to -1"
-    parameter: tv
-    value: -1
-    status: 100
-
-  - description: "text mode verbosity - set to too high"
-    parameter: tv
-    value: 2
-    status: 100
-
-  - description: "queue report verbosity"
-    parameter: qv
-    value: 0
-    returns: 0
-
-  - description: "status report verbosity"
-    parameter: sv
-    value: 1
-    returns: 1
-
-  - description: "status interval - set si to a legal value"
-    parameter: si
-    value: 250
-    returns: 250
-
-  - description: "status interval - set si too small"
-    parameter: si
-    value: 50
-    returns: [100, 1000]
-
-  ### Motor values ###
-
-  - description: "Getting motor %s returns correct data"
-    parameters: [1, 2, 3, 4, 5, 6]
-    value: null
-    returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8}
-    status: 0
-
-  - description: "Setting motor %s to known values"
-    parameters: [1, 2, 3, 4, 5, 6]
-    value: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2}
-    returns: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2}
-    status: 0
-
-  - description: "Setting motor %s with additional madeup key"
-    parameters: [1, 2, 3, 4, 5, 6]
-    value: {ma: 0, sa: 1.8, tr: 1.25, mi: 8, po: 8, pm: 2, madeup: 1}
-    returns: null
-    status: 100
-
-  - description: "Setting axis %s to known values"
-    parameters: [x, y, z]
-    value: {am: 1, vm: 1000, fr: 1000, tn: 0, tm: 150, jm: 20, jh: 20, jd: 0.05, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
-    returns: {am: 1, vm: 1000, fr: 1000, tn: 0, tm: 150, jm: 20, jh: 20, jd: 0.05, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
-    status: 0
-
-  - description: "Setting axis %s to known values"
-    parameters: [a, b, c]
-    value: {am: 3, vm: 288000, fr: 288000, tn: -1, tm: -1, jm: 5760, jh: 5760, jd: 0.05, ra: 0.198943449, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
-    returns: {am: 3, vm: 288000, fr: 288000, tn: -1, tm: -1, jm: 5760, jh: 5760, jd: 0.05, ra: 0.199, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
-    status: 0
-
-  - description: "Getting axis %s returns correct data"
-    parameters: [x, y, z]
-    value: null
-    returns: {am: 1, vm: 1000, fr: 1000, tn: 0, tm: 150, jm: 20, jh: 20, jd: 0.05, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
-    status: 0
-
-  - description: "Getting axis %s returns correct data"
-    parameters: [a, b, c]
-    value: null
-    returns: {am: 3, vm: 288000, fr: 288000, tn: -1, tm: -1, jm: 5760, jh: 5760, jd: 0.05, ra: 0.199, sn: 1, sx: 3, sv: 500, lv: 100, lb: 5, zb: 1}
-    status: 0
-
-  - description: Setup status reports
-    parameter: sr
-    value: {line: true, posx: true, posy: true, posz: true, posa: true, feed: true, vel: true, unit: true, coor: true, dist: true, frmo: true, momo: true, stat: true}
-    exactKeys: [line, posx, posy, posz, posa, feed, vel, unit, coor, dist, frmo, momo, stat]

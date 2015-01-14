@@ -32,7 +32,7 @@ var g = new TinyG();
 
 // Load test data from YAML file
 //var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
-var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup_TEST.yml', 'utf8'));
+var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
 // Uncomment to debug the testData:
 // console.log("testData debug:\n", util.inspect(testData, { depth: null }));
 
