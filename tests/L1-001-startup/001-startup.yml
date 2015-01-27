@@ -116,94 +116,78 @@ setParameterTests:
   
   ### System IDs ###
 
-#  - description: "read firmware build"
-  - parameter: fb
+  - description: "read firmware build"
+    parameter: fb
     value: null
-    exists: 1
+    exists: true
 
-#  - description: "attempt to write firmware build"
-  - parameter: fb
+  - description: "attempt to write firmware build"
+    parameter: fb
     value: 999.99
-    exists: 1
     status: 3
 #    status: 107
 
-#  - description: "read firmware version"
-  - parameter: fv
+  - description: "read firmware version"
+    parameter: fv
     value: null
-    exists: 1
+    exists: true
 
-#  - description: "attempt to write firmware version"
-  - parameter: fv
+  - description: "attempt to write firmware version"
+    parameter: fv
     value: 999.99
-    exists: 1
     status: 3
 #    status: 107
 
 #  - description: "read configuration version"
-  - parameter: cv
-    value: null
-    exists: 1
+#    parameter: cv
+#    value: null
+#    exists: true
 
 #  - description: "attempt to write configuration version"
-  - parameter: cv
-    value: 2
-    exists: 1
-    status: 3
-#    status: 107
+#    parameter: cv
+#    value: 2
+#    status: 3
+##    status: 107
 
-#  - description: "read board ID"
-  - parameter: id
+  - description: "read board ID"
+    parameter: id
     value: null
-    exists: 1
+    exists: true
 
-#  - description: "attempt to write board ID"
-  - parameter: id
+  - description: "attempt to write board ID"
+    parameter: id
     value: "loopy"
-    exists: 1
     status: 3
 #    status: 107
 
-#  - description: "read hardware platform"
-  - parameter: hp
+  - description: "read hardware platform"
+    parameter: hp
     value: null
-    exists: 1
+    exists: true
 
-#  - description: "attempt to write hardware platform"
-  - parameter: hp
+  - description: "attempt to write hardware platform"
+    parameter: hp
     value: 2
-    exists: 1
     status: 3
 #    status: 107
 
-#  - description: "set hardware version - legal input (v8 behaviors) "
-  - parameter: hv
+  - description: "set hardware version - legal input (v8 behaviors) "
+    parameter: hv
     value: 6
     returns: 6
 
-#  - description: "set hardware version - legal input (v8 behaviors) "
-  - parameter: hv
+  - description: "set hardware version - legal input (v8 behaviors) "
+    parameter: hv
     value: 7
     returns: 7
 
-#  - description: "set hardware version - legal input (v8 behaviors) "
-  - parameter: hv
+  - description: "set hardware version - legal input (v8 behaviors) "
+    parameter: hv
     value: 8
     returns: 8
 
-#  - description: "set hardware version - illegal input (v8 behaviors) "
-  - parameter: hv
-    value: 5
-    exists: 1
-    status: 107
-#    status: 106
-
-#  - description: "set hardware version - illegal input (v8 behaviors) "
-  - parameter: hv
+  - description: "set hardware version - illegal input (v8 behaviors) "
+    parameter: hv
     value: 9
-    exists: 1
     status: 107
 #    status: 106
-
-
-

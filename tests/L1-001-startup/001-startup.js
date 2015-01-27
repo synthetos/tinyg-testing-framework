@@ -33,8 +33,7 @@ var g = new TinyG();
 // Load test data from YAML file
 //var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
 
-//var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
-var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup_BUG-01.yml', 'utf8'));
+var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
 
 // Uncomment to debug the testData:
 // console.log("testData debug:\n", util.inspect(testData, { depth: null }));
@@ -189,9 +188,10 @@ describe("Setup system parameters for testing", function () {
           }
         })
 
+				// the following code interprets the .yml responses
         if (util.isArray(v.returns)) {
           promise = promise.should.eventually.be.within(v.returns[0], v.returns[1]);
-        } else if (v.exists === true) {
+        } else if (v.exists == true) {
           promise = promise.should.eventually.exist;
         } else if (v.returns === undefined || v.returns === null) {
           // If we have a *Keys, then we actually implicitly check for exists.
