@@ -37,6 +37,7 @@ global.yaml = yaml;
 global.util = util;
 global.fs = fs;
 global.g = g;
+global.Q = Q;
 
 
 // Load test data from YAML file
@@ -136,4 +137,46 @@ if (DEBUG_RESPONSES === 1) {
   g.on('data', function (v) {
     console.log(v);
   });
+}
+
+global.tinyg_tester_begin = function (testData) {
+    // Begin Mocha preconditions functions
+    before(function (done) {
+      console.log("Setting precondition communication and system parameters");
+      var promise = g.set(testData.precondition.setValues);
+
+      console.log("\nTest parameters:")
+      console.log("  " + new Date());
+
+      if (testData.precondition && testData.precondition.reportParameters) {
+        testData.precondition.reportParameters.forEach(function (p) {
+          promise = promise.then(function () {
+            return g.get(p).then(
+              function (v) {
+                console.log("  " + p + "=" + v);
+              },
+              function (e) {
+                console.log("  " + p + "=null");
+                return Q.fcall(function () {}); // Return an empty promise to "ignore the error"
+              }
+            );
+          });
+        });
+      }
+
+      promise = promise.then(function () {
+        console.log("--\n")
+      }).finally(function () {
+        done();
+      });
+
+      return promise;
+    });
+
+    beforeEach(function () {
+      if (testData.precondition && testData.precondition.setValuesEach) {
+        var promise = g.set(testData.precondition.setValuesEach);
+        return promise;
+      }
+    });
 }
