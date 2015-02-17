@@ -1,0 +1,291 @@
+(msg Arc tests)
+(msg G17 arc with movement in X - offset i)
+(msg G17 arc with movement in X - offset i, with helix in Z)
+(msg G17 arc with movement in Y - offset j)
+(msg G17 arc with movement in Y - offset j, with helix in Z)
+(msg G18 arc with movement in X - offset i)
+(
+( ASSUMPTIONS
+(   Test machine has at least 40mm x 40mm XY travel
+(   Test machine has at least 75mm of X travel
+(
+( PRECONDITIONS (all tests)
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+g21 g17 g90
+t1
+f2000 ( Set feed rate for all tests )
+g0 x0 y0 z0
+x10 ( do a little dance to get your attention )
+x0
+g4 p2 ( pause to examine proper starting point )
+(******************************************************************
+(******************************************************************
+(******************************************************************
+( START TESTS
+(
+(******************************************************************
+(msg G17 arc with movement in X - offset i)
+(
+( PERFORMS
+(   CW  360 circle offset in X
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   All partial circles should return to zero with a traverse
+(
+g17 g2 i20 (360 CW)
+g0 x0 y0 z0
+g17 g3 i20 (360 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x40 (180 CW)
+g0 x0 y0 z0
+g17 g3 i20 x40 (180 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x20 y20 (90 CW)
+g0 x0 y0 z0
+g17 g3 i20 x20 y-20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc with movement in X - offset i, with helix in Z)
+(
+( PERFORMS
+(   CW  360 circle, Z plunge to -50
+(   CCW 360 circle, Z retract to 0
+(   CW  180 arc with Z plunge to -50
+(   CCW 180 arc with Z retract to zero
+(   CW   90 arc with Z plunge to -50
+(   CCW  90 arc with Z retract to 0
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   All partial circles return to zero with a traverse
+(
+g17 g2 i20 z-50 (360 CW)
+g0 x0 y0
+g17 g3 i20 z0 (360 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x40 z-50 (180 CW)
+g0 x0 y0
+g17 g3 i20 x40 z0 (180 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x20 y20 z-50 (90 CW)
+g0 x0 y0
+g17 g3 i20 x20 y-20 z0 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc with movement in Y - offset j)
+(
+( PERFORMS
+(   CW  360 circle offset in Y
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   All partial circles should return to zero with a traverse
+(
+g17 g2 j20 (360 CW)
+g0 x0 y0 z0
+g17 g3 j20 (360 CCW)
+g0 x0 y0 z0
+g17 g2 j20 y40 (180 CW)
+g0 x0 y0 z0
+g17 g3 j20 y40 (180 CCW)
+g0 x0 y0 z0
+g17 g2 j20 x-20 y20 (90 CW)
+g0 x0 y0 z0
+g17 g3 j20 x20 y20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc with movement in Y - offset j, with helix in Z)
+(
+( PERFORMS
+(   CW  360 circle, Z plunge to -50
+(   CCW 360 circle, Z retract to 0
+(   CW  180 arc with Z plunge to -50
+(   CCW 180 arc with Z retract to zero
+(   CW   90 arc with Z plunge to -50
+(   CCW  90 arc with Z retract to 0
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   All partial circles return to zero with a traverse
+(
+g17 g2 j20 z-50 (360 CW)
+g0 x0 y0
+g17 g3 j20 z0 (360 CCW)
+g0 x0 y0 z0
+g17 g2 j20 y40 z-50 (180 CW)
+g0 x0 y0
+g17 g3 j20 y40 z0 (180 CCW)
+g0 x0 y0 z0
+g17 g2 j20 x-20 y20 z-50 (90 CW)
+g0 x0 y0
+g17 g3 j20 x20 y20 z0 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G18 arc with movement in X - offset i)
+(
+( PERFORMS
+(   CW  360 circle offset in X
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(   All partial circles should return to zero with a traverse
+(
+g18 g2 i20 (360 CW)
+g0 x0 y0 z0
+g18 g3 i20 (360 CCW)
+g0 x0 y0 z0
+g18 g2 i20 x40 (180 CW)
+g0 x0 y0 z0
+g18 g3 i20 x40 (180 CCW)
+g0 x0 y0 z0
+g18 g2 i20 x20 z20 (90 CW)
+g0 x0 y0 z0
+g18 g3 i20 x20 z-20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G18 arc with movement in Z - offset k)
+(
+( PERFORMS
+(   CW  360 circle offset in Z
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(   All partial circles should return to zero with a traverse
+(
+g18 g2 k20 (360 CW)
+g0 x0 y0 z0
+g18 g3 k20 (360 CCW)
+g0 x0 y0 z0
+g18 g2 k20 z40 (180 CW)
+g0 x0 y0 z0
+g18 g3 k20 z40 (180 CCW)
+g0 x0 y0 z0
+g18 g2 k20 z20 x-20 (90 CW)
+g0 x0 y0 z0
+g18 g3 k20 z20 x20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G19 arc with movement in Y - offset J)
+(
+( PERFORMS
+(   CW  360 circle offset in Y
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking from the right side of the machine (positive X)
+(   All partial circles should return to zero with a traverse
+(
+g19 g2 j20 (360 CW)
+g0 x0 y0 z0
+g19 g3 j20 (360 CCW)
+g0 x0 y0 z0
+g19 g2 j20 y40 (180 CW)
+g0 x0 y0 z0
+g19 g3 j20 y40 (180 CCW)
+g0 x0 y0 z0
+g19 g2 j20 y20 z20 (90 CW)
+g0 x0 y0 z0
+g19 g3 j20 y20 z-20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G19 arc with movement in Z - offset K)
+(
+( PERFORMS
+(   CW  360 circle offset in Z
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS
+(   Zero set to: middle of XY table, Z ~25 mm down from max 
+(   Starting position: 0,0,0
+(   Extents required: -20,-20,-50 to 20,20,0
+(
+( RESULTS
+(   CW should be clockwise as viewed looking from the right side of the machine (positive X)
+(   All partial circles should return to zero with a traverse
+(
+g19 g2 k20 (360 CW)
+g0 x0 y0 z0
+g19 g3 k20 (360 CCW)
+g0 x0 y0 z0
+g19 g2 k20 z40 (180 CW)
+g0 x0 y0 z0
+g19 g3 k20 z40 (180 CCW)
+g0 x0 y0 z0
+g19 g2 k20 z20 y-20 (90 CW)
+g0 x0 y0 z0
+g19 g3 k20 z20 y20 (90 CCW)
+g0 x0 y0 z0

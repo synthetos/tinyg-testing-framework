@@ -1,0 +1,173 @@
+(msg G17 XY arc tests running are:)
+(msg G17 arc [XY plane] with I offsets)
+(msg G17 arc [XY plane] with I offsets & Z helix)
+(msg G17 arc [XY plane] with J offsets)
+(msg G17 arc [XY plane] with J offsets & Z helix)
+(msg G17 arc [XY plane] 1080 degrees with Z helix)
+(
+( ASSUMPTIONS
+(   This test is set up for a Shapeoko2 but could work on most any full-size tabletop machine with no or minor edits
+(   The machine has properly configured homing switches. If not comment out the homing sequence n10 - n12 and manually home
+(
+( PRECONDITIONS - “before” (all tests unless otherwise noted)
+(   Machine work dimensions required: -100,-100,-75 to 100,100,0
+(   Zero set to middle of XY table, Z at max
+(   Starting position 0,0,-25 set to 0,0,0
+(
+n1 g21 g17 g90 g54
+( Zero and set table or comment out to zero manually
+n10 g28.2 x0 y0 z0
+(n11 g0 x100 y100 z-25
+n11 g0 x150 y150 z-25
+n12 g28.3 x0 y0 z0
+(
+n20 x10 ( do a little dance to get your attention )
+n21 x0
+n22 g4 p2 ( pause to examine proper starting point )
+(
+f2000 ( Set feed rate for all tests unless overridden)
+(******************************************************************
+(******************************************************************
+(******************************************************************
+( START TESTS
+(******************************************************************
+(msg G17 arc [XY plane] with I offsets)
+(
+( PERFORMS
+(   CW  360 circle offset in X
+(   CCW 360 circle
+(   CW  180 arc & back to zero
+(   CCW 180 arc & back to zero
+(   CW   90 arc & back to zero
+(   CCW  90 arc & back to zero
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   Partial circles should return to zero with a traverse
+(
+g0 x0 y0 z0
+g17 g2 i20 (360 CW)
+g0 x0 y0 z0
+g17 g3 i20 (360 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x40 (180 CW)
+g0 x0 y0 z0
+g17 g3 i20 x40 (180 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x20 y20 (90 CW)
+g0 x0 y0 z0
+g17 g3 i20 x20 y-20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc [XY plane] with I offsets & Z helix)
+(
+( PERFORMS
+(   CW  360 circle, Z plunge to -50
+(   CCW 360 circle, Z retract to 0
+(   CW  180 arc with Z plunge to -50
+(   CCW 180 arc with Z retract to zero
+(   CW   90 arc with Z plunge to -50
+(   CCW  90 arc with Z retract to 0
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   Partial circles return to zero with a traverse
+(
+g0 x0 y0 z0
+g17 g2 i20 z-50 (360 CW)
+g0 x0 y0
+g17 g3 i20 z0 (360 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x40 z-50 (180 CW)
+g0 x0 y0
+g17 g3 i20 x40 z0 (180 CCW)
+g0 x0 y0 z0
+g17 g2 i20 x20 y20 z-50 (90 CW)
+g0 x0 y0
+g17 g3 i20 x20 y-20 z0 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc [XY plane] with J offsets)
+(
+( PERFORMS
+(   CW  360 circle offset in Y
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   Partial circles should return to zero with a traverse
+(
+g0 x0 y0 z0
+g17 g2 j20 (360 CW)
+g0 x0 y0 z0
+g17 g3 j20 (360 CCW)
+g0 x0 y0 z0
+g17 g2 j20 y40 (180 CW)
+g0 x0 y0 z0
+g17 g3 j20 y40 (180 CCW)
+g0 x0 y0 z0
+g17 g2 j20 x-20 y20 (90 CW)
+g0 x0 y0 z0
+g17 g3 j20 x20 y20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc [XY plane] with J offsets & Z helix)
+(
+( PERFORMS
+(   CW  360 circle, Z plunge to -50
+(   CCW 360 circle, Z retract to 0
+(   CW  180 arc with Z plunge to -50
+(   CCW 180 arc with Z retract to zero
+(   CW   90 arc with Z plunge to -50
+(   CCW  90 arc with Z retract to 0
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(   Partial circles return to zero with a traverse
+(
+g0 x0 y0 z0
+g17 g2 j20 z-50 (360 CW)
+g0 x0 y0
+g17 g3 j20 z0 (360 CCW)
+g0 x0 y0 z0
+g17 g2 j20 y40 z-50 (180 CW)
+g0 x0 y0
+g17 g3 j20 y40 z0 (180 CCW)
+g0 x0 y0 z0
+g17 g2 j20 x-20 y20 z-50 (90 CW)
+g0 x0 y0
+g17 g3 j20 x20 y20 z0 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G17 arc [XY plane] 1080 degrees with Z helix)
+(
+( PERFORMS
+(   CW  1080 degree, 3 x 80mm circles with 50mm Z plunge, offset in X
+(   CCW 1080 degree reversal of above
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking down on the XY plane (positive Z)
+(
+f4000
+g0 x0 y0 z0
+g17 g2 i40 p3 z-50
+g17 g3 i40 p3 z0
+g0 x0 y0 z0

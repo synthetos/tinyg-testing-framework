@@ -1,0 +1,28 @@
+n1 g21 g17 g90 g54
+( Zero and set table or comment out to zero manually
+n10 g28.2 x0 y0 z0
+n11 g0 x150 y150 z-45
+n12 g28.3 x0 y0 z0
+(
+n20 x10 ( do a little dance to get your attention )
+n21 x0
+n22 g4 p2 ( pause to examine proper starting point )
+(
+f2000 ( Set feed rate for all tests unless overridden)
+
+(******************************************************************
+(msg G18 arc [XZ plane] 1080 degrees with Y helix)
+(
+( PERFORMS
+(   CW  1080 degree, 3 x 40mm circles with 80mm -Y helix, offset in X
+(   CCW 1080 degree reversal of above
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   Clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(
+g0 x0 y0 z0
+g18 g2 i40 p3 y-140
+g18 g3 i40 p3 y0
+g0 x0 y0 z0

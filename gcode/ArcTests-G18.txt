@@ -1,0 +1,172 @@
+(msg G18 XY arc tests running are:)
+(msg G18 arc [XZ plane] with I offsets)
+(msg G18 arc [XZ plane] with I offsets & Y helix)
+(msg G18 arc [XZ plane] with K offsets)
+(msg G18 arc [XZ plane] with K offsets & Y helix)
+(msg G18 arc [XZ plane] 1080 degrees with Y helix)
+(
+( ASSUMPTIONS
+(   This test is set up for a Shapeoko2 but could work on most any full-size tabletop machine with no or minor edits
+(   The machine has properly configured homing switches. If not comment out the homing sequence n10 - n12 and manually home
+(
+( PRECONDITIONS - “before” (all tests unless otherwise noted)
+(   Machine work dimensions required: -100,-100,-75 to 100,100,0
+(   Zero set to middle of XY table, Z at max
+(   Starting position 0,0,-25 set to 0,0,0
+(
+n1 g21 g17 g90 g54
+( Zero and set table or comment out to zero manually
+n10 g28.2 x0 y0 z0
+(n11 g0 x100 y100 z-25
+n11 g0 x150 y150 z-25
+n12 g28.3 x0 y0 z0
+(
+n20 x10 ( do a little dance to get your attention )
+n21 x0
+n22 g4 p2 ( pause to examine proper starting point )
+(
+f2000 ( Set feed rate for all tests unless overridden)
+(******************************************************************
+(******************************************************************
+(******************************************************************
+( START TESTS
+(******************************************************************
+(msg G18 arc [XZ plane] with I offsets)
+(
+( PERFORMS
+(   CW  360 circle offset in X
+(   CCW 360 circle
+(   CW  180 arc & back to zero
+(   CCW 180 arc & back to zero
+(   CW   90 arc & back to zero
+(   CCW  90 arc & back to zero
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(   Partial circles should return to zero with a traverse
+(
+g0 x0 y0 z0
+g18 g2 i20 (360 CW)
+(g0 x0 y0 z0
+g18 g3 i20 (360 CCW)
+(g0 x0 y0 z0
+g18 g2 i20 x40 (180 CW)
+g0 x0 z0
+g18 g3 i20 x40 (180 CCW)
+g0 x0 z0
+g18 g2 i20 x20 z20 (90 CW)
+g0 x0 z0
+g18 g3 i20 x20 z-20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G18 arc [XZ plane] with I offsets & Y helix)
+(
+( PERFORMS
+(   CW  360 circle with center offset in X
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(   Partial circles return to zero with a traverse
+(
+g0 x0 y0 z0
+g18 g2 i20 y-80 (360 CW)
+(g0 x0 z0
+g18 g3 i20 y0 (360 CCW)
+(g0 x0 y0 z0
+g18 g2 i20 x40 y-80 (180 CW)
+g0 x0 z0
+g18 g3 i20 x40 y0 (180 CCW)
+g0 x0 z0
+g18 g2 i20 x20 z20 y-80 (90 CW)
+g0 x0 z0
+g18 g3 i20 x20 z-20 y0 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G18 arc [XZ plane] with K offsets)
+(
+( PERFORMS
+(   CW  360 circle offset in Z
+(   CCW 360 circle
+(   CW  180 arc
+(   CCW 180 arc
+(   CW   90 arc
+(   CCW  90 arc
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(   Partial circles should return to zero with a traverse
+(
+g0 x0 y0 z0
+g18 g2 k20 (360 CW)
+(g0 x0 y0 z0
+g18 g3 k20 (360 CCW)
+(g0 x0 y0 z0
+g18 g2 k20 z40 (180 CW)
+g0 x0 z0
+g18 g3 k20 z40 (180 CCW)
+g0 x0 z0
+g18 g2 k20 z20 x-20 (90 CW)
+g0 x0 z0
+g18 g3 k20 z20 x20 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G18 arc [XZ plane] with K offsets & Y helix)
+(
+( PERFORMS
+(   CW  360 circle, Z plunge to -50
+(   CCW 360 circle, Z retract to 0
+(   CW  180 arc with Z plunge to -50
+(   CCW 180 arc with Z retract to zero
+(   CW   90 arc with Z plunge to -50
+(   CCW  90 arc with Z retract to 0
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(   Partial circles return to zero with a traverse
+(
+g0 x0 y0 z0
+g18 g2 k20 y-80 (360 CW)
+(g0 x0 z0
+g18 g3 k20 y0 (360 CCW)
+(g0 x0 z0
+g18 g2 k20 z40 y-80 (180 CW)
+g0 x0 z0
+g18 g3 k20 z40 y0 (180 CCW)
+g0 x0 z0
+g18 g2 k20 z20 x-20 y-80 (90 CW)
+g0 x0 z0
+g18 g3 k20 z20 x20 y0 (90 CCW)
+g0 x0 y0 z0
+
+(******************************************************************
+(msg G18 arc [XZ plane] 1080 degrees with Y helix)
+(
+( PERFORMS
+(   CW  1080 degree, 3 x 40mm circles with 80mm -Y helix, offset in X
+(   CCW 1080 degree reversal of above
+(
+( PRECONDITIONS - See “before”
+(
+( RESULTS
+(   CW should be clockwise as viewed looking at tool movement from the rear of the machine (positive Y)
+(
+g0 x0 y0 z0
+g18 g2 i40 p3 y-80
+g18 g3 i40 p3 y0
+g0 x0 y0 z0
