@@ -6,7 +6,7 @@
 //#############################################################################
 
 describe("001-Startup tests", function () {
-  var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup_FULL.yml', 'utf8'));
+  var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
 
   before(function (done) {
     console.log("Setting precondition communication and system parameters");
