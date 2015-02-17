@@ -8,13 +8,13 @@
 #### Start of actual data for the tests
 ###############################################################################
 
-#### Global values 
+#### Global values
 min_fb: 80
 min_hv: 6
 
 #### Preconditions for all tests (runs from before_all() )
 precondition:
-  
+
   setValues:   # These run before() all tests (test setup). Ordering is important
     - js: 1    # Should set JSON to strict mode-- for JS parsing
     - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
@@ -30,7 +30,8 @@ precondition:
     - hv: 8    # Should set HW version to v8
 
   setValuesEach: # These run before each test. Try to keep this short -- it makes debugging harder
-    - ee: 0    # Should disable echo and set JSON mode
+    # - ee: 0    # Should disable echo and set JSON mode
+    # ^^ Commented to squelch ton of warning on v9
 
   reportParameters:
     - id
@@ -72,7 +73,7 @@ gcodeDefaults:
 #
 # Syntax:
 #
-# Required: 
+# Required:
 #   "parameters:" as an array OR "parameter:" as a string,
 #   "value" as the value to send
 #
@@ -91,7 +92,7 @@ gcodeDefaults:
 #     exactKeys: [x, y] array of key names that must match exactly; there must be
 #                       exactly those keys in the response, no more, no less
 #
-#   "status:" - matches return code 
+#   "status:" - matches return code
 #     status: 0       status = 0 means comamnd returned OK (0=OK)
 #     <omitted>       same as status: 0
 #     status: nnn     integer match so non-zero status can be interpreted as success
@@ -111,9 +112,9 @@ setParameterTests:
     parameter: null
     value: null
     status: 100
-  
+
   # NOTE: the case of {"":null} is not tested
-  
+
   ### System IDs ###
 
   - description: "read firmware build"
