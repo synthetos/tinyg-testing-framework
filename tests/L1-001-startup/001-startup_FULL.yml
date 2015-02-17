@@ -13,11 +13,11 @@
 
 #### Syntax notes:
 #
-# The test code will execute elements of an array [] in the order listed, so 
-# sequencing is preserved. An element preceded by a '-<space>' marks it as an 
-# element of an array. 
+# The test code will execute elements of an array [] in the order listed, so
+# sequencing is preserved. An element preceded by a '-<space>' marks it as an
+# element of an array.
 #
-# Elements in a dictionary are executed in random order - ordering is not 
+# Elements in a dictionary are executed in random order - ordering is not
 # preserved. Multiple items in {}'s are a dictionary, e.g. {sv: 1, si: 250}
 #
 # A space or newline is required after a colon.
@@ -38,7 +38,7 @@ precondition:
     - {jv: 1}
     - {qv: 1, x: null}
 
-  setValues_Example3: # Same as Example2, but without the brackets, 
+  setValues_Example3: # Same as Example2, but without the brackets,
   					          # since having key: value implies a dictionary
     				          # Translates to JSON [{jv:1}, {qv:1, x:null}]
     - jv: 1 		      # Note that the space after the colon is necessary!
@@ -58,29 +58,30 @@ precondition:
 #### Start of actual data for the tests
 ###############################################################################
 
-#### Global values 
+#### Global values
 min_fb: 80
 min_hv: 6
 
 #### Preconditions for all tests (runs from before_all() )
 precondition:
-  
+
   setValues:   # These run before() all tests (test setup). Ordering is important
     - js: 1    # Should set JSON to strict mode-- for JS parsing
-    - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
-    - js: 1    # Should set JSON to strict mode-- for JS parsing
+    # - ee: 0    # Should disable echo and set JSON mode	-- do this first or responses will get confused
     - fd: 0    # Should set footer depth
-    - ex: 2    # Should set flow control to RTS/CTS
+    # - ex: 2    # Should set flow control to RTS/CTS
     - jv: 5    # Should set JSON verbosity to max
     - tv: 1    # Should set text to verbose
     - qv: 0    # Should turn queue reports off
     - sv: 1    # Should set status report verbosity to filtered
     - si: 250  # Should set status interval
-    - ew: 0    # Should disable window mode
+    # - ew: 0    # Should disable window mode
     - hv: 8    # Should set HW version to v8
 
   setValuesEach: # These run before each test. Try to keep this short -- it makes debugging harder
-    - ee: 0    # Should disable echo and set JSON mode
+    # - ee: 0    # Should disable echo and set JSON mode
+    - js: 1    # Should set JSON to strict mode-- for JS parsing
+    - jv: 5    # Should set JSON verbosity to max
 
   reportParameters:
     - id
@@ -122,7 +123,7 @@ gcodeDefaults:
 #
 # Syntax:
 #
-# Required: 
+# Required:
 #   "parameters:" as an array OR "parameter:" as a string,
 #   "value" as the value to send
 #
@@ -141,7 +142,7 @@ gcodeDefaults:
 #     exactKeys: [x, y] array of key names that must match exactly; there must be
 #                       exactly those keys in the response, no more, no less
 #
-#   "status:" - matches return code 
+#   "status:" - matches return code
 #     status: 0       status = 0 means comamnd returned OK (0=OK)
 #     <omitted>       same as status: 0
 #     status: nnn     integer match so non-zero status can be interpreted as success
@@ -159,7 +160,7 @@ setParameterTests:
   - parameter: null
     value: null
     status: 100
-  
+
   ### System IDs ###
 
   - description: "firmware build - supposed to be read-only"
@@ -210,30 +211,30 @@ setParameterTests:
     exists: 0
     status: 107       # fails on v8 - should be a 106
 #    status: 106       # fails on v8 - should be a 106
-    
+
   - description: "board ID - supposed to be read-only string value"
     parameter: id
     value: "loopy"
     status: 3
     status: 107
-    
+
   ### Dynamic model attributes ###
-  
+
   # NOTE: These report back state from the Gcode models. Typically used only by status reports
 
   - description: "line number most recently parsed (Gcode model line number)"
     parameter: n
     value: null
-    returns: 0 
+    returns: 0
 
-  - parameter: n      # supposed to be read only 
+  - parameter: n      # supposed to be read only
     value: 1331
     status: 100
 
   - description: "line number currently executing or last executed (runtime line number)"
     parameter: line
     value: null
-    returns: 0 
+    returns: 0
 
   - parameter: line
     value: 1331
@@ -242,7 +243,7 @@ setParameterTests:
   - description: "velocity"
     parameter: vel
     value: null
-    returns: 0 
+    returns: 0
 
   - parameter: vel
     value: 1331
@@ -251,7 +252,7 @@ setParameterTests:
   - description: "feed rate"
     parameter: feed
     value: null
-    returns: 0 
+    returns: 0
 
   - parameter: feed
     value: 1331
@@ -477,7 +478,7 @@ setParameterTests:
     status: 100
 
     # work offset
-    
+
   - description: "work offset"
     parameter: ofsx   # X work offset
     value: null
@@ -526,7 +527,7 @@ setParameterTests:
   - parameter: ofsc
     value: 100.000
     status: 100
-  
+
     # home position
 
   - description: "home position"
@@ -537,7 +538,7 @@ setParameterTests:
   - parameter: homx
     value: 100.000
     status: 100
-  
+
   - parameter: homy   # Y home position
     value: null
     returns: 0.00
@@ -545,7 +546,7 @@ setParameterTests:
   - parameter: homy
     value: 100.000
     status: 100
-  
+
   - parameter: homz   # Z home position
     value: null
     returns: 0.00
@@ -553,7 +554,7 @@ setParameterTests:
   - parameter: homz
     value: 100.000
     status: 100
-  
+
   - parameter: homa   # A home position
     value: null
     returns: 0.00
@@ -561,7 +562,7 @@ setParameterTests:
   - parameter: homa
     value: 100.000
     status: 100
-  
+
   - parameter: homb   # B home position
     value: null
     returns: 0.00
@@ -569,7 +570,7 @@ setParameterTests:
   - parameter: homb
     value: 100.000
     status: 100
-  
+
   - parameter: homc   # C home position
     value: null
     returns: 0.00
@@ -577,7 +578,7 @@ setParameterTests:
   - parameter: homc
     value: 100.000
     status: 100
-  
+
     # probe position
 
   - description: "probe position"
@@ -588,7 +589,7 @@ setParameterTests:
   - parameter: prbx
     value: 100.000
     status: 100
-  
+
   - parameter: prby   # Y probe position
     value: null
     returns: 0.00
@@ -596,7 +597,7 @@ setParameterTests:
   - parameter: prby
     value: 100.000
     status: 100
-  
+
   - parameter: prbz   # Z probe position
     value: null
     returns: 0.00
@@ -604,7 +605,7 @@ setParameterTests:
   - parameter: prbz
     value: 100.000
     status: 100
-  
+
   - parameter: prba   # A probe position
     value: null
     returns: 0.00
@@ -612,7 +613,7 @@ setParameterTests:
   - parameter: prba
     value: 100.000
     status: 100
-  
+
   - parameter: prbb   # B probe position
     value: null
     returns: 0.00
@@ -620,7 +621,7 @@ setParameterTests:
   - parameter: prbb
     value: 100.000
     status: 100
-  
+
   - parameter: prbc   # C probe position
     value: null
     returns: 0.00
@@ -628,7 +629,7 @@ setParameterTests:
   - parameter: prbc
     value: 100.000
     status: 100
-  
+
     # jog position
 
   - description: "jog position"
@@ -639,7 +640,7 @@ setParameterTests:
   - parameter: jogx
     value: 100.000
     status: 100
-  
+
   - parameter: jogy   # Y jog position
     value: null
     returns: 0.00
@@ -647,7 +648,7 @@ setParameterTests:
   - parameter: jogy
     value: 100.000
     status: 100
-  
+
   - parameter: jogz   # Z jog position
     value: null
     returns: 0.00
@@ -655,7 +656,7 @@ setParameterTests:
   - parameter: jogz
     value: 100.000
     status: 100
-  
+
   - parameter: joga   # A jog position
     value: null
     returns: 0.00
@@ -663,7 +664,7 @@ setParameterTests:
   - parameter: joga
     value: 100.000
     status: 100
-  
+
   - parameter: jogb   # B jog position
     value: null
     returns: 0.00
@@ -671,7 +672,7 @@ setParameterTests:
   - parameter: jogb
     value: 100.000
     status: 100
-  
+
   - parameter: jogc   # C jog position
     value: null
     returns: 0.00
@@ -679,31 +680,31 @@ setParameterTests:
   - parameter: jogc
     value: 100.000
     status: 100
-  
+
   ### Communications paraameters ###
-  
-  - description: "enable echo"
-    parameter: ee
-    value: 1
-    returns: 1
 
-  - parameter: ee
-    value: -1
-    status: 100
+  # - description: "enable echo"
+  #   parameter: ee
+  #   value: 1
+  #   returns: 1
+  #
+  # - parameter: ee
+  #   value: -1
+  #   status: 100
+  #
+  # - parameter: ee
+  #   value: 0
+  #   returns: 0
+  #
+  # - description: "flow control mode"
+  #   parameter: ex
+  #   value: 2
+  #   returns: 2
 
-  - parameter: ee
-    value: 0
-    returns: 0
-
-  - description: "flow control mode"
-    parameter: ex
-    value: 2
-    returns: 2
-
-  - description: "windowing mode"
-    parameter: ew
-    value: 0
-    returns: 0
+  # - description: "windowing mode"
+  #   parameter: ew
+  #   value: 0
+  #   returns: 0
 
   - description: "footer depth"
     parameter: fd

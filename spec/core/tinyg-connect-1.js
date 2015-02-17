@@ -26,7 +26,7 @@ var g = new TinyG();
 
 var testData = yaml.safeLoad(fs.readFileSync('spec/core/tinyg-connect-1.yml', 'utf8'));
 // Uncomment to debug the testData:
-console.log("testData debug:\n", util.inspect(testData, {depth: null}));
+console.log("testData debug:\n", util.inspect(g, {depth: null}));
 
 var portPath, dataportPath;
 
@@ -109,9 +109,9 @@ sp.write('{"js":1}\n');
 */
 
 // DEBUG:
- // g.on('data', function (v) {
- //   console.log(v);
- // });
+ g.on('data', function (v) {
+   console.log(v);
+ });
 
 //#############################################################################
 
@@ -182,6 +182,25 @@ describe("Check Parameters", function () {
   });
 
 });
+
+
+describe("Setup default coordinate systems", function () {
+
+  // Set parameter tests
+  testData.coordinateSystemTests.forEach(function(v) {
+    var description = 'Sends gcode "' + v.gcode + '" @v8 @v9';
+    if (v.description) {
+      description = util.format(v.description, v.gcode);
+    }
+
+    it(description, function (done) {
+      g.write(v.gcode);
+      done();
+    });
+  });
+
+});
+
 
 describe("Checks System Group Values", function () {
   //Check all sys values are present

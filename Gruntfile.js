@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     mochaTest: {
       test: {
         options: {
+          recursive: true,
           bail: false,
           reporter: 'spec',
           captureFile: 'results.txt', 	// Optionally capture the reporter output to a file
@@ -15,7 +16,7 @@ module.exports = function (grunt) {
           clearRequireCache: false 			// Optionally clear the require cache before running tests (defaults to false)
         },
 //        src: ['spec/**/tinyg-*.js']
-        src: ['tests/**/*.js']
+        src: ['tests/']
       }
     }
   });
