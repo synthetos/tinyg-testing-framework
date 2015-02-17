@@ -38,15 +38,16 @@ precondition:
 #                     Add an "{sr:n}" as the last line if there would normally not be an sr sent.
 #            [object] If the value is an object of one or more key: value pairs, then the set command
 #                     will be used to send them, and each one will wait for a response before the next is sent.
+#   setup_timeout: [number] Number of milliseconds (seconds * 1000) to wait before giving up on ALL setup commands
 #   gcode: [array or string] The given value will be sent as a block of gcode.
 #           (See note below about inline commands and checks.)
-#   gcode_file: [sting] The file path given (relative to the test script) will be opened and sent as a gcode block.
+#   gcode_file: [string] The file path given (relative to the test script) will be opened and sent as a gcode block.
 #                (See note below about inline commands and checks.)
-#   timeout:
+#   timeout: [number] Number of milliseconds (seconds * 1000) to wait before giving up on the entire gcode file
 #   tests: [array] Each object in this array will describe a different kind of test, which will take different parameters.
 #                  The tests will be documented below.
 #
-# Note - Inline commands and checks:
+# Note - Inline commands and checks: (NOT IMPLEMENTED YET!!)
 #   In gcode streams you can embed commands for the test harness by placing them after a ; and inside < and >
 #   For example, to delay transimission of the next command after the reply for the previous command was recieved
 #   by N seconds (may be a fraction) us the following line (the ; must be the first character on a line):
