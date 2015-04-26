@@ -29,3 +29,4 @@ node_modules
 
 # Random files
 results.txt
+.DS_Store
