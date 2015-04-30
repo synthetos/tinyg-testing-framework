@@ -23,8 +23,32 @@
 testSuiteMetadata:
   testSuite: ArcTestSuite-001
 
+
+#### Macro substitutions defined for this file
+variables:
+  OK: 0
+  feedRate: F1000
+  inverseFeedRate: F15
+
+  # gcode string:
+  homePosition: |              # find home position
+    g28.2 x0 y0 z0             ; ordered list of commands (in this case only one)
+
+  # gcode string:
+  midPosition: |               # set G55 coord system to something reasonable
+    ${homePosition}              ; start at home position
+    G90                        ; set absolute coordinates
+    G10 L20 P2 X-50 Y-50 Z30   ; set G55 coordinate offsets from machine zero
+    G55                        ; use G55 coordinate system
+    G0X0Y0Z0                   ; move to G55 zero - middle of work volume
+
+  # gcode string:
+  startPosition: |             # starting position for tests
+    g0 x100 y100 z-30
+
+
 #### Globals for all tests (runs from before_all() )
-testSuiteParameters:
+precondition:
 
   setValues:   # These run before() all tests (test setup). Ordered list
     - js: 1    # Set JSON to strict mode-- for JS parsing
@@ -34,106 +58,84 @@ testSuiteParameters:
     - sv: 1    # Set status report verbosity to filtered
     - si: 100  # Set status interval
 
-  homePosition:                 # find home position
-    - g28.2 x0 y0 z0            # ordered list of commands (in this case only one)
+  beforeAll: |                    # run once before all tests. GCode string
+    ${homePosition}
+    G17
+    G21
+    G94
+    G91.1
+    ${feedRate}
 
-  midPosition:                  # set G55 coord system to something reasonable
-    - $homePosition             # start at home position
-    - G90                       # set absolute coordinates
-    - G10 L20 P2 X-50 Y-50 Z30  # set G55 coordinate offsets from machine zero
-    - G55                       # use G55 coordinate system
-    - G0X0Y0Z0                  # move to G55 zero - middle of work volume
-
-  startPosition:                # starting position for tests
-    - g0 x100 y100 z-30
-
-
-
-#### Macro substitutions defined for this file
-substitutions:
-  OK: 0
-  feedRate: F1000
-  inverseFeedRate: F15
+  beforeEach: |                   # run before each test
+    G0 X100 Y100 Z0
 
 
 ###############################################################################
 #### Center format arcs - XY, MM, Incremental mode
 ###############################################################################
 
-CenterFormatArcs_XY_MM_IncrementalMode:
-
-  testIDs:
-    testID: Arc-001
-    testName: CenterFormatArcs_XY_MM_IncrementalMode
-    testDescription: "Test center format arcs in G18, MM mode, incremental to x100 y100"
-    testTime: now()
+testIDs:
+  testID: Arc-001
+  testName: CenterFormatArcs_XY_MM_IncrementalMode
+  testDescription: "Test center format arcs in G18, MM mode, incremental to x100 y100"
+  testTime: now()
 #    unitUnderTest: uut
 #    testJig: testJigID
 #    testOperator: initials
 
-  beforeAll:                      # run once before all tests. Ordered sequence
-    - $homePosition               # return to home position
-    - G17
-    - G21
-    - G94
-    - G91.1
-    - $FeedRate
 
-  beforeEach:                     # run before each test
-    - G0X100Y100Z0
+tests:
+- testName: CW 90 degree arc in XY
+  testString: G2 I25 X125 Y125
+  testResult:
+    text: $testName
+    endPosition:
+      x: 150
+      y: 100
+    status: $OK
 
-  testRun:
-    - testName: CW 90 degree arc in XY
-      testString: G2 I25 X125 Y125
-      testResult:
-        text: $testName
-        endPosition:
-          x: 150
-          y: 100
-        status: $OK
+- testName: CW 180 degree arc in XY
+  testString: G2 I25 X150
+  testResult:
+    text: Different text than the test name
+    endPosition:
+      x: 150
+      y: 100
+    status: OK
 
-    - testName: CW 180 degree arc in XY
-      testString: G2 I25 X150
-      testResult:
-        text: Different text than the test name
-        endPosition:
-          x: 150
-          y: 100
-        status: OK
+- testName: CW 360 degree circle in XY
+  testString: G2 I25
+  testResult:
+    text: testName
+    endPosition:
+      x: 100
+      y: 100
+    status: OK
 
-    - testName: CW 360 degree circle in XY
-      testString: G2 I25
-      testResult:
-        text: testName
-        endPosition:
-          x: 100
-          y: 100
-        status: OK
+- testName: CW 540 degree circle in XY (1.5 rotations)
+  testString: G2 I25 X150 P1
+  testResult:
+    text: testName
+    endPosition:
+      x: 150
+      y: 100
+    status: OK
 
-    - testName: CW 540 degree circle in XY (1.5 rotations)
-      testString: G2 I25 X150 P1
-      testResult:
-        text: testName
-        endPosition:
-          x: 150
-          y: 100
-        status: OK
+- testName: CW 720 degree circle in XY (2 rotations)
+  testString: G2 I25 P2
+  testResult:
+    text: testName
+    endPosition:
+      x: 100
+      y: 100
+    status: OK
 
-    - testName: CW 720 degree circle in XY (2 rotations)
-      testString: G2 I25 P2
-      testResult:
-        text: testName
-        endPosition:
-          x: 100
-          y: 100
-        status: OK
-
-    - testName: CW 720 degree helix in XY (2 rotations + Z)
-      testString: G2 I25 P2 Z-25
-      testResult:
-        text: testName
-        endPosition:
-          x: 100
-          y: 100
-          z: -25
-        status: OK
+- testName: CW 720 degree helix in XY (2 rotations + Z)
+  testString: G2 I25 P2 Z-25
+  testResult:
+    text: testName
+    endPosition:
+      x: 100
+      y: 100
+      z: -25
+    status: OK
