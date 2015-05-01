@@ -9,7 +9,7 @@ describe("001-Startup tests", function () {
   var testData = yaml.safeLoad(fs.readFileSync('tests/L1-001-startup/001-startup.yml', 'utf8'));
 
   // Begin Mocha preconditions functions
-  tinyg_tester_begin(testData);
+  tinyg_tester_setup(testData);
 
   describe("Check for up-to-date firmware and hardware", function () {
 

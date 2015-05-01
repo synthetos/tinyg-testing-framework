@@ -26,13 +26,26 @@ testSuiteMetadata:
 
 #### Macro substitutions defined for this file
 variables:
-  OK: 0
+  Stat_OK: 1
+  Stat_Ready: 1
+  Stat_Alarm: 2
+  Stat_Stop: 3
+  Stat_End: 4
+  Stat_Running: 5
+  Stat_Holding: 6
+  Stat_Probing: 7
+  Stat_Cycle_Misc: 8
+  Stat_Homing: 9
   feedRate: F1000
   inverseFeedRate: F15
 
-  # gcode string:
+  # Removed the Z!
+  # homePosition: |              # find home position
+  #   g28.2 x0 y0 z0             ; ordered list of commands (in this case only one)
+
   homePosition: |              # find home position
-    g28.2 x0 y0 z0             ; ordered list of commands (in this case only one)
+    ;g28.2 x0 y0             ; ordered list of commands (in this case only one)
+    g28.3 x0 y0             ; ordered list of commands (in this case only one)
 
   # gcode string:
   midPosition: |               # set G55 coord system to something reasonable
@@ -69,6 +82,8 @@ precondition:
   beforeEach: |                   # run before each test
     G0 X100 Y100 Z0
 
+  timeout: 500000
+
 
 ###############################################################################
 #### Center format arcs - XY, MM, Incremental mode
@@ -87,55 +102,61 @@ testIDs:
 tests:
 - testName: CW 90 degree arc in XY
   testString: G2 I25 X125 Y125
+  timeout: 60
   testResult:
-    text: $testName
+    text: CW 90 degree arc in XY
     endPosition:
       x: 150
       y: 100
-    status: $OK
+    status: ${Stat_Stop}
 
 - testName: CW 180 degree arc in XY
   testString: G2 I25 X150
+  timeout: 60
   testResult:
     text: Different text than the test name
     endPosition:
       x: 150
       y: 100
-    status: OK
-
-- testName: CW 360 degree circle in XY
-  testString: G2 I25
-  testResult:
-    text: testName
-    endPosition:
-      x: 100
-      y: 100
-    status: OK
-
-- testName: CW 540 degree circle in XY (1.5 rotations)
-  testString: G2 I25 X150 P1
-  testResult:
-    text: testName
-    endPosition:
-      x: 150
-      y: 100
-    status: OK
-
-- testName: CW 720 degree circle in XY (2 rotations)
-  testString: G2 I25 P2
-  testResult:
-    text: testName
-    endPosition:
-      x: 100
-      y: 100
-    status: OK
-
-- testName: CW 720 degree helix in XY (2 rotations + Z)
-  testString: G2 I25 P2 Z-25
-  testResult:
-    text: testName
-    endPosition:
-      x: 100
-      y: 100
-      z: -25
-    status: OK
+    status: ${Stat_Stop}
+#
+# - testName: CW 360 degree circle in XY
+#   testString: G2 I25
+#   timeout: 5000
+#   testResult:
+#     text: testName
+#     endPosition:
+#       x: 100
+#       y: 100
+#     status: OK
+#
+# - testName: CW 540 degree circle in XY (1.5 rotations)
+#   testString: G2 I25 X150 P1
+#   timeout: 5000
+#   testResult:
+#     text: testName
+#     endPosition:
+#       x: 150
+#       y: 100
+#     status: OK
+#
+# - testName: CW 720 degree circle in XY (2 rotations)
+#   testString: G2 I25 P2
+#   timeout: 5000
+#   testResult:
+#     text: testName
+#     endPosition:
+#       x: 100
+#       y: 100
+#     status: OK
+#
+# - testName: CW 720 degree helix in XY (2 rotations + Z)
+#   testString: G2 I25 P2 Z-25
+#   timeout: 5000
+#   testResult:
+#     text: testName
+#     endPosition:
+#       x: 100
+#       y: 100
+#       z: -25
+#     status: OK

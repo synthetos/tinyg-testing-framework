@@ -2,10 +2,10 @@
   "name": "tinyg-testing-framework",
   "version": "0.1.0",
   "dependencies": {
-    "js-yaml": "^3.2.5",
-    "serialport": "^1.4.6",
-    "sync": "^0.2.3",
-    "tinyg": "^0.3.10"
+    "js-yaml": "^3.3.0",
+    "serialport": "^1.6.3",
+    "sync": "^0.2.5",
+    "tinyg": "^0.3.23"
   },
   "devDependencies": {
     "chai": "^1.10.0",
@@ -32,7 +32,7 @@
     "grunt-usemin": "~2.1.0",
     "jshint-stylish": "~0.1.5",
     "load-grunt-tasks": "~0.2.0",
-    "mocha": "^2.1.0",
+    "mocha": "^2.2.4",
     "q": "^1.1.2",
     "time-grunt": "~0.3.1"
   },

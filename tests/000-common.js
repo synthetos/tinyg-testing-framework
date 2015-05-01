@@ -76,36 +76,6 @@ before(function (done) {
         if (err) {
           done(err);
         }
-//         console.log("Setting precondition communication and system parameters");
-//         var promise = g.set(testData.precondition.setValues);
-//
-// //        promise = promise.then(function () {
-// //          console.log("\nTest parameters:")
-// //        });
-//         console.log("\nTest parameters:")
-//         console.log("  " + new Date());
-//
-//         testData.precondition.reportParameters.forEach(function (p) {
-//           promise = promise.then(function () {
-//             return g.get(p).then(
-//               function (v) {
-//                 console.log("  " + p + "=" + v);
-//               },
-//               function (e) {
-//                 console.log("  " + p + "=null");
-//                 return Q.fcall(function () {}); // Return an empty promise to "ignore the error"
-//               }
-//             );
-//           });
-//         });
-//
-//         promise = promise.then(function () {
-//           console.log("--\n")
-//         }).finally(function () {
-//           done();
-//         });
-//
-        // return promise;
         done();
       });
 
@@ -135,20 +105,43 @@ after(function (done) {
 // DEBUG:
 if (DEBUG_RESPONSES === 1) {
   g.on('data', function (v) {
-    console.log(v);
+    console.log("<" + v);
   });
+  g.on('sentRaw', function (v) {
+    console.log(">" + v);
+  });
+
 }
 
-global.tinyg_tester_begin = function (testData) {
-    // Begin Mocha preconditions functions
-    before(function (done) {
-      console.log("Setting precondition communication and system parameters");
-      var promise = g.set(testData.precondition.setValues);
+global.fix_gcode = function (gcode, testData) {
+  return gcode.replace(/\$\{\s*([a-zA-Z_.]+)\s*\}/g, function (x, full_key) {
+    var keys = full_key.split('.');
+    var v = testData.variables;
+    for (var i = 0; i < keys.length; i++) {
+      if (v[ keys[i] ]) {
+        v = v[ keys[i] ];
+      } else {
+        return "";
+      }
+    }
 
-      console.log("\nTest parameters:")
-      console.log("  " + new Date());
+    return v;
+  })
+};
 
-      if (testData.precondition && testData.precondition.reportParameters) {
+global.tinyg_tester_setup = function (testData) {
+  // Begin Mocha preconditions functions
+  before(function (done) {
+    this.timeout(testData.precondition.timeout || 0);
+
+    console.log("Setting precondition communication and system parameters");
+    var promise = g.set(testData.precondition.setValues);
+
+    console.log("\nTest parameters:")
+    console.log("  " + new Date());
+
+    if (testData.precondition) {
+      if (testData.precondition.reportParameters) {
         testData.precondition.reportParameters.forEach(function (p) {
           promise = promise.then(function () {
             return g.get(p).then(
@@ -164,19 +157,62 @@ global.tinyg_tester_begin = function (testData) {
         });
       }
 
-      promise = promise.then(function () {
-        console.log("--\n")
-      }).finally(function () {
-        done();
-      });
-
-      return promise;
-    });
-
-    beforeEach(function () {
-      if (testData.precondition && testData.precondition.setValuesEach) {
-        var promise = g.set(testData.precondition.setValuesEach);
-        return promise;
+      if (testData.precondition.beforeAll) {
+        var gcode = fix_gcode(testData.precondition.beforeAll, testData);
+        promise = promise.then(function () {
+          // Warning, lines that won't result in a response will jam this!!
+          // Empty lines and commnt-only lines are okay.
+          var gcodeLines = gcode.split(/(?:\n(?:\s*\n|\s*;[^\n]*\n)?)+/);
+          if (gcodeLines[gcodeLines.length-1] == '') {
+            gcodeLines.pop();
+          }
+          var lineCount = gcodeLines.length;
+          return g.writeWithPromise(gcodeLines, function (r) {
+            lineCount--;
+            if (0 == lineCount) {
+              return true;
+            }
+            return false;
+          });
+        });
       }
+    }
+
+    promise = promise.then(function () {
+      // console.log("--\n")
+    }).finally(function () {
+      done();
     });
+
+    return promise;
+  });
+}
+
+global.tinyg_tester_before_each = function (testData) {
+  before(function (done) {
+    this.timeout(0);
+
+    var promise = Q.fcall(function () {});
+    if (testData.precondition ) {
+      if (testData.precondition.setValuesEach) {
+        promise = promise.then(function () {
+          g.set(testData.precondition.setValuesEach);
+        });
+      }
+      if (testData.precondition.beforeEach) {
+        var gcode = fix_gcode(testData.precondition.beforeEach, testData);
+        promise = promise.then(function () {
+          return g.writeWithPromise(gcode);
+        });
+      }
+    }
+
+    promise = promise.then(function () {
+      // console.log("--\n")
+    }).finally(function () {
+      done();
+    });
+
+    return promise;
+  });
 }

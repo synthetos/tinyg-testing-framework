@@ -10,7 +10,7 @@ var path = require("path");
 describe("002-gcode tests", function () {
   var testData = yaml.safeLoad(fs.readFileSync('tests/L1-002-gcode/002-gcode.yml', 'utf8'));
 
-  tinyg_tester_begin(testData);
+  tinyg_tester_setup(testData);
 
   describe("verify gcode end conditions", function () {
     testData.sendGcodeTests.forEach(function (v) {
