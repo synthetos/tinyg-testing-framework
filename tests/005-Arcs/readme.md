@@ -6,6 +6,9 @@
 - If the test gets stuck you can ^c to get out of it (usually twice)
 
 ##YAML Hygiene
+- YAML Specs
+  - Official: http://www.yaml.org/spec/1.2/spec.html
+  - Intro: https://github.com/nodeca/js-yaml
 - The yaml linter will give you a red squiggly if you got it wrong
 - Use js-yaml to see the JSON or report errors
 - The yaml is very sensitive to indentation
@@ -29,6 +32,15 @@
           y: 100
           status: ${stat.stop}
     ```
+- Multi-line strings
+  - The pipe | is used to support multi-line strings such as Gcode lines
+- YAML Comments
+  - There are no block comments in YAML. Only #
+  - There is no crying in baseball
+- Gcode comments
+  - Gcode lines may have comments starting with ; or (
+    - TinyG recognizes both
+    - Note: These will actually be sent to the board
 
 ## USAGE: About YAML in the Test Definitions
 
@@ -42,13 +54,24 @@
   - status: is the return code from response footer {f:[1,0,20]}
   - stat: is the machine status from the SR "stat:" element
 
-### tests:
-- timeout:
-  - is in seconds
-  - allow enough time to answer the manual question
-- text:
-  - if present will display
-- endPosition
-  - checks the end position for one or more axes in the status report returning the STOP stat.
-  - omit any axes you don't want to check
-  - omit the entire endPosition element to not check any axes
+### Parameters used in tests:
+#### testName:
+- ALl tests must have a test name.
+- This is our index to find the dang thing
+
+#### timeout:
+- Timeout value is in seconds
+- Allow enough time to answer the manual question
+
+#### text:
+- If present displays the text string before the manual y/n input
+- If blamk or omitted display the testName in its place
+- (FUTURE) Rename this element to manualPrompt
+  - If present display the text string before the manual y/n input
+  - If blamk display the testName in its place
+  - If omitted skip the manual varification step (always pass)
+
+####endPosition:
+- checks the end position for one or more axes in the status report returning the STOP stat.
+- omit any axes you don't want to check
+- omit the entire endPosition element to not check any axes
