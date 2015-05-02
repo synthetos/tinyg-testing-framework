@@ -26,16 +26,25 @@ testSuiteMetadata:
 
 #### Macro substitutions defined for this file
 variables:
-  Stat_OK: 1
-  Stat_Ready: 1
-  Stat_Alarm: 2
-  Stat_Stop: 3
-  Stat_End: 4
-  Stat_Running: 5
-  Stat_Holding: 6
-  Stat_Probing: 7
-  Stat_Cycle_Misc: 8
-  Stat_Homing: 9
+  status:                       # "status" is the return code from status report footer
+    OK: 1
+
+  stat:                         # "stat" is the machine stateus from the "stat" element
+    init: 0
+    ready: 1
+    alarm: 2
+    stop: 3
+    end: 4
+    run: 5
+    hold: 6
+    probe: 7
+    cycle: 8
+    homing: 9
+    jog: 10
+    interlock: 11
+    shutdown: 12
+    panic: 13
+
   feedRate: F1000
   inverseFeedRate: F15
 
@@ -44,8 +53,8 @@ variables:
   #   g28.2 x0 y0 z0             ; ordered list of commands (in this case only one)
 
   homePosition: |              # find home position
-    ;g28.2 x0 y0             ; ordered list of commands (in this case only one)
-    g28.3 x0 y0             ; ordered list of commands (in this case only one)
+    g28.2 x0 y0        ; ordered list of commands (in this case only one)
+    ;g28.3 x0 y0       ; ordered list of commands (in this case only one)
 
   # gcode string:
   midPosition: |               # set G55 coord system to something reasonable
@@ -57,6 +66,7 @@ variables:
 
   # gcode string:
   startPosition: |             # starting position for tests
+    g0 x101
     g0 x100 y100 z-30
 
 
@@ -79,8 +89,10 @@ precondition:
     G91.1
     ${feedRate}
 
-  beforeEach: |                   # run before each test
-    G0 X100 Y100 Z0
+  beforeEach: |                 # run before each test
+    g0 x101 y101                # doing 2 moves so there's always a stat:3
+    g0 x100 y100
+#    G0 X100 Y100 Z0
 
   timeout: 500000
 
@@ -102,61 +114,62 @@ testIDs:
 tests:
 - testName: CW 90 degree arc in XY
   testString: G2 I25 X125 Y125
-  timeout: 60
+  timeout: 5
   testResult:
     text: CW 90 degree arc in XY
     endPosition:
-      x: 150
-      y: 100
-    status: ${Stat_Stop}
+      x: 125
+      y: 125
+    status: ${stat.stop}
+#    status: ${Stat_Stop}
 
 - testName: CW 180 degree arc in XY
   testString: G2 I25 X150
-  timeout: 60
+  timeout: 5
   testResult:
     text: Different text than the test name
     endPosition:
       x: 150
       y: 100
-    status: ${Stat_Stop}
-#
-# - testName: CW 360 degree circle in XY
-#   testString: G2 I25
-#   timeout: 5000
-#   testResult:
-#     text: testName
-#     endPosition:
-#       x: 100
-#       y: 100
-#     status: OK
-#
-# - testName: CW 540 degree circle in XY (1.5 rotations)
-#   testString: G2 I25 X150 P1
-#   timeout: 5000
-#   testResult:
-#     text: testName
-#     endPosition:
-#       x: 150
-#       y: 100
-#     status: OK
-#
-# - testName: CW 720 degree circle in XY (2 rotations)
-#   testString: G2 I25 P2
-#   timeout: 5000
-#   testResult:
-#     text: testName
-#     endPosition:
-#       x: 100
-#       y: 100
-#     status: OK
-#
-# - testName: CW 720 degree helix in XY (2 rotations + Z)
-#   testString: G2 I25 P2 Z-25
-#   timeout: 5000
-#   testResult:
-#     text: testName
-#     endPosition:
-#       x: 100
-#       y: 100
-#       z: -25
-#     status: OK
+    status: ${stat.stop}
+
+- testName: CW 360 degree circle in XY
+  testString: G2 I25
+  timeout: 5
+  testResult:
+    text: CW 360 degree circle in XY
+    endPosition:
+      x: 100
+      y: 100
+    status: ${stat.stop}
+
+- testName: CW 540 degree circle in XY (1.5 rotations)
+  testString: G2 I25 X150 P1
+  timeout: 20
+  testResult:
+    text: CW 540 degree circle in XY (1.5 rotations)
+    endPosition:
+      x: 150
+      y: 100
+    status: ${stat.stop}
+
+- testName: CW 720 degree circle in XY (2 rotations)
+  testString: G2 I25 P2
+  timeout: 20
+  testResult:
+    text: CW 720 degree circle in XY (2 rotations)
+    endPosition:
+      x: 100
+      y: 100
+    status: ${stat.stop}
+
+- testName: CW 720 degree helix in XY (2 rotations + Z)
+  testString: G2 I25 P2 Z-25
+  timeout: 20
+  testResult:
+    text: CW 720 degree helix in XY (2 rotations + Z)
+    endPosition:
+      x: 100
+      y: 100
+      z: -25
+    status: ${stat.stop}

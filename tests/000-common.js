@@ -50,7 +50,8 @@ global.Q = Q;
 // console.log("testData debug:\n", util.inspect(testData, { depth: null }));
 
 // 1 to print all raw data coming back from the TinyG to the console (CHATTY!), 0 for quiet:
-var DEBUG_RESPONSES = 0;
+//var DEBUG_RESPONSES = 0;
+var DEBUG_RESPONSES = 1;
 
 // ??? What does this do?
 var portPath, dataportPath;
