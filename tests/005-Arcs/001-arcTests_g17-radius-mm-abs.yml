@@ -45,8 +45,8 @@ variables:
     shutdown: 12
     panic: 13
 
-  feedRateMM: F2000               # F1000
-  feedRateInches: F100            # F1000
+  feedRate: F2000            # Millmeters / minute
+#  feedRate: F100              # Inches / minute
   inverseFeedRate: F15
 
   timeoutShort: 5
@@ -100,11 +100,11 @@ testIDs:
 tests:
 
 ###############################################################################
-#### radius format arcs - G17 (XY), MM, Incremental arc distance mode
+#### radius format arcs - G17 (XY), MM, absolute arc distance mode
 ###############################################################################
 
 # Clockwise motion
-- testName: CW 90 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CW 90 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G2 R25 X125 Y125
   timeout: ${timeoutShort}
   testResult:
@@ -114,7 +114,7 @@ tests:
       y: 125
     status: ${stat.stop}
 
-- testName: CW 180 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CW 180 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G2 R25 X150
   timeout: ${timeoutShort}
   testResult:
@@ -124,7 +124,7 @@ tests:
       y: 100
     status: ${stat.stop}
 
-- testName: CW 270 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CW 270 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G2 R-25 X125 Y75
   timeout: ${timeoutShort}
   testResult:
@@ -134,7 +134,7 @@ tests:
       y: 75
     status: ${stat.stop}
 
-- testName: CW 360 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CW 360 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G2 R25 X100.2 Y100.2 P1
   timeout: ${timeoutShort}
   testResult:
@@ -144,7 +144,7 @@ tests:
       y: 100.2
     status: ${stat.stop}
 
-- testName: CW 540 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CW 540 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G2 R25 X150 P1
   timeout: ${timeoutLong}
   testResult:
@@ -154,7 +154,7 @@ tests:
       y: 100
     status: ${stat.stop}
 
-- testName: CW 540 degree radius format helix in XY, MM, incremental arc distance mode
+- testName: CW 540 degree G17 radius format helix, MM, absolute arc distance mode
   testString: G2 R25 X150 Z-25 P1
   timeout: ${timeoutLong}
   testResult:
@@ -164,7 +164,7 @@ tests:
       y: 100
     status: ${stat.stop}
 
-- testName: CW 720 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CW 720 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G2 R25 X100.1 Y100.1 P2
   timeout: ${timeoutLong}
   testResult:
@@ -175,7 +175,7 @@ tests:
     status: ${stat.stop}
 
 ### Counterclockwise motion
-- testName: CCW 90 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CCW 90 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G3 R25 X125 Y75
   timeout: ${timeoutShort}
   testResult:
@@ -185,7 +185,7 @@ tests:
       y: 75
     status: ${stat.stop}
 
-- testName: CCW 180 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CCW 180 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G3 R25 X150
   timeout: ${timeoutShort}
   testResult:
@@ -195,7 +195,7 @@ tests:
       y: 100
     status: ${stat.stop}
 
-- testName: CCW 270 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CCW 270 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G3 R-25 X125 Y125
   timeout: ${timeoutShort}
   testResult:
@@ -205,7 +205,7 @@ tests:
       y: 125
     status: ${stat.stop}
 
-- testName: CCW 360 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CCW 360 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G3 R25 X99.9 Y99.9 P1
   timeout: ${timeoutShort}
   testResult:
@@ -215,7 +215,7 @@ tests:
       y: 99.9
     status: ${stat.stop}
 
-- testName: CCW 540 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CCW 540 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G3 R25 X150 P1
   timeout: ${timeoutLong}
   testResult:
@@ -225,7 +225,7 @@ tests:
       y: 100
     status: ${stat.stop}
 
-- testName: CW 540 degree radius format helix in XY, MM, incremental arc distance mode
+- testName: CW 540 degree G17 radius format helix, MM, absolute arc distance mode
   testString: G3 R25 X150 Z-25 P1
   timeout: ${timeoutLong}
   testResult:
@@ -235,7 +235,7 @@ tests:
       y: 100
     status: ${stat.stop}
 
-- testName: CCW 720 degree radius format arc in XY, MM, incremental arc distance mode
+- testName: CCW 720 degree G17 radius format arc, MM, absolute arc distance mode
   testString: G3 R25 X99.9 Y99.9 P2
   timeout: ${timeoutLong}
   testResult:

@@ -44,8 +44,8 @@ variables:
     shutdown: 12
     panic: 13
 
-  feedRateMM: F2000               # F1000
-  feedRateInches: F100            # F1000
+#  feedRate: F2000            # Millmeters / minute
+  feedRate: F100              # Inches / minute
   inverseFeedRate: F15
 
   timeoutShort: 5
@@ -72,7 +72,7 @@ precondition:
     G20             ; inches
     G94             ; absolute distance mode
     G90.1           ; absolute arc distance mode
-    ${feedRateInches}
+    ${feedRate}
 
   beforeEach: |               # run before each test
     g0 x4.1 y4.1 z0 ; doing 2 moves so the's always a stat:3
@@ -87,7 +87,7 @@ precondition:
 testIDs:
   testID: Arc-001
   testName: G17-center-format-arcs-inches-absolute-arc-distance-mode
-  testDescription: Test G17 center format arcs, Inches, incremental arc distance mode
+  testDescription: Test G17 center format arcs, inches, incremental arc distance mode
   testTime: now()
 #    unitUnderTest: uut
 #    testJig: testJigID
@@ -96,11 +96,11 @@ testIDs:
 tests:
 
 ###############################################################################
-#### Center format arcs - G17 (XY), Inches, Incremental arc distance mode
+#### Center format arcs - G17 (XY), inches, Incremental arc distance mode
 ###############################################################################
 
 # Clockwise arcs
-- testName: CW 90 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CW 90 degree G17 center format arc, inches, incremental arc distance mode
   testString: G2 I5 J4 X5 Y5
   timeout: ${timeoutShort}
   testResult:
@@ -110,7 +110,7 @@ tests:
       y: 5
     status: ${stat.stop}
 
-- testName: CW 180 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CW 180 degree G17 center format arc, inches, incremental arc distance mode
   testString: G2 I5 J4 X6
   timeout: ${timeoutShort}
   testResult:
@@ -120,7 +120,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CW 360 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CW 360 degree G17 center format arc, inches, incremental arc distance mode
   testString: G2 I5 J4
   timeout: ${timeoutShort}
   testResult:
@@ -130,7 +130,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CW 540 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CW 540 degree G17 center format arc, inches, incremental arc distance mode
   testString: G2 I5 J4 X6 P1
   timeout: ${timeoutLong}
   testResult:
@@ -140,7 +140,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CW 720 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CW 720 degree G17 center format arc, inches, incremental arc distance mode
   testString: G2 I5 J4 P2
   timeout: ${timeoutLong}
   testResult:
@@ -150,7 +150,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CW 720 degree center format helix in XY, Inches, incremental arc distance mode
+- testName: CW 720 degree G17 center format helix, inches, incremental arc distance mode
   testString: G2 I5 J4 P2 Z-1
   timeout: ${timeoutLong}
   testResult:
@@ -162,7 +162,7 @@ tests:
     status: ${stat.stop}
 
 ### Counterclockwise arcs
-- testName: CCW 90 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CCW 90 degree G17 center format arc, inches, incremental arc distance mode
   testString: G3 I5 J4 X5 Y3
   timeout: ${timeoutShort}
   testResult:
@@ -172,7 +172,7 @@ tests:
       y: 3
     status: ${stat.stop}
 
-- testName: CCW 180 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CCW 180 degree G17 center format arc, inches, incremental arc distance mode
   testString: G3 I5 J4 X6
   timeout: ${timeoutShort}
   testResult:
@@ -182,7 +182,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CCW 360 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CCW 360 degree G17 center format arc, inches, incremental arc distance mode
   testString: G3 I5 J4
   timeout: ${timeoutShort}
   testResult:
@@ -192,7 +192,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CCW 540 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CCW 540 degree G17 center format arc, inches, incremental arc distance mode
   testString: G3 I5 J4 X6 P1
   timeout: ${timeoutLong}
   testResult:
@@ -202,7 +202,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CCW 720 degree center format arc in XY, Inches, incremental arc distance mode
+- testName: CCW 720 degree G17 center format arc, inches, incremental arc distance mode
   testString: G3 I5 J4 P2
   timeout: ${timeoutLong}
   testResult:
@@ -212,7 +212,7 @@ tests:
       y: 4
     status: ${stat.stop}
 
-- testName: CCW 720 degree center format helix in XY, Inches, incremental arc distance mode
+- testName: CCW 720 degree G17 center format helix, inches, incremental arc distance mode
   testString: G3 I5 J4 P2 Z-1
   timeout: ${timeoutLong}
   testResult:
