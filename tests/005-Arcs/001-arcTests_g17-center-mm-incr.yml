@@ -21,7 +21,7 @@
 #### Global values
 
 testSuiteMetadata:
-  testSuite: ArcTestSuite-001
+  testSuite: G17-center-format-arcs-mm-incremental-arc-distance-mode
 
 
 #### Macro substitutions defined for this file
@@ -97,8 +97,8 @@ precondition:
 
 testIDs:
   testID: Arc-001
-  testName: CenterFormatArcs_XY_MM_IncrementalMode
-  testDescription: "Test center format arcs in G18, MM mode, incremental to x100 y100"
+  testName: G17-center-format-arcs-mm-incremental-arc-distance-mode
+  testDescription: Test G17 center format arcs, MM mode, incremental arc distance mode
   testTime: now()
 #    unitUnderTest: uut
 #    testJig: testJigID
