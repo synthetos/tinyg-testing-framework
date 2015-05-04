@@ -73,12 +73,12 @@ precondition:
     ${homePosition}
     G17             ; XY plane
     G20             ; inches
-    G94             ; absolute distance mode
+    G90             ; absolute distance mode
     G90.1           ; absolute arc distance mode
+    G94             ; units per minute feed rate mode
     ${feedRate}
 
   beforeEach: |               # run before each test
-    g0 x2.1 y2.1 z0 ; doing 2 moves so the's always a stat:3
     g0 x2.0 y2.0 z0
 
   timeout: 60000

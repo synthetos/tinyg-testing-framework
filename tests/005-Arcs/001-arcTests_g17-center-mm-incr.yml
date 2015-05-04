@@ -84,12 +84,16 @@ precondition:
     ${homePosition}
     G17             ; XY plane
     G21             ; millimeters
-    G94             ; absolute distance mode
+    G90             ; absolute distance mode
     G91.1           ; incremental arc distance mode
+    G94             ; units per minute feed rate mode
     ${feedRate}
 
+#  beforeEach: |               # run before each test
+#    g0 x51 y51 z0   ; doing 2 moves so the's always a stat:3
+#    g0 x50 y50 z0
+
   beforeEach: |               # run before each test
-    g0 x51 y51 z0   ; doing 2 moves so the's always a stat:3
     g0 x50 y50 z0
 
   timeout: 60000              # imeout in MILLIseconds

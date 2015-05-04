@@ -84,8 +84,9 @@ precondition:
     ${homePosition}
     G17             ; XY plane
     G21             ; millimeters
-    G94             ; absolute distance mode
+    G90             ; absolute distance mode
     G90.1           ; absolute arc distance mode
+    G94             ; units per minute mode
     ${feedRate}
 
   beforeEach: |               # run before each test
