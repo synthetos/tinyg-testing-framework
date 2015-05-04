@@ -4,9 +4,13 @@
 #
 # NOTES
 #
-# These tests run an a Shapeoko2 or any machine with at least 160mm X 160mm X 60mm working volume
-# All tests assume an Xmin, Ymin, Zmax homing start point (lower left corner)
-# Most tests run from the 100,100 point to be able to properly test absolute and incremental modes
+# These tests run an a Shapeoko2 or any machine with these facilities:
+#   - at least 100mm X 100mm X 60mm working volume
+#   - automatic homing (can be disabled in tests for manual homing)
+#   - tests assume an Xmin, Ymin, Zmax homing start point (lower left corner)
+#
+# Most tests run from the 50,50 point to be able to properly test absolute and
+# incremental modes
 #
 # Nomenclature:
 #   - test          An indivodual test
@@ -45,8 +49,12 @@ variables:
     shutdown: 12
     panic: 13
 
+#  feedRate: F1500            # Millmeters / minute
+#  feedRate: F60              # Inches / minute
+
   feedRate: F2000            # Millmeters / minute
 #  feedRate: F100              # Inches / minute
+
   inverseFeedRate: F15
 
   timeoutShort: 5
@@ -83,7 +91,7 @@ precondition:
     G21             ; millimeters
     G94             ; absolute distance mode
     G91.1           ; incremental arc distance mode
-    ${feedRateMM}
+    ${feedRate}
 
   beforeEach: |               # run before each test
     g0 x101 y101 z0 ; doing 2 moves so the's always a stat:3
@@ -112,13 +120,13 @@ tests:
 
 # Clockwise motion
 - testName: CW 90 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G2 I25 X125 Y125
+  testString: G2 I25 X75 Y75
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 125
-      y: 125
+      x: 75
+      y: 75
     status: ${stat.stop}
 
 - testName: CW 180 degree G17 center format arc, MM, MM, incremental arc distance mode

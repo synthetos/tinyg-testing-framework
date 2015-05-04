@@ -45,8 +45,8 @@ variables:
     shutdown: 12
     panic: 13
 
-  feedRateMM: F2000               # F1000
-  feedRateInches: F100            # F1000
+  feedRate: F2000            # Millmeters / minute
+#  feedRate: F100              # Inches / minute
   inverseFeedRate: F15
 
   timeoutShort: 5
@@ -83,7 +83,7 @@ precondition:
     G21             ; millimeters
     G94             ; absolute distance mode
     G90.1           ; absolute arc distance mode
-    ${feedRateMM}
+    ${feedRate}
 
   beforeEach: |               # run before each test
     g0 x101 y101 z0 ; doing 2 moves so the's always a stat:3
