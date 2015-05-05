@@ -117,7 +117,7 @@ tests:
     endPosition:
       x: 75
       y: 75
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 180 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G2 R25 X100
@@ -127,7 +127,7 @@ tests:
     endPosition:
       x: 100
       y: 50
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 270 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G2 R-25 X75 Y25
@@ -137,7 +137,7 @@ tests:
     endPosition:
       x: 75
       y: 25
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 360 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G2 R25 X50.2 Y50.2 P1
@@ -147,7 +147,7 @@ tests:
     endPosition:
       x: 50.2
       y: 50.2
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 540 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G2 R25 X100 P1
@@ -157,7 +157,7 @@ tests:
     endPosition:
       x: 100
       y: 50
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 540 degree G17 radius format helix, MM, incremental arc distance mode
   testString: G2 R25 X100 Z-25 P1
@@ -167,7 +167,7 @@ tests:
     endPosition:
       x: 100
       y: 50
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 720 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G2 R25 X50.1 Y50.1 P2
@@ -177,7 +177,7 @@ tests:
     endPosition:
       x: 50.1
       y: 50.1
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 ### Counterclockwise motion ###
 
@@ -189,7 +189,7 @@ tests:
     endPosition:
       x: 75
       y: 25
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CCW 180 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G3 R25 X100
@@ -199,7 +199,7 @@ tests:
     endPosition:
       x: 100
       y: 50
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CCW 270 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G3 R-25 X75 Y75
@@ -209,7 +209,7 @@ tests:
     endPosition:
       x: 75
       y: 75
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CCW 360 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G3 R25 X49.9 Y49.9 P1
@@ -219,7 +219,7 @@ tests:
     endPosition:
       x: 49.9
       y: 49.9
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CCW 540 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G3 R25 X100 P1
@@ -229,7 +229,7 @@ tests:
     endPosition:
       x: 100
       y: 50
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CW 540 degree G17 radius format helix, MM, incremental arc distance mode
   testString: G3 R25 X100 Z-25 P1
@@ -239,7 +239,7 @@ tests:
     endPosition:
       x: 100
       y: 50
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: CCW 720 degree G17 radius format arc, MM, incremental arc distance mode
   testString: G3 R25 X49.9 Y49.9 P2
@@ -249,7 +249,7 @@ tests:
     endPosition:
       x: 49.9
       y: 49.9
-    status: ${stat.stop}
+    stat: ${stat.stop}
 
 - testName: final move
   testString: G0 X1 Y1 Z-1
@@ -260,4 +260,4 @@ tests:
 #      x: 1
 #      y: 1
 #      z: -1
-    status: ${stat.stop}
+    stat: ${stat.stop}

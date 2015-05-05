@@ -17,12 +17,13 @@ describe("001-arc tests", function () {
 
   describe("test arcs", function () {
     testData.tests.forEach(function (v) {
-      v.testResult.status = fix_gcode(v.testResult.status, testData);
+      v.testResult.timeout = fix_gcode(v.testResult.timeout, testData);
+      v.testResult.stat = fix_gcode(v.testResult.stat, testData);
 
       if (v.testResult === undefined) {
         v.testResult = {status:3};
-      } else if (v.testResult.status === undefined) {
-        v.testResult.status = 3;
+      } else if (v.testResult.stat === undefined) {
+        v.testResult.stat = 3;
       }
 
       if (v.testName === undefined) {
@@ -42,16 +43,19 @@ describe("001-arc tests", function () {
 
           var gcode = fix_gcode(testString, testData);
 
-          var collectedValues = {};
+          var storedStatusReports = {};
+          var storedFooter = [];
 
           var promise = g.writeWithPromise(gcode, function (r) {
             if (r && r.sr) {
               for (k in r.sr) {
-                collectedValues[k] = r.sr[k];
+                storedStatusReports[k] = r.sr[k];
               }
+            } else if (r && r.f) {
+              storedFooter = r.f;
             }
 
-            if (r.sr && r.sr.stat && r.sr.stat == v.testResult.status) {
+            if (r.sr && r.sr.stat && r.sr.stat == v.testResult.stat) {
               return true;
             }
 
@@ -63,13 +67,17 @@ describe("001-arc tests", function () {
               var actuallyIs = {};
               for (k in v.testResult.endPosition) {
                 // shouldBe["pos"+k] = v.testResult.endPosition[k];
-                actuallyIs[k] = collectedValues["pos"+k];
+                actuallyIs[k] = storedStatusReports["pos"+k];
               }
               actuallyIs.should.deep.eql(v.testResult.endPosition, "wrong end position" );
             }
 
+            if (v.testResult.stat) {
+              storedStatusReports["stat"].should.equal(parseInt(v.testResult.stat, "wrong end status"));
+            }
+
             if (v.testResult.status) {
-              collectedValues["stat"].should.equal(parseInt(v.testResult.status, "wrong end status"));
+              storedStatusReports["stat"].should.equal(parseInt(v.testResult.status, "wrong end status"));
             }
 
           });
