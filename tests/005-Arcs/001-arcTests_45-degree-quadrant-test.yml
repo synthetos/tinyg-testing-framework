@@ -23,8 +23,7 @@
 #### Global values
 
 testSuiteMetadata:
-  testSuite: 45-degree-arc-qudrant-test
-
+  testSuite: 45-degree-quadrant-test
 
 #### Macro substitutions defined for this file
 variables:
@@ -87,8 +86,8 @@ precondition:
 
 testIDs:
   testID: Arc-001
-  testName: 45-degree-arc-qudrant-test
-  testDescription: Test 45 degree gradations for all qudrants
+  testName: 45-degree-qudrant-test
+  testDescription: Test 45 degree gradations for all quadrants
   testTime: now()
 #    unitUnderTest: uut
 #    testJig: testJigID
@@ -102,101 +101,170 @@ tests:
 
 ### Clockwise motion ###
 
-- testName: G17 CW 0.1 degrees
-  testString: G2 I25 X50.1 Y50.1
+- testName: G17 CW 1 degree
+  testString: G2 I-25 X74.99619 Y50.43631
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 50.1
-      y: 50.1
+      x: 74.99619
+      y: 50.43631
     status: ${stat.stop}
 
 - testName: G17 CW 45 degrees
-  testString: G2 I25 X62.5 Y62.5
+  testString: G2 I-25 X67.67767 Y67.67767
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 62.5
-      y: 62.5
+      x: 67.67767
+      y: 67.67767
+    status: ${stat.stop}
+
+- testName: G17 CW 89 degrees
+  testString: G2 I-25 X50.43631 Y74.99619
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 50.43631
+      y: 74.99619
     status: ${stat.stop}
 
 - testName: G17 CW 90 degrees
-  testString: G2 I25 X75 Y75
+  testString: G2 I-25 X50 Y75
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 75
+      x: 50
       y: 75
     status: ${stat.stop}
 
-- testName: G17 CW 135 degrees
-  testString: G2 I25 X87.5 Y62.5
+- testName: G17 CW 91 degrees
+  testString: G2 I-25 X49.56369 Y74.99619
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 87.5
-      y: 62.5
+      x: 49.56369
+      y: 74.99619
+    status: ${stat.stop}
+
+- testName: G17 CW 135 degrees
+  testString: G2 I-25 X32.32233 Y67.67767
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 32.32233
+      y: 67.67767
+    status: ${stat.stop}
+
+- testName: G17 CW 179 degrees
+  testString: G2 I-25 X25.00381 Y50.43631
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 25.00381
+      y: 50.43631
     status: ${stat.stop}
 
 - testName: G17 CW 180 degrees
-  testString: G2 I25 X100
+  testString: G2 I-25 X25 Y50
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 100
+      x: 25
       y: 50
     status: ${stat.stop}
 
-- testName: CW 360 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G2 I25
+- testName: G17 CW 181 degrees
+  testString: G2 I-25 X25.00381 Y49.56369
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 25.00381
+      y: 49.56369
+    status: ${stat.stop}
+
+- testName: G17 CW 225 degrees
+  testString: G2 I-25 X32.32233 Y32.32233
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 32.32233
+      y: 32.32233
+    status: ${stat.stop}
+
+- testName: G17 CW 269 degrees
+  testString: G2 I-25 X49.56369 Y25.00381
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 49.56369
+      y: 25.00381
+    status: ${stat.stop}
+
+- testName: G17 CW 270 degrees
+  testString: G2 I-25 X50 Y25
   timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
       x: 50
-      y: 50
+      y: 25
     status: ${stat.stop}
 
-- testName: CW 540 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G2 I25 X100 P1
-  timeout: ${timeoutLong}
+- testName: G17 CW 271 degrees
+  testString: G2 I-25 X50.43631 Y25.00381
+  timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 50
-      y: 50
+      x: 50.43631
+      y: 25.00381
     status: ${stat.stop}
 
-- testName: CW 720 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G2 I25 P2
-  timeout: ${timeoutLong}
+- testName: G17 CW 315 degrees
+  testString: G2 I-25 X67.67767 Y32.32233
+  timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 50
-      y: 50
+      x: 67.67767
+      y: 32.32233
     status: ${stat.stop}
 
-- testName: CW 720 degree G17 center format helix, MM, incremental arc distance mode
-  testString: G2 I25 P2 Z-25
-  timeout: ${timeoutLong}
+- testName: G17 CW 359 degrees
+  testString: G2 I-25 X74.99619 Y49.56369
+  timeout: ${timeoutShort}
   testResult:
     text:
     endPosition:
-      x: 50
+      x: 74.99619
+      y: 49.56369
+    status: ${stat.stop}
+
+- testName: G17 CW 360 degrees
+  testString: G2 I-25 X75 Y50
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 74
       y: 50
-      z: -25
     status: ${stat.stop}
 
 ### Counterclockwise motion ###
 
 - testName: CCW 90 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G3 I25 X75 Y25
+  testString: G3 I-25 X75 Y25
   timeout: ${timeoutShort}
   testResult:
     text:
@@ -206,7 +274,7 @@ tests:
     status: ${stat.stop}
 
 - testName: CCW 180 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G3 I25 X100
+  testString: G3 I-25 X100
   timeout: ${timeoutShort}
   testResult:
     text:
@@ -216,7 +284,7 @@ tests:
     status: ${stat.stop}
 
 - testName: CCW 360 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G3 I25
+  testString: G3 I-25
   timeout: ${timeoutShort}
   testResult:
     text:
@@ -226,7 +294,7 @@ tests:
     status: ${stat.stop}
 
 - testName: CCW 540 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G3 I25 X100 P1
+  testString: G3 I-25 X100 P1
   timeout: ${timeoutLong}
   testResult:
     text:
@@ -236,7 +304,7 @@ tests:
     status: ${stat.stop}
 
 - testName: CCW 720 degree G17 center format arc, MM, incremental arc distance mode
-  testString: G3 I25 P2
+  testString: G3 I-25 P2
   timeout: ${timeoutLong}
   testResult:
     text:
@@ -246,7 +314,7 @@ tests:
     status: ${stat.stop}
 
 - testName: CCW 720 degree G17 center format helix, MM, incremental arc distance mode
-  testString: G3 I25 P2 Z-25
+  testString: G3 I-25 P2 Z-25
   timeout: ${timeoutLong}
   testResult:
     text:
