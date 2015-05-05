@@ -73,11 +73,11 @@ describe("001-arc tests", function () {
             }
 
             if (v.testResult.stat) {
-              storedStatusReports["stat"].should.equal(parseInt(v.testResult.stat, "wrong end status"));
+              storedStatusReports["stat"].should.equal(parseInt(v.testResult.stat, "wrong end stat"));
             }
 
             if (v.testResult.status) {
-              storedStatusReports["stat"].should.equal(parseInt(v.testResult.status, "wrong end status"));
+              storedFooter[1].should.equal(parseInt(v.testResult.status, "wrong status"));
             }
 
           });
