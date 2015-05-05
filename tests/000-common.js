@@ -115,6 +115,10 @@ if (DEBUG_RESPONSES === 1) {
 }
 
 global.fix_gcode = function (gcode, testData) {
+  if (typeof gcode !== "string") {
+    return gcode;
+  }
+
   return gcode.replace(/\$\{\s*([a-zA-Z_.]+)\s*\}/g, function (x, full_key) {
     var keys = full_key.split('.');
     var v = testData.variables;
