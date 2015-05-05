@@ -33,7 +33,7 @@ describe("001-arc tests", function () {
 
         tinyg_tester_before_each(testData);
 
-        it(v.testName + " (auto)", function () {
+        it("(auto)", function () {
           if (v.timeout !== undefined) {
             this.timeout(v.timeout * 1000);
           }
@@ -62,10 +62,10 @@ describe("001-arc tests", function () {
               var shouldBe = {};
               var actuallyIs = {};
               for (k in v.testResult.endPosition) {
-                shouldBe["pos"+k] = v.testResult.endPosition[k];
-                actuallyIs["pos"+k] = collectedValues["pos"+k];
+                // shouldBe["pos"+k] = v.testResult.endPosition[k];
+                actuallyIs[k] = collectedValues["pos"+k];
               }
-              actuallyIs.should.equal(shouldBe, "wrong end position" );
+              actuallyIs.should.deep.eql(v.testResult.endPosition, "wrong end position" );
             }
 
             if (v.testResult.status) {
@@ -77,7 +77,7 @@ describe("001-arc tests", function () {
           return promise;
         }); // it
 
-        it(v.testName + " (manual check)", function () {
+        it("(manual check)", function () {
           this.timeout(0);
 
           var deferred = Q.defer();
