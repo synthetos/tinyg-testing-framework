@@ -5,16 +5,14 @@
     "type": "git",
     "url": "git+https://github.com/synthetos/tinyg-testing-framework.git"
   },
-
   "dependencies": {
-    "js-yaml": "^3.3.0",
-    "tinyg": "^0.3.24",
     "chai": "^1.10.0",
     "chai-as-promised": "^4.1.1",
-    "mocha": "^2.2.4",
-    "q": "^1.1.2"
+    "jasmine": "^2.3.1",
+    "js-yaml": "^3.3.0",
+    "q": "^1.1.2",
+    "tinyg": "^0.3.24"
   },
-
   "engines": {
     "node": ">=0.8.0"
   }
