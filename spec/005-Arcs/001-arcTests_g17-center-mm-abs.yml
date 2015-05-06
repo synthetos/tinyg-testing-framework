@@ -121,61 +121,61 @@ tests:
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 75
-      y: 75
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 75
+      mpoy: 75
+      stat: ${stat.stop}
 
 - testName: CW 180 degree G17 center format arc, MM, absolute arc distance mode
   testString: G2 I75 J50 X100
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 100
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 360 degree G17 center format arc, MM, absolute arc distance mode
   testString: G2 I75 J50
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 540 degree G17 center format arc, MM, absolute arc distance mode
   testString: G2 I75 J50 X100 P1
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 100
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 720 degree G17 center format arc, MM, absolute arc distance mode
   testString: G2 I75 J50 P2
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 720 degree G17 center format helix, MM, absolute arc distance mode
   testString: G2 I75 J50 P2 Z-25
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-      z: -25
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      mpoz: -25
+      stat: ${stat.stop}
 
 ### Counterclockwise motion ###
 
@@ -184,69 +184,69 @@ tests:
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 75
-      y: 25
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 75
+      mpoy: 25
+      stat: ${stat.stop}
 
 - testName: CCW 180 degree G17 center format arc, MM, absolute arc distance mode
   testString: G3 I75 J50 X100
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 100
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 360 degree G17 center format arc, MM, absolute arc distance mode
   testString: G3 I75 J50
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 540 degree G17 center format arc, MM, absolute arc distance mode
   testString: G3 I75 J50 X100 P1
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 100
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 720 degree G17 center format arc, MM, absolute arc distance mode
   testString: G3 I75 J50 P2
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 720 degree G17 center format helix, MM, absolute arc distance mode
   testString: G3 I75 J50 P2 Z-25
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-      z: -25
-    stat: ${stat.stop
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      mpoz: -25
+      stat: ${stat.stop
 
 - testName: final move
   testString: G0 X1 Y1 Z-1
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 0
-      y: 0
-      z: 0
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 0
+      mpoy: 0
+      mpoz: 0
+      stat: ${stat.stop}

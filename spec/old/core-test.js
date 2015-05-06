@@ -29,7 +29,7 @@ var sp = new SerialPort(PORTNAME, {
 
 //A little function to print out the json responses coming back.  Only accepts JSON
 var debugJS = function(msg){
-  console.log("<<DEBUG>> " + JSON.stringify(msg)) 
+  console.log("<<DEBUG>> " + JSON.stringify(msg))
 }
 
 describe('hooks', function () {
@@ -130,13 +130,13 @@ describe("Check firmware and hardware numbers for up to date values", function (
     sp.write('{"hv":n}\n');
   });
 
-  //Hardware Min Value Test	
+  //Hardware Min Value Test
   it("Checks the min hardware value is set @v8 @v9", function () {
     r.hv.should.be.above(6);
   });
 });
 
-//############################################################################ 
+//############################################################################
 
 describe("Checks System Group Values", function () {
   //Check all sys values are present
@@ -174,7 +174,7 @@ describe("Checks System Group Values", function () {
   });
 });
 
-//############################################################################ 
+//############################################################################
 
 describe("Checks System Group Values", function () {
   //Check all sys values are present
@@ -215,7 +215,7 @@ describe("Checks System Group Values", function () {
   });
 });
 
-//############################################################################ 
+//############################################################################
 
 describe("Check G28.3 Set Machine Origins", function () {
   // Explanation:

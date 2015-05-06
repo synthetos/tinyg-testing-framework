@@ -23,7 +23,8 @@
 #### Global values
 
 testSuiteMetadata:
-  testSuite: G17-center-format-arcs-inches-incremental-arc-distance-mode
+  testSuite: G17-center-format-arcs-mm-incrremental-arc-distance-mode
+
 
 #### Macro substitutions defined for this file
 variables:
@@ -46,10 +47,7 @@ variables:
     shutdown: 12
     panic: 13
 
-#  feedRate: F1500            # Millmeters / minute
-  feedRate: F60              # Inches / minute
-
-  inverseFeedRate: F15
+  feedRate: F1500            # Millmeters / minute
 
   timeoutShort: 5
   timeoutLong: 15
@@ -72,17 +70,16 @@ precondition:
   beforeAll: |                # run once before all tests. GCode string
     ${homePosition}
     G17             ; XY plane
-    G20             ; inches
+    G21             ; millimeters
     G90             ; absolute distance mode
     G91.1           ; incremental arc distance mode
     G94             ; units per minute feed rate mode
     ${feedRate}
 
   beforeEach: |               # run before each test
-    g0 x2.1 y2.1 z0 ; doing 2 moves so the's always a stat:3
-    g0 x2.0 y2.0 z0
+    g0 x50 y50 z0
 
-  timeout: 60000
+  timeout: 60000              # imeout in MILLIseconds
 
 ###############################################################################
 #### TEST SUITE STARTS HERE
@@ -90,147 +87,152 @@ precondition:
 
 testIDs:
   testID: Arc-001
-  testName: G17-center-format-arcs-inches-incremental-arc-distance-mode
-  testDescription: Test G17 center format arcs, inches, incremental arc distance mode
+  testName: G17-center-format-arcs-mm-incrremental-arc-distance-mode
+  testDescription: Test G17 center format arcs, MM, incremental arc distance mode
   testTime: now()
 #    unitUnderTest: uut
 #    testJig: testJigID
 #    testOperator: initials
 
-###############################################################################
-###############################################################################
-###############################################################################
-
 tests:
 
-### Clockwise arcs ###
+###############################################################################
+#### Center format arcs - G17 (XY), MM, Incremental arc distance mode
+###############################################################################
 
-- testName: CW 90 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G2 I1 X3 Y3
+### Clockwise motion ###
+
+- testName: CW 90 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G2 I25 X75 Y75
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 3
-      y: 3
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 75
+      mpoy: 75
+      stat: ${stat.stop}
 
-- testName: CW 180 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G2 I1 X4
+- testName: CW 180 degree G17 center format arc, MM, MM, incremental arc distance mode
+  testString: G2 I25 X100
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 4
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CW 360 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G2 I1
+- testName: CW 360 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G2 I25
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 2
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CW 540 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G2 I1 X4 P1
+- testName: CW 540 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G2 I25 X100 P1
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 4
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CW 720 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G2 I1 P2
+- testName: CW 720 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G2 I25 P2
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 2
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CW 720 degree G17 center format helix, inches, incremental arc distance mode
-  testString: G2 I1 P2 Z-1
+- testName: CW 720 degree G17 center format helix, MM, incremental arc distance mode
+  testString: G2 I25 P2 Z-25
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 2
-      y: 2
-      z: -1
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      mpoz: -25
+      stat: ${stat.stop}
 
-### Counterclockwise arcs ###
+### Counterclockwise motion ###
 
-- testName: CCW 90 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G3 I1 X3 Y1
+- testName: CCW 90 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G3 I25 X75 Y25
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 3
-      y: 1
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 25
+      stat: ${stat.stop}
 
-- testName: CCW 180 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G3 I1 X4
+- testName: CCW 180 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G3 I25 X100
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 4
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CCW 360 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G3 I1
+- testName: CCW 360 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G3 I25
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 2
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CCW 540 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G3 I1 X4 P1
+- testName: CCW 540 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G3 I25 X100 P1
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 4
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CCW 720 degree G17 center format arc, inches, incremental arc distance mode
-  testString: G3 I1 P2
+- testName: CCW 720 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G3 I25 P2
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 2
-      y: 2
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
-- testName: CCW 720 degree G17 center format helix, inches, incremental arc distance mode
-  testString: G3 I1 P2 Z-1
+- testName: CCW 720 degree G17 center format helix, MM, incremental arc distance mode
+  testString: G3 I25 P2 Z-25
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 2
-      y: 2
-      z: -1
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      mpoz: -25
+      stat: ${stat.stop}
 
 - testName: final move
-  testString: G0 X0.1 Y0.1 Z-0.1
+  testString: G0 X1 Y1 Z-1
   timeout: ${timeoutShort}
   testResult:
-    stat: ${stat.stop}
+    text:
+    endStatus:
+      mpox: 1
+      mpoy: 1
+      mpoz: -1
+      stat: ${stat.stop}

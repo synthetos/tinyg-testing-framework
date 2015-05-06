@@ -117,61 +117,61 @@ tests:
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 75
-      y: 75
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 75
+      mpoy: 75
+      stat: ${stat.stop}
 
 - testName: CW 180 degree G17 center format arc, MM, MM, incremental arc distance mode, inverse time feed rate
   testString: G2 I25 X100 ${inverseFeedRate}
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 360 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G2 I25 ${inverseFeedRate}
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 540 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G2 I25 X100 P1 ${inverseFeedRate}
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 720 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G2 I25 P2 ${inverseFeedRate}
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CW 720 degree G17 center format helix, MM, incremental arc distance mode, inverse time feed rate
   testString: G2 I25 P2 Z-25 ${inverseFeedRate}
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-      z: -25
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      mpoz: -25
+      stat: ${stat.stop}
 
 ### Counterclockwise motion ###
 
@@ -180,69 +180,69 @@ tests:
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 25
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 25
+      stat: ${stat.stop}
 
 - testName: CCW 180 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G3 I25 X100 ${inverseFeedRate}
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 100
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 360 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G3 I25 ${inverseFeedRate}
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 540 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G3 I25 X100 P1 ${inverseFeedRate}
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 100
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 100
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 720 degree G17 center format arc, MM, incremental arc distance mode, inverse time feed rate
   testString: G3 I25 P2 ${inverseFeedRate}
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: CCW 720 degree G17 center format helix, MM, incremental arc distance mode, inverse time feed rate
   testString: G3 I25 P2 Z-25 ${inverseFeedRate}
   timeout: ${timeoutLong}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 50
-      z: -25
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 50
+      mpoz: -25
+      stat: ${stat.stop}
 
 - testName: final move
   testString: G0 X1 Y1 Z-1
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 1
-      y: 1
-      z: -1
-    stat: ${stat.stop}
+    endStatus:
+      mpox: 1
+      mpoy: 1
+      mpoz: -1
+      stat: ${stat.stop}

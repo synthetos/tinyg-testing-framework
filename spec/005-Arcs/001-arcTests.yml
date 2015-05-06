@@ -48,12 +48,12 @@ variables:
 
   feedRate: F1500            # Millmeters / minute
 
-  timeoutShort: 5
+  timeoutShort: 10
   timeoutLong: 15
 
   homePosition: |              # find home position
-    g28.2 x0 y0 z0            ; ordered list of commands
-    ;g28.3 x0 y0              ; ordered list of commands
+    ;g28.2 x0 y0 z0            ; ordered list of commands
+    g28.3 x0 y0              ; ordered list of commands
 
 #### Globals for all tests (runs from before_all() )
 precondition:
@@ -65,18 +65,26 @@ precondition:
     - qv: 0    # Surn queue reports off
     - sv: 1    # Set status report verbosity to filtered
     - si: 100  # Set status interval
+    - sr:
+        stat: true
+        mpox: true
+        mpoy: true
+        mpoz: true
+
+  setValuesEach:   # These run before() all tests (test setup). Ordered list
+    - sr: null     # get a status report
 
   beforeAll: |                # run once before all tests. GCode string
     ${homePosition}
     G17             ; XY plane
-    G21             ; millimeters
+    G31             ; millimeters
     G90             ; absolute distance mode
     G91.1           ; incremental arc distance mode
     G94             ; units per minute feed rate mode
     ${feedRate}
 
   beforeEach: |               # run before each test
-    g0 x50 y50 z0
+    g0 x75 y50 z0
 
   timeout: 60000              # imeout in MILLIseconds
 
@@ -93,10 +101,6 @@ testIDs:
 #    testJig: testJigID
 #    testOperator: initials
 
-###############################################################################
-###############################################################################
-###############################################################################
-
 tests:
 
 - testName: G17 CCW 360 degrees
@@ -104,172 +108,176 @@ tests:
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 75
-      y: 50
-    status: ${stat.stop}
+    endStatus:
+      mpox: 75
+      mpoy: 50
+      stat: ${stat.stop}
+
+###############################################################################
+#### Center format arcs - G17 (XY), MM, Incremental arc distance mode
+###############################################################################
 
 ### Clockwise motion ###
 
-- testName: G17 CW 1 degree
+- testName: G17 CW 1 degree [temp]
   testString: G2 I-25 X74.99619 Y49.56369
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 74.99619
-      y: 49.56369
-    status: ${stat.stop}
+    endStatus:
+      mpox: 74.99619
+      mpoy: 49.56369
+      stat: ${stat.stop}
 
 - testName: G17 CW 45 degrees
   testString: G2 I-25 X67.67767 Y32.32233
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 67.67767
-      y: 32.32233
-    status: ${stat.stop}
+    endStatus:
+      mpox: 67.67767
+      mpoy: 32.32233
+      stat: ${stat.stop}
 
 - testName: G17 CW 89 degrees
   testString: G2 I-25 X50.43631 Y25.00381
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50.43631
-      y: 25.00381
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50.43631
+      mpoy: 25.00381
+      stat: ${stat.stop}
 
 - testName: G17 CW 90 degrees
   testString: G2 I-25 X50 Y25
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 25
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 25
+      stat: ${stat.stop}
 
 - testName: G17 CW 91 degrees
   testString: G2 I-25 X49.56369 Y25.00381
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 49.56369
-      y: 25.00381
-    status: ${stat.stop}
+    endStatus:
+      mpox: 49.56369
+      mpoy: 25.00381
+      stat: ${stat.stop}
 
 - testName: G17 CW 135 degrees
   testString: G2 I-25 X32.32233 Y32.32233
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 32.32233
-      y: 32.32233
-    status: ${stat.stop}
+    endStatus:
+      mpox: 32.32233
+      mpoy: 32.32233
+      stat: ${stat.stop}
 
 - testName: G17 CW 179 degrees
   testString: G2 I-25 X25.00381 Y49.56369
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 25.00381
-      y: 49.56369
-    status: ${stat.stop}
+    endStatus:
+      mpox: 25.00381
+      mpoy: 49.56369
+      stat: ${stat.stop}
 
 - testName: G17 CW 180 degrees
   testString: G2 I-25 X25 Y50
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 25
-      y: 50
-    status: ${stat.stop}
+    endStatus:
+      mpox: 25
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: G17 CW 181 degrees
   testString: G2 I-25 X25.00381 Y50.43631
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 25.00381
-      y: 50.43631
-    status: ${stat.stop}
+    endStatus:
+      mpox: 25.00381
+      mpoy: 50.43631
+      stat: ${stat.stop}
 
 - testName: G17 CW 225 degrees
   testString: G2 I-25 X32.32233 Y67.67767
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 32.32233
-      y: 67.67767
-    status: ${stat.stop}
+    endStatus:
+      mpox: 32.32233
+      mpoy: 67.67767
+      stat: ${stat.stop}
 
 - testName: G17 CW 269 degrees
   testString: G2 I-25 X49.56369 Y74.99619
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 49.56369
-      y: 74.99619
-    status: ${stat.stop}
+    endStatus:
+      mpox: 49.56369
+      mpoy: 74.99619
+      stat: ${stat.stop}
 
 - testName: G17 CW 270 degrees
   testString: G2 I-25 X50 Y75
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 75
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 75
+      stat: ${stat.stop}
 
 - testName: G17 CW 271 degrees
   testString: G2 I-25 X50.43631 Y74.99619
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50.43631
-      y: 74.99619
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50.43631
+      mpoy: 74.99619
+      stat: ${stat.stop}
 
 - testName: G17 CW 315 degrees
   testString: G2 I-25 X67.67767 Y67.67767
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 67.67767
-      y: 67.67767
-    status: ${stat.stop}
+    endStatus:
+      mpox: 67.67767
+      mpoy: 67.67767
+      stat: ${stat.stop}
 
 - testName: G17 CCW 359 degree
   testString: G2 I-25 X74.99619 Y50.43631
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 74.99619
-      y: 50.43631
-    status: ${stat.stop}
+    endStatus:
+      mpox: 74.99619
+      mpoy: 50.43631
+      stat: ${stat.stop}
 
 - testName: G17 CW 360 degrees
   testString: G2 I-25 X75 Y50
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 74
-      y: 50
-    status: ${stat.stop}
+    endStatus:
+      mpox: 74
+      mpoy: 50
+      stat: ${stat.stop}
 
 ### Counterclockwise motion ###
 
@@ -278,168 +286,168 @@ tests:
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 74.99619
-      y: 50.43631
-    status: ${stat.stop}
+    endStatus:
+      mpox: 74.99619
+      mpoy: 50.43631
+      stat: ${stat.stop}
 
 - testName: G17 CCW 45 degrees
   testString: G3 I-25 X67.67767 Y67.67767
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 67.67767
-      y: 67.67767
-    status: ${stat.stop}
+    endStatus:
+      mpox: 67.67767
+      mpoy: 67.67767
+      stat: ${stat.stop}
 
 - testName: G17 CCW 89 degrees
   testString: G3 I-25 X50.43631 Y74.99619
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50.43631
-      y: 74.99619
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50.43631
+      mpoy: 74.99619
+      stat: ${stat.stop}
 
 - testName: G17 CCW 90 degrees
   testString: G3 I-25 X50 Y75
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 75
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 75
+      stat: ${stat.stop}
 
 - testName: G17 CCW 91 degrees
   testString: G3 I-25 X49.56369 Y74.99619
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 49.56369
-      y: 74.99619
-    status: ${stat.stop}
+    endStatus:
+      mpox: 49.56369
+      mpoy: 74.99619
+      stat: ${stat.stop}
 
 - testName: G17 CCW 135 degrees
   testString: G3 I-25 X32.32233 Y67.67767
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 32.32233
-      y: 67.67767
-    status: ${stat.stop}
+    endStatus:
+      mpox: 32.32233
+      mpoy: 67.67767
+      stat: ${stat.stop}
 
 - testName: G17 CCW 179 degrees
   testString: G3 I-25 X25.00381 Y50.43631
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 25.00381
-      y: 50.43631
-    status: ${stat.stop}
+    endStatus:
+      mpox: 25.00381
+      mpoy: 50.43631
+      stat: ${stat.stop}
 
 - testName: G17 CCW 180 degrees
   testString: G3 I-25 X25 Y50
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 25
-      y: 50
-    status: ${stat.stop}
+    endStatus:
+      mpox: 25
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: G17 CCW 181 degrees
   testString: G3 I-25 X25.00381 Y49.56369
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 25.00381
-      y: 49.56369
-    status: ${stat.stop}
+    endStatus:
+      mpox: 25.00381
+      mpoy: 49.56369
+      stat: ${stat.stop}
 
 - testName: G17 CCW 225 degrees
   testString: G3 I-25 X32.32233 Y32.32233
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 32.32233
-      y: 32.32233
-    status: ${stat.stop}
+    endStatus:
+      mpox: 32.32233
+      mpoy: 32.32233
+      stat: ${stat.stop}
 
 - testName: G17 CCW 269 degrees
   testString: G3 I-25 X49.56369 Y25.00381
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 49.56369
-      y: 25.00381
-    status: ${stat.stop}
+    endStatus:
+      mpox: 49.56369
+      mpoy: 25.00381
+      stat: ${stat.stop}
 
 - testName: G17 CCW 270 degrees
   testString: G3 I-25 X50 Y25
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50
-      y: 25
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50
+      mpoy: 25
+      stat: ${stat.stop}
 
 - testName: G17 CCW 271 degrees
   testString: G3 I-25 X50.43631 Y25.00381
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 50.43631
-      y: 25.00381
-    status: ${stat.stop}
+    endStatus:
+      mpox: 50.43631
+      mpoy: 25.00381
+      stat: ${stat.stop}
 
 - testName: G17 CCW 315 degrees
   testString: G3 I-25 X67.67767 Y32.32233
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 67.67767
-      y: 32.32233
-    status: ${stat.stop}
+    endStatus:
+      mpox: 67.67767
+      mpoy: 32.32233
+      stat: ${stat.stop}
 
 - testName: G17 CCW 359 degrees
   testString: G3 I-25 X74.99619 Y49.56369
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 74.99619
-      y: 49.56369
-    status: ${stat.stop}
+    endStatus:
+      mpox: 74.99619
+      mpoy: 49.56369
+      stat: ${stat.stop}
 
 - testName: G17 CCW 360 degrees
   testString: G3 I-25 X75 Y50
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 74
-      y: 50
-    status: ${stat.stop}
+    endStatus:
+      mpox: 74
+      mpoy: 50
+      stat: ${stat.stop}
 
 - testName: final move
   testString: G0 X1 Y1 Z0
   timeout: ${timeoutShort}
   testResult:
     text:
-    endPosition:
-      x: 1
-      y: 1
-      z: 0
-    status: ${stat.stop}
+    endStatus:
+      mpox: 1
+      mpoy: 1
+      mpoz: 0
+      stat: ${stat.stop}

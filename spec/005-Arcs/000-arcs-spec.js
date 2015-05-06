@@ -6,19 +6,19 @@ var path = require("path");
 var readline = require('readline'),
 rl = readline.createInterface(process.stdin, process.stdout);
 
-//#############################################################################
-//#### Preliminary Tests
-//#############################################################################
+
+tinyg_tester_init();
 
 describe("001-arc tests", function () {
-  var testData = yaml.safeLoad(fs.readFileSync('tests/005-Arcs/001-arcTests.yml', 'utf8'));
+  var testData = yaml.safeLoad(fs.readFileSync('spec/005-Arcs/001-arcTests.yml', 'utf8'));
 
   tinyg_tester_setup(testData);
 
   describe("test arcs", function () {
+
     testData.tests.forEach(function (v) {
-      v.testResult.timeout = fix_gcode(v.testResult.timeout, testData);
-      v.testResult.stat = fix_gcode(v.testResult.stat, testData);
+      v.timeout = replace_tokens(v.timeout, testData);
+      v.testResult.stat = replace_tokens(v.testResult.stat, testData);
 
       if (v.testResult === undefined) {
         v.testResult = {status:3};
@@ -32,18 +32,18 @@ describe("001-arc tests", function () {
 
       describe(v.testName, function () {
 
-        tinyg_tester_before_each(testData);
+        var storedStatusReports = {};
+        tinyg_tester_before_each(testData, storedStatusReports);
 
-        it("(auto)", function () {
-          if (v.timeout !== undefined) {
-            this.timeout(v.timeout * 1000);
+        it("(auto)", function (done) {
+          if (stopTesting) {
+            pending("Skipped");
           }
 
           var testString = v.testString || fs.readFileSync(path.resolve(__dirname, v.testFile)).join("\n");
 
-          var gcode = fix_gcode(testString, testData);
+          var gcode = replace_tokens(testString, testData);
 
-          var storedStatusReports = {};
           var storedFooter = [];
 
           var promise = g.writeWithPromise(gcode, function (r) {
@@ -61,7 +61,6 @@ describe("001-arc tests", function () {
 
             return false;
           }).then(function () {
-
             if (v.testResult.endPosition && typeof v.testResult.endPosition === 'object') {
               var shouldBe = {};
               var actuallyIs = {};
@@ -69,34 +68,38 @@ describe("001-arc tests", function () {
                 // shouldBe["pos"+k] = v.testResult.endPosition[k];
                 actuallyIs[k] = storedStatusReports["pos"+k];
               }
-              actuallyIs.should.deep.eql(v.testResult.endPosition, "wrong end position" );
+              expect(actuallyIs).toEqual(v.testResult.endPosition, "wrong end position" );
             }
 
             if (v.testResult.stat) {
-              storedStatusReports["stat"].should.equal(parseInt(v.testResult.stat, "wrong end stat"));
+              expect(storedStatusReports["stat"]).toEqual(parseInt(v.testResult.stat, "wrong end stat"));
             }
 
             if (v.testResult.status) {
-              storedFooter[1].should.equal(parseInt(v.testResult.status, "wrong status"));
+              expect(storedFooter[1]).toEqual(parseInt(v.testResult.status, "wrong status"));
             }
-
           });
 
-          return promise;
-        }); // it
+          return promise.catch(function (error) {expect(error).toBeUndefined()}).finally(function() {done();});
+        }, v.timeout ? v.timeout * 1000 : 10000000); // it
 
-        it("(manual check)", function () {
-          this.timeout(0);
+        it("(manual check)", function (done) {
+          if (stopTesting) {
+            pending("Skipped");
+          }
 
           var deferred = Q.defer();
-          var question = fix_gcode(v.testResult.text || v.testName, testData);
+          var question = replace_tokens(v.testResult.text || v.testName, testData);
 
           function _ask() {
-            rl.question(question + ' (y/n) ', function(answer) {
+            rl.question(question + ' (y/n/q) ', function(answer) {
               if (answer.match(/^y(es)?$/i)) {
                 deferred.resolve();
               } else if (answer.match(/^no?$/i)) {
                 deferred.reject(new Error("User said it failed!"));
+              } else if (answer.match(/^q(uit)?$/i)) {
+                stopTesting = true;
+                deferred.reject(new Error("User quit testing!"));
               } else {
                 _ask();
               }
@@ -105,10 +108,11 @@ describe("001-arc tests", function () {
 
           _ask();
 
-          return deferred.promise;
-        }); // it
+          return deferred.promise.catch(function (error) {expect(error).toBeUndefined()}).finally(function() {done();});
+        }, 10000000 /* never timeout */); // it
       }); // describe
 
     }); // forEach
+
   }); // describe
 }) // describe
