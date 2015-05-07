@@ -51,7 +51,7 @@ global.replace_tokens = function (gcode, testData) {
     return gcode;
   }
 
-  return gcode.replace(/\$\{\s*([a-zA-Z_.]+)\s*\}/g, function (x, full_key) {
+  var retGcode = gcode.replace(/\$\{\s*([a-zA-Z_.]+)\s*\}/g, function (x, full_key) {
     var keys = full_key.split('.');
     var v = testData.variables;
     for (var i = 0; i < keys.length; i++) {
@@ -63,7 +63,9 @@ global.replace_tokens = function (gcode, testData) {
     }
 
     return v;
-  })
+  });
+
+  return retGcode;
 };
 
 global.tinyg_tester_init = function() {
@@ -194,7 +196,7 @@ global.tinyg_tester_setup = function (testData) {
 }
 
 global.tinyg_tester_before_each = function (testData, storedStatus) {
-  if (storedStatus == null) {
+  if (storedStatus === null) {
     storedStatus = {};
   }
 

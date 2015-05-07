@@ -46,7 +46,7 @@ describe("001-arc tests", function () {
 
           var storedFooter = [];
 
-          var promise = g.writeWithPromise(gcode, function (r) {
+          function updateStoredSRs(r) {
             if (r && r.sr) {
               for (k in r.sr) {
                 storedStatusReports[k] = r.sr[k];
@@ -54,33 +54,43 @@ describe("001-arc tests", function () {
             } else if (r && r.f) {
               storedFooter = r.f;
             }
+          }
 
-            if (r.sr && r.sr.stat && r.sr.stat == v.testResult.stat) {
+          var promise = g.writeWithPromise(gcode, function (r) {
+            updateStoredSRs(r);
+
+            if (r.sr && r.sr.stat && r.sr.stat == (v.doneStat || 3)) {
               return true;
             }
 
             return false;
+
+          }).progress(function (r) {
+            updateStoredSRs(r);
+
           }).then(function () {
-            if (v.testResult.endPosition && typeof v.testResult.endPosition === 'object') {
-              var shouldBe = {};
+            if (v.testResult.endStatus && typeof v.testResult.endStatus === 'object') {
               var actuallyIs = {};
-              for (k in v.testResult.endPosition) {
-                // shouldBe["pos"+k] = v.testResult.endPosition[k];
-                actuallyIs[k] = storedStatusReports["pos"+k];
+              var shouldBe = {};
+              for (k in v.testResult.endStatus) {
+                actuallyIs[k] = storedStatusReports[k];
+
+                var X = v.testResult.endStatus[k];
+                X = replace_tokens(X, testData);
+                if (!isNaN(parseFloat(X))) {
+                  X = parseFloat(X);
+                }
+                shouldBe[k] = X;
               }
-              expect(actuallyIs).toEqual(v.testResult.endPosition, "wrong end position" );
+              expect(actuallyIs).toEqual(shouldBe, "wrong end status" );
             }
 
-            if (v.testResult.stat) {
-              expect(storedStatusReports["stat"]).toEqual(parseInt(v.testResult.stat, "wrong end stat"));
-            }
-
-            if (v.testResult.status) {
-              expect(storedFooter[1]).toEqual(parseInt(v.testResult.status, "wrong status"));
+            if (storedFooter.length > 0) {
+              expect(storedFooter[1]).toEqual(parseInt(v.testResult.status) || 0, "wrong status");
             }
           });
 
-          return promise.catch(function (error) {expect(error).toBeUndefined()}).finally(function() {done();});
+          return promise.finally(function() {done();});
         }, v.timeout ? v.timeout * 1000 : 10000000); // it
 
         it("(manual check)", function (done) {

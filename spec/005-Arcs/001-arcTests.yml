@@ -70,6 +70,9 @@ precondition:
         mpox: true
         mpoy: true
         mpoz: true
+        posx: true
+        posy: true
+        posz: true
 
   setValuesEach:   # These run before() all tests (test setup). Ordered list
     - sr: null     # get a status report
