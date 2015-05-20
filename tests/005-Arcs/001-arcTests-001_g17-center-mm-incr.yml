@@ -112,7 +112,7 @@ tests:
       y: 75
     status: ${stat.stop}
 
-- testName: CW 180 degree G17 center format arc, MM, MM, incremental arc distance mode
+- testName: CW 180 degree G17 center format arc, MM, incremental arc distance mode
   testString: G2 I25 X100
   timeout: ${timeoutShort}
   testResult:
@@ -120,6 +120,16 @@ tests:
     endPosition:
       x: 50
       y: 50
+    status: ${stat.stop}
+
+- testName: CW 270 degree G17 center format arc, MM, incremental arc distance mode
+  testString: G2 I25 X75 Y25
+  timeout: ${timeoutShort}
+  testResult:
+    text:
+    endPosition:
+      x: 75
+      y: 75
     status: ${stat.stop}
 
 - testName: CW 360 degree G17 center format arc, MM, incremental arc distance mode
