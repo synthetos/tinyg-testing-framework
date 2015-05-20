@@ -8,6 +8,7 @@
 // Built-in libraries:
 var util = require("util");
 var fs = require('fs');
+var path = require('path');
 
 // Chai and Chai-as-promised
 // var chai = require("chai");
@@ -43,7 +44,7 @@ global.stopTesting = false;
 //var DEBUG_RESPONSES = 0;
 var DEBUG_RESPONSES = 1;
 
-// ??? What does this do?
+// Variables used to hold the path to the TinyG devices
 var portPath, dataportPath;
 
 global.replace_tokens = function (gcode, testData) {
@@ -51,7 +52,7 @@ global.replace_tokens = function (gcode, testData) {
     return gcode;
   }
 
-  var retGcode = gcode.replace(/\$\{\s*([a-zA-Z_.]+)\s*\}/g, function (x, full_key) {
+  var retGcode = gcode.replace(/\$\{?\s*([a-zA-Z_.]+)\s*\}?/g, function (x, full_key) {
     var keys = full_key.split('.');
     var v = testData.variables;
     for (var i = 0; i < keys.length; i++) {
@@ -67,6 +68,80 @@ global.replace_tokens = function (gcode, testData) {
 
   return retGcode;
 };
+
+function _deepReplace(data, dataPath, topLevelData) {
+  if (topLevelData === undefined) {
+    topLevelData = data;
+  }
+
+  if (data === undefined || data === null) {
+    return data;
+  }
+
+  if (data.hasOwnProperty('include')) {
+    var baseDir = path.dirname(dataPath);
+    newData = yaml.safeLoad(fs.readFileSync( path.resolve(baseDir, data.include) ));
+    delete data['include'];
+
+    if (util.isArray(newData)) {
+      return _deepReplace(newData, dataPath, topLevelData);
+    }
+    else if (typeof newData === 'object') {
+      // merge in the new data:
+      for (var subkey in newData) {
+        data[subkey] = newData[subkey];
+      }
+    }
+
+    data = _deepReplace(data, dataPath, topLevelData);
+  }
+
+  var parentIsArray = util.isArray(data);
+  var arrayElementsToExpand = [];
+
+  for (var key in data) {
+    if (typeof data[key] === 'object') {
+      var wasArray = util.isArray(data[key]);
+      data[key] = _deepReplace(data[key], dataPath, topLevelData);
+      if (parentIsArray && !wasArray && util.isArray(data[key])) {
+        arrayElementsToExpand.push(key);
+      }
+    } else if (typeof data[key] === 'string') {
+      var newValue = replace_tokens(data[key], topLevelData);
+      var numValue = parseInt(newValue);
+
+      if (!isNaN(numValue) && numValue == newValue) {
+        newValue = numValue;
+      }
+
+      data[key] = newValue;
+    }
+  }
+
+  if (parentIsArray) {
+    var nextToExpand = arrayElementsToExpand.shift();
+    var newArray = [];
+
+    for (var i = 0; i < data.length; i++) {
+      if (i == nextToExpand) {
+        nextToExpand = arrayElementsToExpand.shift();
+        for (var j = 0; j < data[i].length; j++) {
+          newArray.push(data[i][j]);
+        }
+      } else {
+        newArray.push(data[i]);
+      }
+    }
+
+    return newArray;
+  }
+
+  return data;
+}
+
+global.loadData = function (dataPath) {
+  return _deepReplace(yaml.safeLoad(fs.readFileSync(dataPath, 'utf8')), dataPath);
+}
 
 global.tinyg_tester_init = function() {
 
@@ -132,7 +207,12 @@ global.tinyg_tester_init = function() {
   }
 };
 
-global.tinyg_tester_setup = function (testData) {
+global.tinyg_tester_setup = function (dataPath) {
+
+  var testData = loadData(dataPath);
+
+  // console.log("TestData: " + util.inspect(testData));
+
   // Begin Mocha preconditions functions
   beforeAll(function (done) {
     if (stopTesting) {
@@ -193,6 +273,8 @@ global.tinyg_tester_setup = function (testData) {
 
     return promise;
   }, 10000000 /* never timeout */);
+
+  return testData;
 }
 
 global.tinyg_tester_before_each = function (testData, storedStatus) {

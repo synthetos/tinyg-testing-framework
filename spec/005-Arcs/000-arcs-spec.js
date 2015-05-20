@@ -10,9 +10,9 @@ rl = readline.createInterface(process.stdin, process.stdout);
 tinyg_tester_init();
 
 describe("001-arc tests", function () {
-  var testData = yaml.safeLoad(fs.readFileSync('spec/005-Arcs/001-arcTests.yml', 'utf8'));
+  // var testData = yaml.safeLoad(fs.readFileSync('spec/005-Arcs/001-arcTests.yml', 'utf8'));
 
-  tinyg_tester_setup(testData);
+  testData = tinyg_tester_setup("spec/005-Arcs/001-arcTests.yml");
 
   describe("test arcs", function () {
 
@@ -39,6 +39,9 @@ describe("001-arc tests", function () {
           if (stopTesting) {
             pending("Skipped");
           }
+
+          // For debugging
+          // console.log("storedStatusReports: " + util.inspect(storedStatusReports));
 
           var testString = v.testString || fs.readFileSync(path.resolve(__dirname, v.testFile)).join("\n");
 
