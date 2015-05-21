@@ -13,13 +13,11 @@ describe("001-arc tests", function () {
   // var testData = yaml.safeLoad(fs.readFileSync('spec/005-Arcs/001-arcTests.yml', 'utf8'));
 
   testData = tinyg_tester_setup("spec/005-Arcs/001-arcTests.yml");
+  // console.log(require('util').inspect(testData, { depth: null }));
 
   describe("test arcs", function () {
 
     testData.tests.forEach(function (v) {
-      v.timeout = replace_tokens(v.timeout, testData);
-      v.testResult.stat = replace_tokens(v.testResult.stat, testData);
-
       if (v.testResult === undefined) {
         v.testResult = {status:3};
       } else if (v.testResult.stat === undefined) {
@@ -35,7 +33,7 @@ describe("001-arc tests", function () {
         var storedStatusReports = {};
         tinyg_tester_before_each(testData, storedStatusReports);
 
-        it("(auto)", function (done) {
+        var auto_func = function (done) {
           if (stopTesting) {
             pending("Skipped");
           }
@@ -45,7 +43,7 @@ describe("001-arc tests", function () {
 
           var testString = v.testString || fs.readFileSync(path.resolve(__dirname, v.testFile)).join("\n");
 
-          var gcode = replace_tokens(testString, testData);
+          var gcode = testString;
 
           var storedFooter = [];
 
@@ -79,7 +77,6 @@ describe("001-arc tests", function () {
                 actuallyIs[k] = storedStatusReports[k];
 
                 var X = v.testResult.endStatus[k];
-                X = replace_tokens(X, testData);
                 if (!isNaN(parseFloat(X))) {
                   X = parseFloat(X);
                 }
@@ -94,35 +91,55 @@ describe("001-arc tests", function () {
           });
 
           return promise.finally(function() {done();});
-        }, v.timeout ? v.timeout * 1000 : 10000000); // it
+        };
 
-        it("(manual check)", function (done) {
-          if (stopTesting) {
-            pending("Skipped");
+        if (v.focus) {
+          // Focused
+          fit("(auto)", auto_func, v.timeout ? v.timeout * 1000 : 10000000);
+        } else {
+          it("(auto)", auto_func, v.timeout ? v.timeout * 1000 : 10000000);
+        }
+
+        if (v.manualPrompt) {
+          var manual_func = function (done) {
+            if (stopTesting) {
+              pending("Skipped");
+            }
+
+            var deferred = Q.defer();
+            var question = v.manualPrompt;
+            if (question === true) {
+              question = v.testName;
+            }
+
+            function _ask() {
+              rl.question(question + ' (y/n/q) ', function(answer) {
+                if (answer.match(/^y(es)?$/i)) {
+                  deferred.resolve();
+                } else if (answer.match(/^no?$/i)) {
+                  deferred.reject(new Error("User said it failed!"));
+                } else if (answer.match(/^q(uit)?$/i)) {
+                  stopTesting = true;
+                  deferred.reject(new Error("User quit testing!"));
+                } else {
+                  _ask();
+                }
+              });
+            }
+
+            _ask();
+
+            return deferred.promise.catch(function (error) {expect(error).toBeUndefined()}).finally(function() {done();});
           }
 
-          var deferred = Q.defer();
-          var question = replace_tokens(v.testResult.text || v.testName, testData);
-
-          function _ask() {
-            rl.question(question + ' (y/n/q) ', function(answer) {
-              if (answer.match(/^y(es)?$/i)) {
-                deferred.resolve();
-              } else if (answer.match(/^no?$/i)) {
-                deferred.reject(new Error("User said it failed!"));
-              } else if (answer.match(/^q(uit)?$/i)) {
-                stopTesting = true;
-                deferred.reject(new Error("User quit testing!"));
-              } else {
-                _ask();
-              }
-            });
+          if (v.focus) {
+            // Focused
+            fit("(manual check)", manual_func, 10000000 /* "never" timeout */);
+          } else {
+            it("(manual check)", manual_func, 10000000 /* "never" timeout */);
           }
+        } // if (v.manualPrompt)
 
-          _ask();
-
-          return deferred.promise.catch(function (error) {expect(error).toBeUndefined()}).finally(function() {done();});
-        }, 10000000 /* never timeout */); // it
       }); // describe
 
     }); // forEach
