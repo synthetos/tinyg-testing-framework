@@ -80,11 +80,13 @@ function _deepReplace(data, dataPath, topLevelData) {
 
   if (data.hasOwnProperty('include')) {
     var baseDir = path.dirname(dataPath);
-    newData = yaml.safeLoad(fs.readFileSync( path.resolve(baseDir, data.include) ));
+    var newPath = path.resolve(baseDir, data.include);
+
+    newData = yaml.safeLoad(fs.readFileSync( newPath ));
     delete data['include'];
 
     if (util.isArray(newData)) {
-      return _deepReplace(newData, dataPath, topLevelData);
+      return _deepReplace(newData, newPath, topLevelData);
     }
     else if (typeof newData === 'object') {
       // merge in the new data:
@@ -93,7 +95,7 @@ function _deepReplace(data, dataPath, topLevelData) {
       }
     }
 
-    data = _deepReplace(data, dataPath, topLevelData);
+    data = _deepReplace(data, newPath, topLevelData);
   }
 
   var parentIsArray = util.isArray(data);
@@ -213,56 +215,86 @@ global.tinyg_tester_setup = function (dataPath) {
 
   // console.log("TestData: " + util.inspect(testData));
 
-  // Begin Mocha preconditions functions
-  beforeAll(function (done) {
-    if (stopTesting) {
-      pending("skipped at user's request");
-    }
-
-    // this.timeout(testData.precondition.timeout || 0);
-
+  if (testData.precondition) {
     console.log("Setting precondition communication and system parameters");
     var promise = g.set(testData.precondition.setValues);
 
     console.log("\nTest parameters:")
     console.log("  " + new Date());
 
-    if (testData.precondition) {
-      if (testData.precondition.reportParameters) {
-        testData.precondition.reportParameters.forEach(function (p) {
-          promise = promise.then(function () {
-            return g.get(p).then(
-              function (v) {
-                console.log("  " + p + "=" + v);
-              },
-              function (e) {
-                console.log("  " + p + "=null");
-                return Q.fcall(function () {}); // Return an empty promise to "ignore the error"
-              }
-            );
-          });
-        });
-      }
-
-      if (testData.precondition.beforeAll) {
-        var gcode = replace_tokens(testData.precondition.beforeAll, testData);
+    if (testData.precondition.reportParameters) {
+      testData.precondition.reportParameters.forEach(function (p) {
         promise = promise.then(function () {
-          // Warning, lines that won't result in a response will jam this!!
-          // Empty lines and commnt-only lines are okay.
-          var gcodeLines = gcode.split(/(?:\n(?:\s*\n|\s*;[^\n]*\n)?)+/);
-          if (gcodeLines[gcodeLines.length-1] == '') {
-            gcodeLines.pop();
-          }
-          var lineCount = gcodeLines.length;
-          return g.writeWithPromise(gcodeLines, function (r) {
-            lineCount--;
-            if (0 == lineCount) {
-              return true;
+          return g.get(p).then(
+            function (v) {
+              console.log("  " + p + "=" + v);
+            },
+            function (e) {
+              console.log("  " + p + "=null");
+              return Q.fcall(function () {}); // Return an empty promise to "ignore the error"
             }
-            return false;
-          });
+          );
         });
+      });
+    }
+
+    tinyg_tester_before_all(testData.precondition);
+    tinyg_tester_before_each(testData.precondition);
+  }
+
+  return testData;
+}
+
+
+global.tinyg_tester_before_all = function (testData, storedStatus) {
+  if (storedStatus === undefined) {
+    storedStatus = {};
+  }
+
+  function _handleProgress(r) {
+    if (r && r.sr) {
+      for (k in r.sr) {
+        storedStatus[k] = r.sr[k];
       }
+    }
+    if (r && r.r && r.r.f) {
+      storedStatus.r.f = r.r.f;
+    }
+  }
+
+  beforeAll(function (done) {
+    if (stopTesting) {
+      pending("skipped at user's request");
+    }
+
+    var promise = Q.fcall(function () {});
+    if (testData.setValues) {
+      promise = promise.then(function () {
+        return g.set(testData.setValues).progress(_handleProgress); // writeWithPromise
+      });
+    }
+    if (testData.beforeAll) {
+      var gcode = replace_tokens(testData.beforeAll, testData);
+      promise = promise.then(function () {
+        // Warning, lines that won't result in a response will jam this!!
+        // Empty lines and commnt-only lines are okay.
+        // var gcodeLines = gcode.split(/(?:\n(?:\s*\n|\s*;[^\n]*\n)?)+/);
+        var gcodeLines = gcode.split(/(?:\n)+/);
+        if (gcodeLines[gcodeLines.length-1] == '') {
+          gcodeLines.pop();
+        }
+        var lineCount = gcodeLines.length;
+
+        return g.writeWithPromise(gcodeLines, function (r) {
+          lineCount--;
+          if (0 == lineCount) {
+            return true;
+          }
+          console.log("lineCount: " + lineCount);
+
+          return false;
+        }).progress(_handleProgress); // writeWithPromise
+      });
     }
 
     promise = promise.then(function () {
@@ -273,57 +305,47 @@ global.tinyg_tester_setup = function (dataPath) {
 
     return promise;
   }, 10000000 /* never timeout */);
-
-  return testData;
 }
 
 global.tinyg_tester_before_each = function (testData, storedStatus) {
-  if (storedStatus === null) {
+  if (storedStatus === undefined) {
     storedStatus = {};
   }
 
-  beforeAll(function (done) {
+  function _handleProgress(r) {
+    if (r && r.sr) {
+      for (k in r.sr) {
+        storedStatus[k] = r.sr[k];
+      }
+    }
+  }
+
+  beforeEach(function (done) {
+    console.log("++\n")
+
     if (stopTesting) {
       pending("skipped at user's request");
     }
 
     var promise = Q.fcall(function () {});
-    if (testData.precondition ) {
-      if (testData.precondition.setValuesEach) {
-        promise = promise.then(function () {
-          return g.set(testData.precondition.setValuesEach).progress(
-            function (r) {
-              if (r && r.sr) {
-                for (k in r.sr) {
-                  storedStatus[k] = r.sr[k];
-                }
-              }
-            }
-          ); // writeWithPromise
-        });
-      }
-      if (testData.precondition.beforeEach) {
-        var gcode = replace_tokens(testData.precondition.beforeEach, testData);
-        promise = promise.then(function () {
-          return g.writeWithPromise(gcode).progress(
-            function (r) {
-              if (r && r.sr) {
-                for (k in r.sr) {
-                  storedStatus[k] = r.sr[k];
-                }
-              }
-            }
-          ); // writeWithPromise
-        });
-      }
+    if (testData.setValuesEach) {
+      promise = promise.then(function () {
+        return g.set(testData.setValuesEach).progress(_handleProgress); // writeWithPromise
+      });
+    }
+    if (testData.beforeEach) {
+      var gcode = replace_tokens(testData.beforeEach, testData);
+      promise = promise.then(function () {
+        return g.writeWithPromise(gcode).progress(_handleProgress); // writeWithPromise
+      });
     }
 
     promise = promise.then(function () {
-      // console.log("--\n")
+      console.log("--\n")
     }).finally(function () {
       done();
     });
 
     return promise;
-  }, /* disable timeout */ 0);
+  }, 10000000 /* never timeout */);
 }
