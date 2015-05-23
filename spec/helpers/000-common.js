@@ -216,9 +216,6 @@ global.tinyg_tester_setup = function (dataPath) {
   // console.log("TestData: " + util.inspect(testData));
 
   if (testData.precondition) {
-    console.log("Setting precondition communication and system parameters");
-    var promise = g.set(testData.precondition.setValues);
-
     console.log("\nTest parameters:")
     console.log("  " + new Date());
 
@@ -251,14 +248,11 @@ global.tinyg_tester_before_all = function (testData, storedStatus) {
     storedStatus = {};
   }
 
-  function _handleProgress(r) {
+  function _handleProgress(r, f) {
     if (r && r.sr) {
       for (k in r.sr) {
         storedStatus[k] = r.sr[k];
       }
-    }
-    if (r && r.r && r.r.f) {
-      storedStatus.r.f = r.r.f;
     }
   }
 
@@ -279,10 +273,7 @@ global.tinyg_tester_before_all = function (testData, storedStatus) {
         // Warning, lines that won't result in a response will jam this!!
         // Empty lines and commnt-only lines are okay.
         // var gcodeLines = gcode.split(/(?:\n(?:\s*\n|\s*;[^\n]*\n)?)+/);
-        var gcodeLines = gcode.split(/(?:\n)+/);
-        if (gcodeLines[gcodeLines.length-1] == '') {
-          gcodeLines.pop();
-        }
+        var gcodeLines = gcode.split(/(?:\r?\n)+/);
         var lineCount = gcodeLines.length;
 
         return g.writeWithPromise(gcodeLines, function (r) {

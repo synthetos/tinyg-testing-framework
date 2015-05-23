@@ -49,11 +49,11 @@ variables:
   feedRate: F1500            # Millmeters / minute
 
   timeoutShort: 10
-  timeoutLong: 15
+  timeoutLong: 60
 
   homePosition: |              # find home position
     ;g28.2 x0 y0 z0            ; ordered list of commands
-    g28.3 x0 y0              ; ordered list of commands
+    g28.3 x0 y0 z0             ; ordered list of commands
 
   gcodeDefaults: |
     G21 G94 G90 G91.1	; set initial Gcode state
@@ -117,4 +117,7 @@ testIDs:
 
 tests:
 
-- include: 002-arc-rotation-tests.yml
+- include: 002.1-arc-rotation-tests.yml
+- include: 002.2-arc-rotation-tests.yml
+- include: 002.3-arc-rotation-tests.yml
+- include: 002.4-arc-rotation-tests.yml

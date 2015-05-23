@@ -34,7 +34,7 @@ function run_tests(testData, storedStatusReports) {
       v.endCondition.stat = 3;
     }
 
-    console.log("v: " + util.inspect(v));
+    // console.log("v: " + util.inspect(v));
 
 
     if (v.name === undefined) {
@@ -107,7 +107,7 @@ function run_tests(testData, storedStatusReports) {
               // shouldBe[k] = X;
             }
 
-            expect(actuallyIs).toEqual(shouldBe, "wrong end state" );
+            expect(actuallyIs).toEqual(shouldBe, "wrong end state (result -> expected result)" );
           }
           //
           // if (storedFooter.length > 0) {

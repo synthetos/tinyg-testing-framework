@@ -1,24 +1,22 @@
 # Search:
 # ^([^;]+);(.*)$
 # Replace:
-# - name: $2\n  gcode: |\n    $1;$2\n  endState: { posx: 000, posy: 000, posz: 000 }\n\n
+# - name: $2\n  gcode: |\n    $1;$2\n  endState: { posx: 0, posy: 0, posz: 0 }\n\n
 
 - name: G17 arcs, inches, absolute distance mode, incremental arc distance mode, I offset
   beforeAll: |
-    G17 G20 G90 G91.1
-    F50
+    G17 G20 G90 G91.1	; XY plane, inches, absolute distance mode, incremental arc distance mode
+    F50	; Inches per minute
   beforeEach: |
     G0 X1 Y0 Z0
   endCondition: { stat: $stat.stop }
-  timeout: ${timeoutShort}
+  timeout: ${timeoutLong}
 
   tests:
-
   - name:  CW 90 degree arc
     gcode: |
       G2 I-1 X0 Y-1	; CW 90 degree arc
     endState: { posx: 000, posy: -1, posz: 000 }
-    focus: true
 
 
   - name:  CW 180 degree arc
