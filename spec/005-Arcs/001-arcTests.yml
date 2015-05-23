@@ -121,3 +121,6 @@ tests:
 - include: 002.2-arc-rotation-tests.yml
 - include: 002.3-arc-rotation-tests.yml
 - include: 002.4-arc-rotation-tests.yml
+- include: 002.5-arc-rotation-tests.yml
+- include: 002.6-arc-rotation-tests.yml
+- include: 002.7-arc-rotation-tests.yml
