@@ -89,7 +89,7 @@ function run_tests(testData, storedStatusReports) {
           updateStoredSRs(r);
 
         }).then(function () {
-          if (v.endStatus && typeof v.endStatus === 'object') {
+          if (v.endState && typeof v.endState === 'object') {
             var actuallyIs = {};
             var shouldBe = {};
             for (k in v.endState) {
@@ -106,6 +106,7 @@ function run_tests(testData, storedStatusReports) {
               // }
               // shouldBe[k] = X;
             }
+
             expect(actuallyIs).toEqual(shouldBe, "wrong end state" );
           }
           //

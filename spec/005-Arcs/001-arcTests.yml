@@ -55,6 +55,16 @@ variables:
     ;g28.2 x0 y0 z0            ; ordered list of commands
     g28.3 x0 y0              ; ordered list of commands
 
+  gcodeDefaults: |
+    G21 G94 G90 G91.1	; set initial Gcode state
+    G10 L2 P1 X0 Y0 Z0	; clear G54 offsets
+    G10 L2 P2 X0 Y0 Z0	; clear G55 offsets
+    G10 L2 P3 X0 Y0 Z0	; clear G56 offsets
+    G10 L2 P4 X0 Y0 Z0	; clear G57 offsets
+    G10 L2 P5 X0 Y0 Z0	; clear G58 offsets
+    G10 L2 P6 X0 Y0 Z0	; clear G59 offsets
+    G54	; select G54 coordinates
+
 #### Globals for all tests (runs from before_all() )
 precondition:
 
@@ -63,31 +73,32 @@ precondition:
     - jv: 5    # Set JSON verbosity to max
     - tv: 1    # Set text to verbose
     - qv: 0    # Surn queue reports off
-    - sv: 1    # Set status report verbosity to filtered
+    - sv: 2    # Set status report verbosity to filtered
     - si: 100  # Set status interval
     - sr:
-        stat: true
-        mpox: true
-        mpoy: true
-        mpoz: true
+        line: true
         posx: true
         posy: true
         posz: true
+        feed: true
+        vel: true
+        unit: true
+        coor: true
+        dist: true
+        stat: true
 
   setValuesEach:   # These run before() each test (test setup). Ordered list
     - sr: null     # get a status report
 
   beforeAll: |                # run once before all tests. GCode string
-    ${homePosition}
-    G17             ; XY plane
-    G31             ; millimeters
-    G90             ; absolute distance mode
-    G91.1           ; incremental arc distance mode
-    G94             ; units per minute feed rate mode
-    ${feedRate}
+    $gcodeDefaults
+    $homePosition
+    G0 X30 Y30 Z-30	; move in mm
+    G10 L20 P2 X0 Y0 Z0	; set new working zero in G55
+    G55
 
-  beforeEach: |               # run before each test
-    g0 x75 y50 z0
+  # beforeEach: |               # run before each test
+  #   g0 x75 y50 z0
 
   timeout: 60000              # imeout in MILLIseconds
 
@@ -106,11 +117,4 @@ testIDs:
 
 tests:
 
-- name: G17 I
-  beforeAll: G17
-  # beforeEach: G0 X1 Y0 Z0
-  endCondition: { stat: $stat.stop, blah: yes }
-  timeout: ${timeoutShort}
-
-  tests:
-  - include: 001-arcTests_45-degree-quadrant-test.yml
+- include: 002-arc-rotation-tests.yml

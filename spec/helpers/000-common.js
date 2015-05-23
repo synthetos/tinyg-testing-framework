@@ -321,7 +321,7 @@ global.tinyg_tester_before_each = function (testData, storedStatus) {
   }
 
   beforeEach(function (done) {
-    console.log("++\n")
+    // console.log("++\n")
 
     if (stopTesting) {
       pending("skipped at user's request");
@@ -341,7 +341,7 @@ global.tinyg_tester_before_each = function (testData, storedStatus) {
     }
 
     promise = promise.then(function () {
-      console.log("--\n")
+      // console.log("--\n")
     }).finally(function () {
       done();
     });
