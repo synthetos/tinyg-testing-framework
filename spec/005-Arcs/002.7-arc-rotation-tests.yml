@@ -1,0 +1,85 @@
+# Search:
+# ^([^;]+);(.*)$
+# Replace:
+#   - name: $2\n    gcode: |\n      $1;$2\n    endState: { posx: 0, posy: 0, posz: 0 }\n\n
+
+- name: G17 arcs, inches, absolute distance mode, incremental arc distance mode, I offset
+  beforeAll: |
+    G17 G20 G90 G91.1	; XY plane, inches, absolute distance mode, incremental arc distance mode
+    F50000000	; Inches per minute
+  beforeEach: |
+    G0 X1 Y0 Z0
+  endCondition: { stat: $stat.stop }
+  timeout: ${timeoutShort}
+
+  tests:
+  - name:  CW 90 degree arc
+    gcode: |
+      G2 I-1 X0 Y-1	; CW 90 degree arc
+    endState: { posx: 000, posy: -1, posz: 000 }
+
+
+  - name:  CW 180 degree arc
+    gcode: |
+      G2 I-1 X-1 Y0	; CW 180 degree arc
+    endState: { posx: -1, posy: 000, posz: 000 }
+
+
+  - name:  CW 270 degree arc
+    gcode: |
+      G2 I-1 X0 Y1	; CW 270 degree arc
+    endState: { posx: 000, posy: 1, posz: 000 }
+
+
+  - name:  CW 360 degree arc
+    gcode: |
+      G2 I-1	; CW 360 degree arc
+    endState: { posx: 000, posy: 000, posz: 000 }
+
+
+  - name:  CW 540 degree arc
+    gcode: |
+      G2 I-1 X-1 Y0 P1	; CW 540 degree arc
+    endState: { posx: -1, posy: 000, posz: 000 }
+
+
+  - name:  CW 720 degree helix
+    gcode: |
+      G2 I-1 Z1 P2	; CW 720 degree helix
+    endState: { posx: 000, posy: 000, posz: 1 }
+
+
+  - name:  CCW  90 degree arc
+    gcode: |
+      G3 I-1 X0 Y1	; CCW  90 degree arc
+    endState: { posx: 000, posy: 1, posz: 000 }
+
+
+  - name:  CCW  180 degree arc
+    gcode: |
+      G3 I-1 X-1 Y0	; CCW  180 degree arc
+    endState: { posx: -1, posy: 000, posz: 000 }
+
+
+  - name:  CCW  270 degree arc
+    gcode: |
+      G3 I-1 X0 Y-1	; CCW  270 degree arc
+    endState: { posx: 000, posy: -1, posz: 000 }
+
+
+  - name:  CCW  360 degree arc
+    gcode: |
+      G3 I-1	; CCW  360 degree arc
+    endState: { posx: 000, posy: 000, posz: 000 }
+
+
+  - name:  CCW  540 degree arc
+    gcode: |
+      G3 I-1 X-1 Y0 P1	; CCW  540 degree arc
+    endState: { posx: -1, posy: 000, posz: 000 }
+
+
+  - name:  CCW  720 degree helix
+    gcode: |
+      G3 I-1 Z1 P2	; CCW  720 degree helix
+    endState: { posx: 000, posy: 000, posz: 1 }
