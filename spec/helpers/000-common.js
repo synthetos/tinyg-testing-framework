@@ -281,7 +281,7 @@ global.tinyg_tester_before_all = function (testData, storedStatus) {
           if (0 == lineCount) {
             return true;
           }
-          console.log("lineCount: " + lineCount);
+          // console.log("lineCount: " + lineCount);
 
           return false;
         }).progress(_handleProgress); // writeWithPromise

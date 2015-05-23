@@ -52,8 +52,8 @@ variables:
   timeoutLong: 60
 
   homePosition: |              # find home position
-    ;g28.2 x0 y0 z0            ; ordered list of commands
-    g28.3 x0 y0 z0             ; ordered list of commands
+    g28.2 x0 y0 z0            ; ordered list of commands
+    ;g28.3 x0 y0 z0             ; ordered list of commands
 
   gcodeDefaults: |
     G21 G94 G90 G91.1	; set initial Gcode state
@@ -99,8 +99,6 @@ precondition:
 
   # beforeEach: |               # run before each test
   #   g0 x75 y50 z0
-
-  timeout: 60000              # imeout in MILLIseconds
 
 ###############################################################################
 #### TEST SUITE STARTS HERE
