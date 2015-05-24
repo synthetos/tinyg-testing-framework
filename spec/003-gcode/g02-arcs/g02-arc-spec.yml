@@ -115,5 +115,5 @@ testIDs:
 tests:
 
 - include: g02.g17.arc-rotation-tests.yml
-#- include: g02.g18.arc-rotation-tests.yml
-#- include: g02.g19.arc-rotation-tests.yml
+- include: g02.g18.arc-rotation-tests.yml
+- include: g02.g19.arc-rotation-tests.yml
