@@ -42,7 +42,7 @@ function run_tests(testData, storedStatusReports) {
       v.name = "NO DESCRIPTION PROVIDED -- PLEASE FIX THIS";
     }
 
-    describe(v.name, function () {
+    var spec_func = function () {
 
       if (v.tests) {
         tinyg_tester_before_all(v, storedStatusReports);
@@ -119,12 +119,7 @@ function run_tests(testData, storedStatusReports) {
         return promise.finally(function() {done();});
       };
 
-      if (v.focus) {
-        // Focused
-        fit("(auto)", auto_func, v.timeout ? v.timeout * 1000 : 10000000);
-      } else {
-        it("(auto)", auto_func, v.timeout);
-      }
+      it("(auto)", auto_func, v.timeout);
 
       if (v.manualPrompt) {
         var manual_func = function (done) {
@@ -158,14 +153,16 @@ function run_tests(testData, storedStatusReports) {
           return deferred.promise.catch(function (error) {expect(error).toBeUndefined()}).finally(function() {done();});
         }
 
-        if (v.focus) {
-          // Focused
-          fit("(manual check)", manual_func, 10000000 /* "never" timeout */);
-        } else {
-          it("(manual check)", manual_func, 10000000 /* "never" timeout */);
-        }
+        it("(manual check)", manual_func, 10000000 /* "never" timeout */);
       } // if (v.manualPrompt)
 
-    }); // describe v.name
+    };
+
+    if (v.focus) {
+      // Focused
+      fdescribe(v.name, spec_func); // describe v.name
+    } else {
+      describe(v.name, spec_func); // describe v.name
+    }
   }); // forEach v
 }
