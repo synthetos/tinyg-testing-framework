@@ -3,6 +3,8 @@
 # Replace:
 # - name: $2\n  gcode: |\n    $1;$2\n  endState: { posx: 0, posy: 0, posz: 0 }\n\n
 
+# testSuiteName:
+
 - name: G17 arcs, inches, absolute distance mode, incremental arc distance mode, I offset
   beforeAll: |
     G17 G20 G90 G91.1	; XY plane, inches, absolute distance mode, incremental arc distance mode

@@ -3,31 +3,32 @@
 # Replace:
 #   - name: $2\n    gcode: |\n      $1;$2\n    endState: { posx: 0, posy: 0, posz: 0 }\n\n
 
-- name: G17 arcs, inches, absolute distance mode, incremental arc distance mode, J offset
+- name: G19 arcs, inches, absolute distance mode, incremental arc distance mode, J offset
   beforeAll: |
-    G17 G20 G90 G91.1	; XY plane, inches, absolute distance mode, incremental arc distance mode
+    G19 G20 G90 G91.1	; YZ plane, inches, absolute distance mode, incremental arc distance mode
     F50	; Inches per minute
   beforeEach: |
     G0 X0 Y1 Z0
   endCondition: { stat: $stat.stop }
-  timeout: ${timeoutLong}
+  timeout: ${timeoutShort}
 
   tests:
   - name:  CW 90 degree arc
     gcode: |
-      G2 J-1 X1 Y0	; CW 90 degree arc
-    endState: { posx: 1, posy: 0, posz: 0 }
+      G2 J-1 Y0 Z-1	; CW 90 degree arc
+    endState: { posx: 0, posy: 0, posz: -1 }
+
 
   - name:  CW 180 degree arc
     gcode: |
-      G2 J-1 X0 Y-1	; CW 180 degree arc
+      G2 J-1 Y-1 Z0	; CW 180 degree arc
     endState: { posx: 0, posy: -1, posz: 0 }
 
 
   - name:  CW 270 degree arc
     gcode: |
-      G2 J-1 X-1 Y0	; CW 270 degree arc
-    endState: { posx: -1, posy: 0, posz: 0 }
+      G2 J-1 Y0 Z1	; CW 270 degree arc
+    endState: { posx: 0, posy: 0, posz: 1 }
 
 
   - name:  CW 360 degree arc
@@ -38,32 +39,32 @@
 
   - name:  CW 540 degree arc
     gcode: |
-      G2 J-1 X0 Y-1 P1	; CW 540 degree arc
+      G2 J-1 Y-1 Z0 P1	; CW 540 degree arc
     endState: { posx: 0, posy: -1, posz: 0 }
 
 
   - name:  CW 720 degree helix
     gcode: |
-      G2 J-1 Z1 P2	; CW 720 degree helix
-    endState: { posx: 0, posy: 1, posz: 1 }
-    focus: true
+      G2 J-1 Y-1 Z0 X1 P2	; CW 720 degree helix
+    endState: { posx: 1, posy: -1, posz: 0 }
+
 
   - name:  CCW  90 degree arc
     gcode: |
-      G3 J-1 X-1 Y0	; CCW  90 degree arc
-    endState: { posx: -1, posy: 0, posz: 0 }
+      G3 J-1 Y0 Z1	; CCW  90 degree arc
+    endState: { posx: 0, posy: 0, posz: 1 }
 
 
   - name:  CCW  180 degree arc
     gcode: |
-      G3 J-1 X0 Y-1	; CCW  180 degree arc
+      G3 J-1 Y-1 Z0	; CCW  180 degree arc
     endState: { posx: 0, posy: -1, posz: 0 }
 
 
   - name:  CCW  270 degree arc
     gcode: |
-      G3 J-1 X1 Y0	; CCW  270 degree arc
-    endState: { posx: 1, posy: 0, posz: 0 }
+      G3 J-1 Y0 Z-1	; CCW  270 degree arc
+    endState: { posx: 0, posy: 0, posz: -1 }
 
 
   - name:  CCW  360 degree arc
@@ -74,11 +75,11 @@
 
   - name:  CCW  540 degree arc
     gcode: |
-      G3 J-1 X0 Y-1 P1	; CCW  540 degree arc
+      G3 J-1 Y-1 Z0 P1	; CCW  540 degree arc
     endState: { posx: 0, posy: -1, posz: 0 }
 
 
   - name:  CCW  720 degree helix
     gcode: |
-      G3 J-1 Z1 P2	; CCW  720 degree helix
-    endState: { posx: 0, posy: 1, posz: 1 }
+      G3 J-1 Y-1 Z0 X1 P2	; CCW  720 degree helix
+    endState: { posx: 1, posy: -1, posz: 0 }

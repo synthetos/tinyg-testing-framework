@@ -10,7 +10,7 @@
   beforeEach: |
     G0 X1 Y0 Z0
   endCondition: { stat: $stat.stop }
-  timeout: ${timeoutLong}
+  timeout: ${timeoutShort}
 
   tests:
   - name:  CW 90 degree arc
