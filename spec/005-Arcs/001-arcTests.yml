@@ -27,10 +27,10 @@ testSuiteMetadata:
 
 #### Macro substitutions defined for this file
 variables:
-  rc:                       # "status" is the return code from status report footer
-    OK: 1
+  rc:                       # "status" is the return code from response `r` footer
+    OK: 0
 
-  stat:                         # "stat" is the machine stateus from the "stat" element
+  stat:                     # "stat" is the machine stateus from the "stat" element
     init: 0
     ready: 1
     alarm: 2
@@ -46,16 +46,15 @@ variables:
     shutdown: 12
     panic: 13
 
-  feedRate: F1500            # Millmeters / minute
+  feedRate: F1500            # Millimeters / minute
 
   timeoutShort: 10
-  timeoutLong: 60
+  timeoutLong: 3600
 
   homePosition: |              # find home position
-    g28.2 x0 y0 z0            ; ordered list of commands
-    ;g28.3 x0 y0 z0             ; ordered list of commands
+    g28.2 x0 y0 z0            ; ordered list of Gcode blocks. In this case only one
 
-  gcodeDefaults: |
+  gcodeDefaults: |    # initial values for gcode state
     G21 G94 G90 G91.1	; set initial Gcode state
     G10 L2 P1 X0 Y0 Z0	; clear G54 offsets
     G10 L2 P2 X0 Y0 Z0	; clear G55 offsets
@@ -73,7 +72,7 @@ precondition:
     - jv: 5    # Set JSON verbosity to max
     - tv: 1    # Set text to verbose
     - qv: 0    # Surn queue reports off
-    - sv: 2    # Set status report verbosity to filtered
+    - sv: 2    # Set status report verbosity to (1) filtered or (2) verbose
     - si: 100  # Set status interval
     - sr:
         line: true
@@ -115,10 +114,10 @@ testIDs:
 
 tests:
 
-- include: 002.1-arc-rotation-tests.yml
+#- include: 002.1-arc-rotation-tests.yml
 - include: 002.2-arc-rotation-tests.yml
-- include: 002.3-arc-rotation-tests.yml
-- include: 002.4-arc-rotation-tests.yml
-- include: 002.5-arc-rotation-tests.yml
-- include: 002.6-arc-rotation-tests.yml
-- include: 002.7-arc-rotation-tests.yml
+#- include: 002.3-arc-rotation-tests.yml
+#- include: 002.4-arc-rotation-tests.yml
+#- include: 002.5-arc-rotation-tests.yml
+#- include: 002.6-arc-rotation-tests.yml
+#- include: 002.7-arc-rotation-tests.yml

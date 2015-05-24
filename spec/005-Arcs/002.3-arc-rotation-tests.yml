@@ -46,7 +46,7 @@
   - name:  CW 720 degree helix
     gcode: |
       G2 I-1 X-1 Z0 Y1 P2	; CW 720 degree helix
-    endState: { posx: -1, posy: 1, posz: 0 }
+    endState: { posx: 1, posy: 0, posz: 0 }
 
 
   - name:  CCW  90 degree arc
@@ -82,4 +82,4 @@
   - name:  CCW  720 degree helix
     gcode: |
       G3 I-1 X-1 Z0 Y1 P2	; CCW  720 degree helix
-    endState: { posx: -1, posy: 1, posz: 0 }
+    endState: { posx: 1, posy: 0, posz: 0 }
